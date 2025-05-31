@@ -30,24 +30,7 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "typescript.validate.enable": true,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": [
-    "dprk",
-    "Drvb",
-    "Etyc",
-    "Gnrc",
-    "HFJQ",
-    "Kevkx",
-    "Khzhl",
-    "lcae",
-    "lgyy",
-    "Mijmeo",
-    "mlwq",
-    "Mnqs",
-    "ntpc",
-    "Qwax",
-    "Rascia",
-    "Shotts",
-    "wnbpfg",
-    "xxxg"
-  ]
+  "workbench.colorCustomizations": {
+    "@import": "./src/app/syntax-theme.json"
+  }
 }
