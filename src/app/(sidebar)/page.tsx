@@ -14,6 +14,7 @@ import { ClockIcon } from "@/icons/clock-icon";
 import { LessonsIcon } from "@/icons/lessons-icon";
 import { PlayIcon } from "@/icons/play-icon";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -23,16 +24,16 @@ export const metadata: Metadata = {
 };
 
 function formatDuration(seconds: number): string {
-  let h = Math.floor(seconds / 3600);
-  let m = Math.floor((seconds % 3600) / 60);
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
 
   return h > 0 ? (m > 0 ? `${h} hr ${m} min` : `${h} hr`) : `${m} min`;
 }
 
 export default async function Page() {
-  let modules = await getModules();
-  let lessons = modules.flatMap(({ lessons }) => lessons);
-  let duration = lessons.reduce(
+  const modules = await getModules();
+  const lessons = modules.flatMap(({ lessons }) => lessons);
+  const duration = lessons.reduce(
     (sum, { video }) => sum + (video?.duration ?? 0),
     0,
   );
@@ -49,7 +50,7 @@ export default async function Page() {
     >
       <div className="relative mx-auto max-w-7xl">
         <div className="absolute -inset-x-2 top-0 -z-10 h-80 overflow-hidden rounded-t-2xl mask-b-from-60% sm:h-88 md:h-112 lg:-inset-x-4 lg:h-128">
-          <img
+          <Image
             alt=""
             src="https://assets.tailwindcss.com/templates/compass/hero-background.png"
             className="absolute inset-0 h-full w-full mask-l-from-60% object-cover object-center opacity-40"
@@ -87,7 +88,7 @@ export default async function Page() {
               </div>
               <div className="mt-10">
                 <Link
-                  href={`/${modules[0].lessons[0].id}`}
+                  href={`/${modules[0]?.lessons[0]?.id}`}
                   className="inline-flex items-center gap-x-2 rounded-full bg-gray-950 px-3 py-0.5 text-sm/7 font-semibold text-white hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600"
                 >
                   <PlayIcon className="fill-white" />
@@ -119,7 +120,7 @@ export default async function Page() {
                             description={lesson.description}
                             href={`/${lesson.id}`}
                             type="video"
-                            duration={lesson.video?.duration}
+                            duration={lesson.video?.duration ?? null}
                           />
                         </li>
                       ))}
