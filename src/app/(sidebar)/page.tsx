@@ -31,7 +31,7 @@ function formatDuration(seconds: number): string {
 }
 
 export default async function Page() {
-  const modules = await getModules();
+  const modules = getModules();
   const lessons = modules.flatMap(({ lessons }) => lessons);
   const duration = lessons.reduce(
     (sum, { video }) => sum + (video?.duration ?? 0),
@@ -54,6 +54,8 @@ export default async function Page() {
             alt=""
             src="https://assets.tailwindcss.com/templates/compass/hero-background.png"
             className="absolute inset-0 h-full w-full mask-l-from-60% object-cover object-center opacity-40"
+            width={1456}
+            height={816}
           />
           <div className="absolute inset-0 rounded-t-2xl outline-1 -outline-offset-1 outline-gray-950/10 dark:outline-white/10" />
         </div>
