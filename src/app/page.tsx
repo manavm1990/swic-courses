@@ -8,7 +8,7 @@ import { ContentLink } from "@/components/content-link";
 import { Logo } from "@/components/logo";
 import { PageSection } from "@/components/page-section";
 import { SidebarLayoutContent } from "@/components/sidebar-layout";
-import { getModules, type Module } from "@/data/lessons";
+import { getModules } from "@/data/lessons";
 import { PlayIcon } from "@/icons/play-icon";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -60,7 +60,7 @@ export default function Page() {
             </div>
 
             <div className="grid grid-cols-1 gap-y-16 pb-10 sm:px-4">
-              {modules.map((module: Module, index: number) => (
+              {modules.map((module, index: number) => (
                 <PageSection
                   key={module.id}
                   id={module.id}

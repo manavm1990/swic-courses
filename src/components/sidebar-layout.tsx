@@ -1,7 +1,6 @@
 "use client";
 
 import { IconButton } from "@/components/icon-button";
-import type { Module } from "@/data/lessons";
 import { SidebarIcon } from "@/icons/sidebar-icon";
 import {
   CloseButton,
@@ -14,6 +13,25 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { createContext, useContext, useState } from "react";
+
+// Define readonly module type
+type ReadonlyModule = Readonly<{
+  id: string;
+  title: string;
+  description: string;
+  lessons: ReadonlyArray<
+    Readonly<{
+      id: string;
+      title: string;
+      description: string;
+      video: Readonly<{
+        thumbnail: string;
+        duration: number;
+        url: string;
+      }> | null;
+    }>
+  >;
+}>;
 
 export const SidebarContext = createContext<{
   isSidebarOpen: boolean;
@@ -32,7 +50,7 @@ function CourseNavigation({
   onNavigate,
   className,
 }: {
-  modules: Module[];
+  modules: ReadonlyArray<ReadonlyModule>;
   onNavigate?: () => void;
   className?: string;
 }) {
@@ -81,7 +99,7 @@ function MobileNavigation({
 }: {
   open: boolean;
   onClose: () => void;
-  modules: Module[];
+  modules: ReadonlyArray<ReadonlyModule>;
 }) {
   return (
     <Dialog open={open} onClose={onClose} className="xl:hidden">
@@ -108,7 +126,7 @@ export function SidebarLayout({
   modules,
   children,
 }: {
-  modules: Module[];
+  modules: ReadonlyArray<ReadonlyModule>;
   children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
