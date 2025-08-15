@@ -14,25 +14,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Compass - The Ultimate Guide to Navigating Uncertainty",
+  title: "SWIC Web Development",
   description:
-    "A comprehensive journey that helps you navigate uncertainty and make choices aligned with your values and goals.",
+    "A modern web development course that teaches you how to build using real world tools and practices.",
 };
 
-function formatDuration(seconds: number): string {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-
-  return h > 0 ? (m > 0 ? `${h} hr ${m} min` : `${h} hr`) : `${m} min`;
-}
-
-export default async function Page() {
-  const modules = await getModules();
-  const lessons = modules.flatMap(({ lessons }) => lessons);
-  const duration = lessons.reduce(
-    (sum, { video }) => sum + (video?.duration ?? 0),
-    0,
-  );
+export default function Page() {
+  const modules = getModules();
 
   return (
     <SidebarLayoutContent
@@ -62,7 +50,7 @@ export default async function Page() {
 
               <div className="mt-10">
                 <Link
-                  href={`/${modules[0].lessons[0].id}`}
+                  href={`/${modules[0]?.lessons[0]?.id}`}
                   className="inline-flex items-center gap-x-2 rounded-full bg-gray-950 px-3 py-0.5 text-sm/7 font-semibold text-white hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600"
                 >
                   <PlayIcon className="fill-white" />
@@ -94,7 +82,6 @@ export default async function Page() {
                             description={lesson.description}
                             href={`/${lesson.id}`}
                             type="video"
-                            duration={lesson.video?.duration}
                           />
                         </li>
                       ))}

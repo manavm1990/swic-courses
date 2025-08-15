@@ -4,7 +4,7 @@ import { clsx } from "clsx";
 export function IconButton({
   className,
   ...props
-}: React.ComponentProps<"button">) {
+}: React.ComponentProps<typeof Button>) {
   return (
     <Button
       type="button"

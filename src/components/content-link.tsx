@@ -3,25 +3,16 @@ import { CheckmarkIcon } from "@/icons/checkmark-icon";
 import { CirclePlayIcon } from "@/icons/circle-play-icon";
 import Link from "next/link";
 
-function formatDuration(seconds: number): string {
-  let m = Math.floor(seconds / 60);
-  let s = seconds % 60;
-
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
-
 export function ContentLink({
   title,
   description,
   href,
   type = "article",
-  duration,
 }: {
   title: string;
   description: string;
   href: string;
   type?: "article" | "tool" | "video";
-  duration?: number | null;
 }) {
   return (
     <div className="flow-root">
@@ -45,23 +36,8 @@ export function ContentLink({
             <span className="font-semibold text-gray-950 dark:text-white">
               {title}
             </span>
-            {duration && (
-              <>
-                <span className="mx-2 hidden text-gray-950/25 sm:inline dark:text-white/25">
-                  &middot;
-                </span>
-                <span className="hidden text-gray-500 sm:inline">
-                  {formatDuration(duration)}
-                </span>
-              </>
-            )}
           </div>
           <p className="text-gray-700 dark:text-gray-400">{description}</p>
-          {duration && (
-            <div className="text-gray-500 sm:hidden">
-              {formatDuration(duration)}
-            </div>
-          )}
         </div>
       </Link>
     </div>

@@ -23,20 +23,27 @@ export function getModules(): Module[] {
 export async function getLesson(
   slug: string,
 ): Promise<(Lesson & { module: Module; next: Lesson | null }) | null> {
-  const module = lessons.find(({ lessons }) =>
+  const lessonModule = lessons.find(({ lessons }) =>
     lessons.some(({ id }) => id === slug),
   );
 
-  if (!module) {
+  if (!lessonModule) {
     return null;
   }
 
-  const index = module.lessons.findIndex(({ id }) => id === slug);
+  const index = lessonModule.lessons.findIndex(({ id }) => id === slug);
+  const currentLesson = lessonModule.lessons[index];
+
+  if (!currentLesson) {
+    return null;
+  }
+
+  const nextLesson = lessonModule.lessons[index + 1] ?? null;
 
   return {
-    ...module.lessons[index],
-    module,
-    next: index < module.lessons.length - 1 ? module.lessons[index + 1] : null,
+    ...currentLesson,
+    module: lessonModule,
+    next: nextLesson,
   };
 }
 
