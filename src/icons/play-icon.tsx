@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import type React from "react";
 
 export function PlayIcon({ className, ...props }: React.ComponentProps<"svg">) {
   return (

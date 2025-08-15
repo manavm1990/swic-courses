@@ -2,7 +2,7 @@
 
 import { PlayIcon } from "@/icons/play-icon";
 import { clsx } from "clsx";
-import type React from "react";
+
 import { useEffect, useRef } from "react";
 
 function formatTime(seconds: number): string {

@@ -3,7 +3,7 @@ import { getModules } from "@/data/lessons";
 import { clsx } from "clsx";
 import { GeistMono } from "geist/font/mono";
 import localFont from "next/font/local";
-import type React from "react";
+
 import "./globals.css";
 
 const InterVariable = localFont({

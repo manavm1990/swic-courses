@@ -1,6 +1,5 @@
 import { clsx } from "clsx";
 import Link, { type LinkProps } from "next/link";
-import type React from "react";
 
 export function Breadcrumbs(props: React.ComponentProps<"nav">) {
   return (

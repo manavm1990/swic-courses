@@ -12,7 +12,7 @@ import {
 import { clsx } from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type React from "react";
+
 import { createContext, useContext, useState } from "react";
 
 export const SidebarContext = createContext<{

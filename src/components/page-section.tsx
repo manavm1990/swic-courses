@@ -1,5 +1,3 @@
-import type React from "react";
-
 export function PageSection({
   title,
   children,

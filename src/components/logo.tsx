@@ -1,5 +1,3 @@
-import type React from "react";
-
 export function Logo(props: React.ComponentProps<"svg">) {
   return (
     <svg viewBox="0 0 151 32" fill="currentColor" {...props}>
