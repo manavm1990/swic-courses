@@ -5,7 +5,7 @@ import { clsx } from "clsx";
 
 import { useEffect, useRef } from "react";
 
-function formatTime(seconds: number): string {
+function formatTime(seconds: number) {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = Math.floor(seconds % 60);
