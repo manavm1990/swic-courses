@@ -1,3 +1,5 @@
+import { SidebarLayout } from "@/components/sidebar-layout";
+import { getModules } from "@/data/lessons";
 import { clsx } from "clsx";
 import { GeistMono } from "geist/font/mono";
 import localFont from "next/font/local";
@@ -27,7 +29,9 @@ export default function RootLayout({
       )}
     >
       <body>
-        <div className="isolate">{children}</div>
+        <div className="isolate">
+          <SidebarLayout modules={getModules()}>{children}</SidebarLayout>
+        </div>
       </body>
     </html>
   );

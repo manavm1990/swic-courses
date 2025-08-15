@@ -14,7 +14,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type React from "react";
 import { createContext, useContext, useState } from "react";
-import { Navbar } from "./navbar";
 
 export const SidebarContext = createContext<{
   isSidebarOpen: boolean;
@@ -37,7 +36,7 @@ function CourseNavigation({
   onNavigate?: () => void;
   className?: string;
 }) {
-  let pathname = usePathname();
+  const pathname = usePathname();
 
   return (
     <div className={clsx(className, "space-y-8")}>
@@ -112,8 +111,8 @@ export function SidebarLayout({
   modules: Module[];
   children: React.ReactNode;
 }) {
-  let [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  let [isMobileDialogOpen, setIsMobileDialogOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileDialogOpen, setIsMobileDialogOpen] = useState(false);
 
   return (
     <SidebarContext.Provider
@@ -160,7 +159,7 @@ export function SidebarLayoutContent({
   breadcrumbs: React.ReactNode;
   children: React.ReactNode;
 }) {
-  let {
+  const {
     isSidebarOpen,
     setIsSidebarOpen,
     isMobileDialogOpen,
@@ -169,7 +168,12 @@ export function SidebarLayoutContent({
 
   return (
     <>
-      <Navbar>
+      <div
+        className={clsx(
+          "sticky top-0 z-10 bg-white/90 backdrop-blur-sm dark:bg-gray-950/90",
+          "flex items-center justify-between gap-x-8 px-4 py-4 sm:px-6",
+        )}
+      >
         <div className="flex min-w-0 shrink items-center gap-x-4">
           <IconButton
             onClick={() => setIsMobileDialogOpen(!isMobileDialogOpen)}
@@ -187,7 +191,8 @@ export function SidebarLayoutContent({
           )}
           <div className="min-w-0">{breadcrumbs}</div>
         </div>
-      </Navbar>
+      </div>
+
       <main className="px-4 sm:px-6">{children}</main>
     </>
   );

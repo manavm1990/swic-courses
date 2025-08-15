@@ -17,7 +17,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  let lesson = await getLesson((await params).slug);
+  const lesson = await getLesson((await params).slug);
 
   return {
     title: `${lesson?.title} - Compass`,
@@ -30,14 +30,14 @@ export default async function Page({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  let slug = (await params).slug;
-  let lesson = await getLesson(slug);
+  const slug = (await params).slug;
+  const lesson = await getLesson(slug);
 
   if (!lesson) {
     notFound();
   }
 
-  let Content = await getLessonContent(slug);
+  const Content = await getLessonContent(slug);
 
   return (
     <SidebarLayoutContent
@@ -69,17 +69,11 @@ export default async function Page({
               <Content />
             </div>
             <div className="mt-16 border-t border-gray-200 pt-8 dark:border-white/10">
-              {lesson.next ? (
+              {lesson.next && (
                 <NextPageLink
                   title={lesson.next.title}
                   description={lesson.next.description}
                   href={`/${lesson.next.id}`}
-                />
-              ) : (
-                <NextPageLink
-                  title="Interviews"
-                  description="Explore interviews with industry experts and thought leaders."
-                  href="/interviews"
                 />
               )}
             </div>

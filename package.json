@@ -1,13 +1,10 @@
 {
-  "name": "compass",
-  "version": "0.1.0",
+  "name": "swic-web-dev",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "format": "prettier --write ."
+    "start": "next start"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.6",
