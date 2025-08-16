@@ -86,13 +86,6 @@ const lessons = [
         video: null,
       },
       {
-        id: "vscode-configuration",
-        title: "VS Code Configuration",
-        description:
-          "Essential VS Code extensions and settings: ESLint, Prettier, and workspace setup.",
-        video: null,
-      },
-      {
         id: "git-fundamentals",
         title: "Git Fundamentals",
         description:
