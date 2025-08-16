@@ -25,16 +25,12 @@ export async function getLesson(slug: string) {
     lessons.some(({ id }) => id === slug),
   );
 
-  if (!lessonModule) {
-    return null;
-  }
+  if (!lessonModule) return null;
 
   const index = lessonModule.lessons.findIndex(({ id }) => id === slug);
   const currentLesson = lessonModule.lessons[index];
 
-  if (!currentLesson) {
-    return null;
-  }
+  if (!currentLesson) return null;
 
   const nextLesson = lessonModule.lessons[index + 1] ?? null;
 
