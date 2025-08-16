@@ -1,0 +1,542 @@
+# Practice & Next Steps
+
+Homework guidelines and practice exercises: Git commits with text files and basic variable exercises.
+
+## Introduction
+
+### Time to Practice What You've Learned!
+
+You've covered a lot of ground in Week 1 - development environment setup, learning mindset, Git fundamentals, and JavaScript basics. Now it's time to reinforce these concepts through hands-on practice and prepare for Week 2.
+
+**Real-world scenario**: Professional developers spend significant time practicing and experimenting outside of their main projects. The best programmers are those who continuously practice new techniques, build personal projects, and maintain their skills through regular coding exercises.
+
+### What This Lesson Covers
+- **Homework assignments** for Week 1 concepts
+- **Practice exercises** to reinforce learning
+- **Git workflow practice** with real commits
+- **Self-assessment tools** to check your progress
+- **Preparation guidelines** for Week 2
+
+### Why Practice Matters
+- **Reinforces learning**: Repetition builds muscle memory
+- **Identifies gaps**: Reveals areas that need more attention
+- **Builds confidence**: Success with exercises builds momentum
+- **Creates habits**: Regular practice establishes good development routines
+
+## Core Concept Overview
+
+### The Learning Cycle
+
+**Effective programming learning follows this pattern**:
+1. **Learn** new concepts (what you did this week)
+2. **Practice** with guided exercises (what you'll do now)
+3. **Apply** to real projects (coming in future weeks)
+4. **Reflect** on what worked and what didn't
+5. **Iterate** - repeat the cycle with new concepts
+
+### Types of Practice
+
+**Repetitive Practice**:
+- Builds muscle memory for common tasks
+- Examples: Git workflow, variable creation, running files
+- Goal: Make basic operations automatic
+
+**Problem-Solving Practice**:
+- Develops logical thinking skills
+- Examples: Creating programs that solve specific problems
+- Goal: Learn to break down complex tasks
+
+**Creative Practice**:
+- Encourages experimentation and exploration
+- Examples: Building fun projects with new techniques
+- Goal: Maintain motivation and discover interests
+
+### Key Concepts to Reinforce
+
+**Git Workflow**:
+- Creating repositories
+- Adding and committing changes
+- Writing meaningful commit messages
+- Using Git with development workflow
+
+**JavaScript Fundamentals**:
+- Variable creation and manipulation
+- Data types and operations
+- Console output and debugging
+- Problem solving with code
+
+**Development Environment**:
+- VS Code productivity features
+- Terminal/command line comfort
+- File organization and project structure
+
+## Hands-On Application
+
+### Assignment 1: Git Practice with Journal
+
+**Goal**: Practice Git workflow while reflecting on your learning.
+
+**Instructions**:
+1. **Navigate to your git-practice folder**:
+   ```bash
+   cd ~/Code/SWIC-Course/git-practice  # Mac
+   cd C:\Users\YourName\Code\SWIC-Course\git-practice  # Windows
+   ```
+
+2. **Create a learning journal**:
+   - Create `learning-journal.md`
+   - Add this content:
+   ```markdown
+   # My Programming Learning Journal
+   
+   ## Week 1 - Foundations
+   
+   ### What I Learned
+   - How to set up a development environment
+   - Git basics: add, commit, status, log
+   - JavaScript variables and data types
+   - Running JavaScript files with Node.js
+   - Professional development habits
+   
+   ### Challenges I Faced
+   (Write about any difficulties you encountered)
+   
+   ### What Surprised Me
+   (Write about anything unexpected you discovered)
+   
+   ### Goals for Week 2
+   (Write what you want to focus on next)
+   ```
+
+3. **Add and commit**:
+   ```bash
+   git add learning-journal.md
+   git commit -m "Add Week 1 learning reflection journal"
+   ```
+
+4. **Create a resources file**:
+   - Create `useful-resources.md`
+   - Add links to helpful websites you found
+   - Include at least 3 resources with brief descriptions
+
+5. **Add and commit the resources**:
+   ```bash
+   git add useful-resources.md
+   git commit -m "Add curated list of learning resources"
+   ```
+
+6. **Update your journal with new insights**:
+   - Add a section called "## Week 1 Review"
+   - Write about what you learned during the homework
+   - Commit with message: "Add Week 1 review and insights"
+
+7. **Check your commit history**:
+   ```bash
+   git log --oneline
+   ```
+   You should see all your commits with clear, descriptive messages.
+
+### Assignment 2: JavaScript Problem Solving
+
+**Goal**: Practice JavaScript fundamentals with real programming challenges.
+
+**Setup**:
+1. **Navigate to javascript-basics folder**:
+   ```bash
+   cd ~/Code/SWIC-Course/javascript-basics  # Mac
+   cd C:\Users\YourName\Code\SWIC-Course\javascript-basics  # Windows
+   ```
+
+2. **Initialize Git if you haven't already**:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit with Week 1 JavaScript exercises"
+   ```
+
+**Problem 1: Personal Information Calculator**
+
+Create `personal-info.js`:
+```javascript
+// Personal Information Calculator
+// Replace with your actual information
+
+const firstName = "Your Name";
+const lastName = "Your Last Name";
+const birthYear = 2000; // Your birth year
+const currentYear = 2024;
+const favoriteNumber = 7; // Your favorite number
+const city = "Your City";
+
+// Calculate your age
+let age = currentYear - birthYear;
+
+// Create formatted outputs
+console.log("=== Personal Information ===");
+console.log("Full Name:", firstName + " " + lastName);
+console.log("Age:", age, "years old");
+console.log("Hometown:", city);
+console.log("Favorite Number:", favoriteNumber);
+
+// Fun calculations
+let ageInMonths = age * 12;
+let ageInDays = age * 365; // Approximate
+let favNumberSquared = favoriteNumber * favoriteNumber;
+
+console.log("\n=== Fun Facts ===");
+console.log("Age in months:", ageInMonths);
+console.log("Age in days (approx):", ageInDays);
+console.log("Favorite number squared:", favNumberSquared);
+
+// Commit this file
+```
+
+**Problem 2: Simple Calculator**
+
+Create `calculator.js`:
+```javascript
+// Simple Calculator
+// Practice with numbers and operations
+
+let num1 = 15;
+let num2 = 4;
+
+console.log("=== Calculator Results ===");
+console.log("First number:", num1);
+console.log("Second number:", num2);
+console.log();
+
+// Basic operations
+console.log("Addition:", num1 + num2);
+console.log("Subtraction:", num1 - num2);
+console.log("Multiplication:", num1 * num2);
+console.log("Division:", num1 / num2);
+console.log("Remainder:", num1 % num2);
+
+// Advanced calculations
+let average = (num1 + num2) / 2;
+let difference = Math.abs(num1 - num2); // Absolute difference
+
+console.log("\n=== Advanced Results ===");
+console.log("Average:", average);
+console.log("Absolute difference:", difference);
+console.log("First number squared:", num1 * num1);
+
+// Challenge: Try changing num1 and num2 to different values
+// and run the program again!
+```
+
+**Problem 3: Text Processor**
+
+Create `text-processor.js`:
+```javascript
+// Text Processor
+// Practice with strings
+
+const sentence1 = "JavaScript is a powerful programming language";
+const sentence2 = "I am learning to code";
+const word1 = "amazing";
+const word2 = "developer";
+
+console.log("=== Original Text ===");
+console.log("Sentence 1:", sentence1);
+console.log("Sentence 2:", sentence2);
+console.log("Word 1:", word1);
+console.log("Word 2:", word2);
+
+// String operations
+console.log("\n=== Text Analysis ===");
+console.log("Sentence 1 length:", sentence1.length);
+console.log("Sentence 2 length:", sentence2.length);
+console.log("Combined length:", sentence1.length + sentence2.length);
+
+// String combinations
+let combinedSentence = sentence1 + " and " + sentence2;
+let modifiedSentence = sentence1.replace("powerful", word1);
+let personalStatement = "I am becoming an " + word1 + " " + word2;
+
+console.log("\n=== Text Combinations ===");
+console.log("Combined:", combinedSentence);
+console.log("Modified:", modifiedSentence);
+console.log("Personal statement:", personalStatement);
+
+// Case conversions
+console.log("\n=== Case Conversions ===");
+console.log("Uppercase:", sentence1.toUpperCase());
+console.log("Lowercase:", sentence2.toLowerCase());
+```
+
+**Commit Each Exercise**:
+```bash
+# After completing each file:
+git add personal-info.js
+git commit -m "Add personal information calculator"
+
+git add calculator.js
+git commit -m "Add simple calculator with basic operations"
+
+git add text-processor.js  
+git commit -m "Add text processing and string manipulation"
+```
+
+### Assignment 3: Development Environment Practice
+
+**Goal**: Get comfortable with VS Code and development workflow.
+
+**Tasks**:
+
+1. **Organize your workspace**:
+   - Create a `week-1-review` folder in SWIC-Course
+   - Move all your practice files to appropriate subfolders
+   - Create a workspace file: `SWIC-Course.code-workspace`
+
+2. **Practice keyboard shortcuts**:
+   - Open Command Palette (`Ctrl/Cmd + Shift + P`) and explore
+   - Use Quick File Open (`Ctrl/Cmd + P`) to navigate files
+   - Practice commenting/uncommenting code (`Ctrl/Cmd + /`)
+   - Try multi-cursor editing (`Alt + Click`)
+
+3. **Test your extensions**:
+   - Create a messy JavaScript file with poor formatting
+   - Save and watch Prettier format it automatically
+   - Add intentional errors and see ESLint warnings
+   - Fix the warnings based on ESLint suggestions
+
+4. **Terminal practice**:
+   - Practice navigating directories with `cd`
+   - List files with `ls` (Mac) or `dir` (Windows)
+   - Run multiple JavaScript files without leaving VS Code terminal
+
+## Advanced Concepts & Comparisons
+
+### Study Strategies for Programming
+
+| Strategy | Description | When to Use | Example |
+|----------|-------------|-------------|---------|
+| **Repetition** | Practice same concept multiple times | Learning syntax | Writing 10 different variable declarations |
+| **Variation** | Same concept, different contexts | Understanding patterns | Variables in calculators, games, forms |
+| **Elaboration** | Connect to existing knowledge | Deep understanding | How variables relate to math algebra |
+| **Interleaving** | Mix different concepts together | Real-world application | Project using Git + JavaScript + VS Code |
+
+### Building Programming Habits
+
+**Daily Habits** (15-30 minutes):
+- Write code every day, even if just experimenting
+- Read error messages carefully instead of panicking
+- Use Git to track your daily practice
+- Try one new VS Code feature or keyboard shortcut
+
+**Weekly Habits**:
+- Review what you learned and identify gaps
+- Build a small project combining multiple concepts
+- Share your progress with others (social accountability)
+- Plan learning goals for the upcoming week
+
+**Monthly Habits**:
+- Assess overall progress against initial goals
+- Update your development environment and tools
+- Connect with other learners or programming communities
+- Celebrate achievements and learning milestones
+
+### Error-Driven Learning
+
+**Common JavaScript Errors and What They Teach**:
+
+```javascript
+// SyntaxError: Missing quotes
+let name = John;  // ❌ Error teaches importance of string syntax
+let name = "John"; // ✅ Correct
+
+// ReferenceError: Variable not defined  
+console.log(firstName); // ❌ Error teaches variable scope
+let firstName = "Jane";
+console.log(firstName); // ✅ Correct - declare before use
+
+// TypeError: Cannot read property
+let person;
+console.log(person.name); // ❌ Error teaches checking for undefined
+let person = { name: "Alex" };
+console.log(person.name); // ✅ Correct
+```
+
+**How to Use Errors for Learning**:
+1. **Read the error message carefully** - it tells you exactly what's wrong
+2. **Look at the line number** - errors point to specific locations
+3. **Research the error type** - understand what category of mistake it is
+4. **Fix and re-run** - see if your solution works
+5. **Document the solution** - keep notes for similar future errors
+
+## Troubleshooting & Best Practices
+
+### Common Homework Challenges
+
+#### "I don't understand what to do"
+**Solutions**:
+- Re-read the instructions step by step
+- Break large tasks into smaller pieces
+- Look at the example code provided
+- Ask specific questions (not "I don't get it")
+
+#### "My code doesn't work"
+**Debugging process**:
+1. **Check the error message** - what does it actually say?
+2. **Verify file names and paths** - typos are common
+3. **Look for syntax errors** - missing quotes, brackets, semicolons
+4. **Test with simple examples** - start with basic cases
+5. **Use console.log()** to see what values you have
+
+#### "Git commands aren't working"
+**Common fixes**:
+- Make sure you're in the right directory (`pwd` or `cd`)
+- Check if it's a Git repository (`git status`)
+- Verify file names exactly match what you created
+- Restart terminal if PATH issues persist
+
+### Homework Best Practices
+
+**Time Management**:
+- Set aside specific times for homework (consistency helps)
+- Take breaks every 30-45 minutes to avoid fatigue
+- Don't try to do everything in one sitting
+- If stuck for more than 20 minutes, take a break or ask for help
+
+**Quality Over Speed**:
+- Focus on understanding, not just completing
+- Test your code thoroughly before considering it "done"
+- Write clear, meaningful commit messages
+- Organize your files and folders properly
+
+**Learning Reinforcement**:
+- Explain your code out loud as you write it
+- Comment your code to practice explaining what it does
+- Try variations of the exercises for extra practice
+- Keep notes about what you found difficult or interesting
+
+### Setting Up for Long-term Success
+
+**Create a learning schedule**:
+```
+Week 1: Environment setup, Git, JavaScript basics
+Week 2: Functions, DOM manipulation, interactive web pages
+Week 3: Objects, arrays, data manipulation
+Week 4: Events, forms, user interaction
+...and so on
+```
+
+**Track your progress**:
+- Keep a learning journal (as part of homework!)
+- Document challenges and how you solved them
+- Note concepts that need more practice
+- Celebrate small wins and milestones
+
+## Wrap-Up & Assessment
+
+### Week 1 Homework Checklist
+
+**Git Practice**:
+- [ ] Created learning journal with reflections
+- [ ] Added useful resources file  
+- [ ] Made meaningful commits with good messages
+- [ ] Checked commit history with `git log --oneline`
+
+**JavaScript Practice**:
+- [ ] Completed personal information calculator
+- [ ] Built simple calculator with math operations
+- [ ] Created text processor with string manipulation
+- [ ] All files run without errors using `node filename.js`
+
+**Development Environment**:
+- [ ] Organized workspace with proper folder structure
+- [ ] Practiced VS Code keyboard shortcuts
+- [ ] Tested Prettier and ESLint extensions
+- [ ] Comfortable using integrated terminal
+
+**Self-Assessment**:
+- [ ] Can explain what each line of code does
+- [ ] Fixed at least one error by reading error messages
+- [ ] Successfully used Git workflow multiple times
+- [ ] Feel confident with basic JavaScript concepts
+
+### Reflection Questions
+
+**Answer these in your learning journal**:
+
+1. **What was the hardest part of Week 1?** How did you work through it?
+
+2. **Which concept "clicked" for you?** What made it suddenly make sense?
+
+3. **What development habits are you building?** Which ones need more work?
+
+4. **How comfortable are you with making mistakes and debugging?** 
+
+5. **What are you most excited to learn next?**
+
+### Preparation for Week 2
+
+**Review these concepts** if you struggled with them:
+- Variable creation and manipulation
+- Running JavaScript files with Node.js
+- Basic Git workflow (add, commit, status)
+- Using VS Code effectively
+
+**Mental preparation**:
+- Programming gets more complex, but you have the foundations
+- Every professional developer started exactly where you are now
+- Focus on understanding, not memorizing syntax
+- Embrace the problem-solving mindset you're developing
+
+**Technical preparation**:
+- Ensure all your tools are working (Node.js, Git, VS Code)
+- Organize your SWIC-Course folder for easy navigation
+- Have a consistent workspace setup
+- Know where to find help when you need it
+
+### Understanding Your Growth
+
+**Skills you've developed**:
+- **Technical setup** - professional development environment
+- **Version control** - tracking changes with Git
+- **Programming basics** - variables, data types, operations
+- **Problem-solving approach** - breaking down complex tasks
+- **Professional habits** - meaningful commits, organized code, debugging mindset
+
+**This foundation enables**:
+- **Advanced JavaScript concepts** like functions and objects
+- **Web development** with HTML, CSS, and interactive JavaScript
+- **Project building** with multiple files and components
+- **Team collaboration** using Git and professional practices
+
+### Next Week Preview
+
+**Week 2 will cover**:
+- **Functions** - organizing and reusing code
+- **DOM Manipulation** - making web pages interactive
+- **Events** - responding to user actions
+- **Projects** - building actual web applications
+
+**How Week 1 prepares you**:
+- Git workflow for tracking project changes
+- JavaScript fundamentals for writing function logic
+- Development environment for productive coding
+- Problem-solving mindset for tackling new challenges
+
+### Additional Resources for Continued Practice
+
+**Free Practice Platforms**:
+- **Codewars**: https://www.codewars.com/ (programming challenges)
+- **FreeCodeCamp**: https://www.freecodecamp.org/ (structured curriculum)
+- **JavaScript30**: https://javascript30.com/ (30-day vanilla JavaScript challenge)
+
+**Reference Materials**:
+- **MDN JavaScript Guide**: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide
+- **Git Handbook**: https://guides.github.com/introduction/git-handbook/
+- **VS Code Tips**: https://code.visualstudio.com/docs/getstarted/tips-and-tricks
+
+**Community Support**:
+- **Stack Overflow**: For specific technical questions
+- **Reddit r/learnprogramming**: For general learning advice
+- **Discord/Slack coding communities**: For real-time help and discussion
+
+**Congratulations on completing Week 1!** You've built a solid foundation for your programming journey. The habits and skills you've developed this week will serve you throughout your entire career in software development.
+
+*Ready for Week 2? Let's continue building your JavaScript skills with functions and interactive web development!*
