@@ -1,5 +1,4 @@
 import { FlatCompat } from "@eslint/eslintrc";
-import eslintConfigPrettier from "eslint-config-prettier/flat";
 import * as mdx from "eslint-plugin-mdx";
 
 const compat = new FlatCompat({
@@ -9,11 +8,16 @@ const compat = new FlatCompat({
 export default [
   // Next.js and TypeScript for your components
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-
-  // MDX configuration
   {
     files: ["**/*.mdx"],
     ...mdx.flat,
+
+    // * Keep stuff below the flattening above ☝️.
+    languageOptions: {
+      globals: {
+        VideoYT: "readonly",
+      },
+    },
     processor: mdx.createRemarkProcessor({
       lintCodeBlocks: true,
     }),
@@ -25,10 +29,7 @@ export default [
     ...mdx.flatCodeBlocks,
   },
 
-  // Prettier (disables conflicting formatting rules)
   ...compat.extends("prettier"),
-
-  // Ignore patterns
   {
     ignores: ["**/node_modules/**", "**/.next/**", "**/out/**", "**/public/**"],
   },
