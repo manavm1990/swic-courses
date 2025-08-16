@@ -10,11 +10,9 @@ const withMDX = createMDX({
 
 const nextConfig = {
   turbopack: {},
-  pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  pageExtensions: ["ts", "tsx", "md", "mdx"],
   images: {
-    remotePatterns: [
-      new URL("https://assets.tailwindcss.com/templates/compass/**"),
-    ],
+    remotePatterns: [new URL("https://d8n3.c1.e2-8.dev/swic/**")],
   },
 };
 

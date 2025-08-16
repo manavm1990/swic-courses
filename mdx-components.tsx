@@ -1,3 +1,4 @@
+import { Figure } from "@/components/figure-image";
 import { VideoYT } from "@/components/video-yt";
 import { transformerColorizedBrackets } from "@shikijs/colorized-brackets";
 import type { MDXComponents } from "mdx/types";
@@ -69,34 +70,27 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     h1: ({ children }) => {
       const id = generateId(getTextContent(children));
-
       return <h1 id={id}>{children}</h1>;
     },
     h2: ({ children }) => {
       const id = generateId(getTextContent(children));
-
       return <h2 id={id}>{children}</h2>;
     },
     h3: ({ children }) => {
       const id = generateId(getTextContent(children));
-
       return <h3 id={id}>{children}</h3>;
     },
     h4: ({ children }) => {
       const id = generateId(getTextContent(children));
-
       return <h4 id={id}>{children}</h4>;
     },
     img: ({ alt, ...props }) => {
       const schemePlaceholder = encodeURIComponent("{scheme}");
-
       let width, height;
-
       if (IMAGE_DIMENSION_REGEX.test(alt)) {
         [width, height] = alt.split("|")[1].split("x").map(Number);
         alt = alt.split("|")[0];
       }
-
       if (props.src.includes(schemePlaceholder))
         return (
           <>
@@ -118,20 +112,17 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
             />
           </>
         );
-
       return <Image {...props} alt={alt} width={width} height={height} />;
     },
     async pre(props) {
       const child = React.Children.only(props.children);
-
       if (!child) return null;
-
       const { children: code, className } = child.props;
       const lang = className ? className.replace("language-", "") : "";
-
       return <CodeBlock code={code} lang={lang} />;
     },
     VideoYT: VideoYT,
+    Figure: Figure,
     ...components,
   };
 }
