@@ -1,3 +1,4 @@
+import { VideoYT } from "@/components/video-yt";
 import { transformerColorizedBrackets } from "@shikijs/colorized-brackets";
 import type { MDXComponents } from "mdx/types";
 import Image from "next/image";
@@ -130,6 +131,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
       return <CodeBlock code={code} lang={lang} />;
     },
+    VideoYT: VideoYT,
     ...components,
   };
 }
