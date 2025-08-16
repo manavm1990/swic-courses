@@ -93,17 +93,10 @@ const lessons = [
         video: null,
       },
       {
-        id: "javascript-basics",
-        title: "JavaScript Basics",
+        id: "learn-md",
+        title: "Learn Markdown",
         description:
-          "Your first steps with JavaScript: variables, console.log, and running files with Node.js.",
-        video: null,
-      },
-      {
-        id: "practice-and-homework",
-        title: "Practice & Next Steps",
-        description:
-          "Homework guidelines and practice exercises: Git commits with text files and basic variable exercises.",
+          "Master the basics of Markdown syntax for formatting text documents.",
         video: null,
       },
     ],

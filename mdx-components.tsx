@@ -1,4 +1,4 @@
-import { Figure } from "@/components/figure-image";
+import { Figure } from "@/components/figure";
 import { VideoYT } from "@/components/video-yt";
 import { transformerColorizedBrackets } from "@shikijs/colorized-brackets";
 import type { MDXComponents } from "mdx/types";
