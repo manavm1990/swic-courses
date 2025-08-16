@@ -52,7 +52,7 @@ export async function getLessonContent(slug: string) {
 
 const lessons = [
   {
-    id: "week-1-fundamentals",
+    id: "fundamentals",
     title: "Environment & Fundamentals",
     description:
       "Get set up with the essential tools for web development and learn the fundamentals of programming mindset, version control, and JavaScript basics.",
