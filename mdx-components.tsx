@@ -70,19 +70,43 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     h1: ({ children }) => {
       const id = generateId(getTextContent(children));
-      return <h1 id={id}>{children}</h1>;
+      return (
+        <h1 id={id}>
+          <a href={`#${id}`} className="no-underline hover:underline">
+            {children}
+          </a>
+        </h1>
+      );
     },
     h2: ({ children }) => {
       const id = generateId(getTextContent(children));
-      return <h2 id={id}>{children}</h2>;
+      return (
+        <h2 id={id}>
+          <a href={`#${id}`} className="no-underline hover:underline">
+            {children}
+          </a>
+        </h2>
+      );
     },
     h3: ({ children }) => {
       const id = generateId(getTextContent(children));
-      return <h3 id={id}>{children}</h3>;
+      return (
+        <h3 id={id}>
+          <a href={`#${id}`} className="no-underline hover:underline">
+            {children}
+          </a>
+        </h3>
+      );
     },
     h4: ({ children }) => {
       const id = generateId(getTextContent(children));
-      return <h4 id={id}>{children}</h4>;
+      return (
+        <h4 id={id}>
+          <a href={`#${id}`} className="no-underline hover:underline">
+            {children}
+          </a>
+        </h4>
+      );
     },
     img: ({ alt, ...props }) => {
       const schemePlaceholder = encodeURIComponent("{scheme}");
