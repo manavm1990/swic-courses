@@ -11,7 +11,6 @@ export type Lesson = {
   description: string;
   video: {
     thumbnail: string;
-    duration: number;
     url: string;
   } | null;
 };
@@ -20,7 +19,13 @@ export function getModules() {
   return lessons;
 }
 
-export async function getLesson(slug: string) {
+export async function getLesson(slug: string): Promise<
+  | (Lesson & {
+      module: Module;
+      next: Lesson | null;
+    })
+  | null
+> {
   const lessonModule = lessons.find(({ lessons }) =>
     lessons.some(({ id }) => id === slug),
   );
@@ -110,4 +115,4 @@ const lessons = [
       },
     ],
   },
-] as const;
+] as const satisfies Module[];
