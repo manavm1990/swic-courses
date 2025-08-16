@@ -22,15 +22,14 @@ export default [
       lintCodeBlocks: true,
     }),
   },
-
-  // Optional: Rules for code blocks inside MDX
-  {
-    files: ["**/*.mdx"],
-    ...mdx.flatCodeBlocks,
-  },
-
   ...compat.extends("prettier"),
   {
-    ignores: ["**/node_modules/**", "**/.next/**", "**/out/**", "**/public/**"],
+    ignores: [
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/out/**",
+      "**/public/**",
+      "**/*.mdx",
+    ],
   },
 ];
