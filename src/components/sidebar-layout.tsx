@@ -171,10 +171,8 @@ export function SidebarLayout({
 }
 
 export function SidebarLayoutContent({
-  breadcrumbs,
   children,
 }: {
-  breadcrumbs: React.ReactNode;
   children: React.ReactNode;
 }) {
   const {
@@ -207,7 +205,6 @@ export function SidebarLayoutContent({
               <SidebarIcon className="shrink-0 stroke-gray-950 dark:stroke-white" />
             </IconButton>
           )}
-          <div className="min-w-0">{breadcrumbs}</div>
         </div>
       </div>
 

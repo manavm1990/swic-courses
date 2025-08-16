@@ -1,9 +1,3 @@
-import {
-  Breadcrumb,
-  BreadcrumbHome,
-  Breadcrumbs,
-  BreadcrumbSeparator,
-} from "@/components/breadcrumbs";
 import { ContentLink } from "@/components/content-link";
 import { Logo } from "@/components/logo";
 import { PageSection } from "@/components/page-section";
@@ -23,15 +17,7 @@ export default function Page() {
   const modules = getModules();
 
   return (
-    <SidebarLayoutContent
-      breadcrumbs={
-        <Breadcrumbs>
-          <BreadcrumbHome />
-          <BreadcrumbSeparator />
-          <Breadcrumb>Overview</Breadcrumb>
-        </Breadcrumbs>
-      }
-    >
+    <SidebarLayoutContent>
       <div className="relative mx-auto max-w-7xl">
         <div className="absolute -inset-x-2 top-0 -z-10 h-80 overflow-hidden rounded-t-2xl mask-b-from-60% sm:h-88 md:h-112 lg:-inset-x-4 lg:h-128">
           <div className="absolute inset-0 rounded-t-2xl outline-1 -outline-offset-1 outline-gray-950/10 dark:outline-white/10" />

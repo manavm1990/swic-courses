@@ -1,9 +1,3 @@
-import {
-  Breadcrumb,
-  BreadcrumbHome,
-  Breadcrumbs,
-  BreadcrumbSeparator,
-} from "@/components/breadcrumbs";
 import { NextPageLink } from "@/components/next-page-link";
 import { SidebarLayoutContent } from "@/components/sidebar-layout";
 import TableOfContents from "@/components/table-of-contents";
@@ -20,7 +14,7 @@ export async function generateMetadata({
   const lesson = await getLesson((await params).slug);
 
   return {
-    title: `${lesson?.title} - Compass`,
+    title: `${lesson?.title}`,
     description: lesson?.description,
   };
 }
@@ -38,19 +32,7 @@ export default async function Page({
   const Content = await getLessonContent(slug);
 
   return (
-    <SidebarLayoutContent
-      breadcrumbs={
-        <Breadcrumbs>
-          <BreadcrumbHome />
-          <BreadcrumbSeparator className="max-md:hidden" />
-          <Breadcrumb href={`/#${lesson.module.id}`} className="max-md:hidden">
-            {lesson.module.title}
-          </Breadcrumb>
-          <BreadcrumbSeparator />
-          <Breadcrumb>{lesson.title}</Breadcrumb>
-        </Breadcrumbs>
-      }
-    >
+    <SidebarLayoutContent>
       <div className="mx-auto max-w-7xl">
         <div className="-mx-2 sm:-mx-4">
           {lesson.video && (
