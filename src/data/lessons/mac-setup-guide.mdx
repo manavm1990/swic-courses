@@ -16,6 +16,7 @@ Setting up your development environment on Mac is streamlined thanks to Homebrew
 - **Visual Studio Code**: Your code editor
 - **Node.js LTS**: JavaScript runtime for running code outside browsers
 - **Git**: Version control system (may already be installed)
+- **Claude Desktop**: Arguably the best AI 🤖 tool for coding
 
 ## Core Concept Overview
 
@@ -54,6 +55,13 @@ Setting up your development environment on Mac is streamlined thanks to Homebrew
 - Version Control System (VCS) for tracking code changes over time
 - Essential for collaboration and professional development
 - May already be installed on your Mac
+
+**Claude Desktop:**
+
+- AI assistant optimized for developers and technical work
+- Includes a 'learning' mode
+- Desktop app offers better performance than web version for development tasks
+- Explains complex technical concepts clearly
 
 ### Understanding the Mac Terminal
 
@@ -155,7 +163,37 @@ Warp Terminal is an AI powered terminal that you will use over Mac Terminal excl
 
 **Note:** Henceforth, any references to the Terminal in this course are meant to indicate Warp Terminal.
 
-### Step 4: Install Visual Studio Code
+### Step 4: Install Claude Desktop
+
+1. **Install Claude Desktop via Homebrew**:
+   - In Warp Terminal, type: `brew install --cask claude`
+   - Press Enter
+   - Wait for download and installation (2-3 minutes)
+
+2. **Open Claude Desktop**:
+   - Press `Cmd + Space`, type "Claude", press Enter
+   - Claude Desktop should open with a login screen
+   - Sign in with your existing Claude account or create one
+
+3. **Verify installation**:
+   - Claude Desktop should appear in your Applications folder
+   - You can access it anytime via Spotlight search or Applications
+
+4. **Claude Pro (Course Requirement)**:
+
+   **Important**: Claude Pro is listed as a course requirement in lieu of textbook expenses.
+   - **About Claude Pro**:
+     - Enhanced performance and priority access during high-traffic periods
+     - Increased usage limits for complex tasks
+     - Access to latest Claude models
+
+   - **Getting Claude Pro**:
+     - Visit [claude.ai](https://claude.ai) in your browser
+     - Sign in to your account
+     - Navigate to your subscription settings
+     - Choose the Pro plan for $20/mo. Feel free to go above that, but Pro is plenty for this class and it gets expensive very quickly after that tier!
+
+### Step 5: Install Visual Studio Code
 
 1. **Install VS Code via Homebrew**:
    - In Warp Terminal, type: `brew install --cask visual-studio-code`
@@ -178,7 +216,7 @@ Warp Terminal is an AI powered terminal that you will use over Mac Terminal excl
    - Type: `code .` (the dot means "current folder")
    - VS Code should open and show your home folder in the sidebar
 
-### Step 5: Install Node.js
+### Step 6: Install Node.js
 
 1. **Install Node.js LTS via Homebrew**:
    - In Warp Terminal, type: `brew install node`
@@ -193,7 +231,7 @@ Warp Terminal is an AI powered terminal that you will use over Mac Terminal excl
    - You should see something like `11.5.1`
    - Both commands should show version numbers
 
-### Step 6: Install or Update Git
+### Step 7: Install or Update Git
 
 Git might already be installed on your Mac, but let's make sure you have the latest version.
 
@@ -213,7 +251,7 @@ Git might already be installed on your Mac, but let's make sure you have the lat
 
 We'll configure Git and set up your name and email in the Git Fundamentals lesson.
 
-### Step 7: Set Up Your Development directory
+### Step 8: Set Up Your Development directory
 
 **Note:** A directory is nothing but a folder on your computer. We will be using the terms interchangeably.
 
@@ -372,6 +410,7 @@ Check each item as you complete it:
 
 - [ ] Warp Terminal opens and shows a prompt
 - [ ] `brew --version` shows Homebrew version
+- [ ] Claude Desktop opens and you can sign in
 - [ ] VS Code opens and shows Welcome screen
 - [ ] `code .` opens current folder in VS Code
 - [ ] `node --version` shows Node.js version
@@ -406,6 +445,7 @@ If all commands work without errors, you're ready for the next lesson!
 
 - **Package manager** (Homebrew) for easy software installation
 - **Terminal** (Warp Terminal) for command line access
+- **AI assistant** (Claude Desktop) for coding help and learning
 - **Code editor** (VS Code) for writing and editing code
 - **JavaScript runtime** (Node.js) for running programs outside of a web browser
 - **Version control** (Git) for tracking changes
