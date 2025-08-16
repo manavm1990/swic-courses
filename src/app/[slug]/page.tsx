@@ -7,7 +7,7 @@ import {
 import { NextPageLink } from "@/components/next-page-link";
 import { SidebarLayoutContent } from "@/components/sidebar-layout";
 import TableOfContents from "@/components/table-of-contents";
-import { Video } from "@/components/video-player";
+import { Video } from "@/components/video";
 import { getLesson, getLessonContent } from "@/data/lessons";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -33,9 +33,7 @@ export default async function Page({
   const slug = (await params).slug;
   const lesson = await getLesson(slug);
 
-  if (!lesson) {
-    notFound();
-  }
+  if (!lesson) notFound();
 
   const Content = await getLessonContent(slug);
 
