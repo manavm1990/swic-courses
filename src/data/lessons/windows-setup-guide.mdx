@@ -1,527 +1,166 @@
-# Installing Software on Windows
+# Windows Setup Guide
 
-Step-by-step setup instructions for Windows users with direct downloads and installations.
+Complete setup instructions for Windows users: VS Code, Node.js, Git, and developer tools.
 
 ## Introduction
 
-### Welcome Windows Users!
+Setting up your development environment on Windows requires downloading and installing each tool individually. While Windows has package managers like Chocolatey and WinGet, we will use direct downloads for simplicity and consistency. This guide will establish a professional development environment identical to what you would use in industry.
 
-The following instructions will guide you through setting up your development environment on Windows. If you are on Mac, do not follow these instructions. Head over to the Mac Setup Guide instead. If you run into any issues, please reach out for assistance.
+The following instructions are specifically for Windows users. Mac users should refer to the Mac Setup Guide instead. The entire setup process takes approximately 45 minutes depending on your internet connection speed.
 
-Setting up your development environment on Windows is straightforward when you follow the right steps. This process will take about 45 minutes depending on your internet speed. By the end, you'll have a professional development environment ready for web development.
+**Note:** If you are an advanced Windows user and you know and understand how to use the 📦 managers such as Chocolatey or WinGet, you may choose to use them for installation.
 
-### Why These Tools?
+### What You'll Install Today
 
-Before we install anything, let's review what each tool does:
-
-- **Chrome** - The most popular browser for web development. Its Developer Tools help you inspect and debug websites.
-- **VS Code** - A powerful yet beginner-friendly code editor that helps you write code with features like syntax highlighting and error detection.
-- **Warp** - Modern, intelligent terminal with built-in AI help that gives you access to Git and command-line tools that are common in web development.
-- **GitHub CLI** - Connects your computer to GitHub, making it easy to share and backup your code.
-- **Node.js** - Lets you run JavaScript code on your computer instead of just in the browser.
-
-### Before We Start
-- Make sure you have administrator access on your computer
-- Close any antivirus software temporarily (it sometimes blocks downloads)
-- Have a stable internet connection
-- Set aside about 30-45 minutes for the complete setup
+- **Visual Studio Code**: Your primary code editor
+- **Node.js LTS**: JavaScript runtime for executing code outside browsers
+- **Git**: Version control system for tracking code changes
+- **Warp Terminal**: Modern terminal with integrated AI assistance
+- **GitHub CLI**: Command-line interface for GitHub operations
+- **Claude Desktop**: AI coding assistant optimized for developers
 
 ## Core Concept Overview
 
-### What Each Tool Does
+### Understanding Windows Development Tools
 
-**Visual Studio Code (VS Code)**:
-- Free code editor made by Microsoft
-- Syntax highlighting makes code easier to read
-- Built-in terminal and file explorer
-- Thousands of extensions to add functionality
+**Command Prompt and PowerShell** serve as Windows' built-in command-line interfaces. Command Prompt represents the legacy interface, while PowerShell offers more advanced capabilities. We will bootstrap with these tools initially, then transition to Warp Terminal for superior development experience.
 
-**Node.js**:
-- Lets you run JavaScript files directly on your computer
-- Comes with npm (Node Package Manager) for installing code libraries
-- LTS = Long Term Support (the stable version)
+**Visual Studio Code** functions as a powerful code editor created by Microsoft. It provides syntax highlighting for code readability, integrated terminal access, comprehensive file management, and thousands of extensions for added functionality. The editor serves as your primary workspace for writing and editing code.
 
-**Git**:
-- Version control system - like "track changes" for code
-- Lets you save snapshots of your work
-- Essential for collaborating with other developers
-- Required for most programming jobs
+**Node.js** enables JavaScript execution directly on your computer rather than exclusively in web browsers. It includes npm (Node Package Manager) for installing code libraries and packages. We install the LTS (Long Term Support) version for maximum stability.
 
-### Understanding File Paths on Windows
+**Git** provides version control capabilities essential for professional development. It tracks changes in your code over time, enables collaboration with other developers, and creates snapshots of your work for recovery purposes.
 
-Before we install anything, let's understand how Windows organizes files:
-- `C:\` is your main drive
-- `C:\Users\YourName\` is your user folder
-- `C:\Program Files\` is where most software gets installed
-- We'll create a `Code` folder in your user directory for projects
+### Windows File System Structure
 
-### Key Terms
-- **Installer**: A program that sets up other software
-- **PATH**: A list of folders Windows searches for programs
-- **Command Line/Terminal**: Text interface for running programs
-- **Administrator Rights**: Permission to install software system-wide
+Windows organizes files through a hierarchical structure starting with drive letters. Your main drive typically appears as `C:\`, with user files stored in `C:\Users\YourName\`. Most software installs to `C:\Program Files\` or `C:\Program Files (x86)\`. We will create a dedicated `Code` folder in your user directory for organizing all development projects.
+
+The PATH environment variable determines where Windows searches for executable programs. Many installation issues stem from incorrect PATH configuration, which installers typically handle automatically when you select the appropriate options.
 
 ## Hands-On Application
 
-### Step 1: Download Visual Studio Code
+### Step 1: Install Visual Studio Code
 
-1. **Open your web browser** (Chrome, Edge, Firefox - any will work)
+Navigate to the VS Code website at `https://code.visualstudio.com/` using any web browser. Click the prominent "Download for Windows" button to download the installer file, which will be named something like `VSCodeUserSetup-x64-1.XX.X.exe`.
 
-2. **Go to the VS Code website**:
-   - Type this address: `https://code.visualstudio.com/`
-   - You should see a big blue "Download for Windows" button
+Once downloaded, navigate to your Downloads folder and double-click the installer file. When Windows requests permission to make changes, click Yes. Proceed through the installation wizard, accepting the license agreement.
 
-3. **Download the installer**:
-   - Click the "Download for Windows" button
-   - This downloads a file called something like `VSCodeUserSetup-x64-1.XX.X.exe`
-   - Wait for the download to complete (usually 1-2 minutes)
+On the "Select Additional Tasks" screen, ensure you check all the following options: "Add 'Open with Code' action to Windows Explorer file context menu", "Add 'Open with Code' action to Windows Explorer directory context menu", "Register Code as an editor for supported file types", and "Add to PATH". These selections enable convenient VS Code access from Windows Explorer and the command line.
 
-4. **Run the installer**:
-   - Go to your Downloads folder
-   - Double-click the VS Code installer file
-   - If Windows asks "Do you want to allow this app to make changes?", click **Yes**
+Complete the installation by clicking Install and waiting for the process to finish. Launch VS Code to verify successful installation. You should see the Welcome screen with a dark theme by default.
 
-5. **Installation wizard**:
-   - Click **Next** through the license agreement
-   - **IMPORTANT**: On the "Select Additional Tasks" screen, check these boxes:
-     - ☑️ "Add 'Open with Code' action to Windows Explorer file context menu"
-     - ☑️ "Add 'Open with Code' action to Windows Explorer directory context menu"  
-     - ☑️ "Register Code as an editor for supported file types"
-     - ☑️ "Add to PATH"
-   - Click **Next**, then **Install**
-   - Wait for installation (2-3 minutes)
-   - Click **Finish** and let VS Code launch
+### Step 2: Install Node.js
 
-6. **Verify VS Code works**:
-   - You should see the VS Code welcome screen
-   - If not, look for VS Code in your Start menu and click it
+Visit the Node.js website at `https://nodejs.org/`. You will see two download options. Select the LTS version (marked as "Recommended for Most Users") rather than the Current version. This downloads a file named like `node-v20.XX.X-x64.msi`.
 
-**What to expect**: VS Code opens with a dark theme by default and shows a Welcome tab. Don't worry about configuring anything yet - we'll do that in the next lesson.
+Run the Node.js installer from your Downloads folder, granting Windows permission when requested. Progress through the installation wizard, accepting the license agreement and keeping the default installation location. On the Custom Setup screen, verify that "Add to PATH" is selected before proceeding.
 
-### Step 2: Download and Install Node.js
+After installation completes, verify Node.js works correctly. Press Windows key + R to open the Run dialog, type `cmd`, and press Enter. In the command prompt window, type `node --version` and press Enter. You should see a version number like `v20.11.0`. Similarly, verify npm by typing `npm --version`, which should display something like `10.2.4`.
 
-1. **Go to the Node.js website**:
-   - Type this address: `https://nodejs.org/`
-   - You'll see two big green download buttons
+### Step 3: Install Git
 
-2. **Choose the LTS version**:
-   - Click the button that says something like "20.XX.X LTS (Recommended for Most Users)"
-   - **DO NOT** click "Current" - we want the stable LTS version
-   - This downloads a file like `node-v20.XX.X-x64.msi`
+Download Git from `https://git-scm.com/` by clicking "Download for Windows". This downloads a file like `Git-2.XX.X-64-bit.exe`. Run the installer from your Downloads folder with administrator permission.
 
-3. **Run the Node.js installer**:
-   - Go to your Downloads folder
-   - Double-click the Node.js installer file
-   - Click **Yes** when Windows asks for permission
+The Git installer presents numerous configuration screens. Maintain the default selections for most options, with these specific choices: Select "Use Visual Studio Code as Git's default editor" when prompted for an editor choice. Choose "Override the default branch name" and set it to "main". Select "Git from the command line and 3rd party software" for PATH environment configuration. Keep "Checkout Windows-style, commit Unix-style line endings" for line ending conversions.
 
-4. **Installation wizard**:
-   - Click **Next** to start
-   - Accept the license agreement, click **Next**
-   - Keep the default installation location, click **Next**
-   - **IMPORTANT**: On "Custom Setup" screen, make sure "Add to PATH" is selected
-   - Click **Next** through any additional screens
-   - Click **Install** and wait (3-5 minutes)
-   - Click **Finish**
+After installation, verify Git functionality by opening a new command prompt and typing `git --version`. You should see output like `git version 2.42.0.windows.1`.
 
-5. **Verify Node.js works**:
-   - Press `Windows key + R` to open the Run dialog
-   - Type `cmd` and press Enter
-   - In the black command prompt window, type: `node --version`
-   - Press Enter
-   - You should see something like `v20.11.0`
-   - Type `npm --version` and press Enter
-   - You should see something like `10.2.4`
-   - If you see version numbers, success! Close the command prompt.
+### Step 4: Install Warp Terminal
 
-**Troubleshooting**: If you get "'node' is not recognized as an internal or external command", restart your computer and try again. The installer needs to refresh your system's PATH.
+Warp provides a modern terminal experience with integrated AI assistance. Download Warp from `https://www.warp.dev/` by clicking "Download for Windows". Run the installer with default options and launch Warp when installation completes.
 
-### Step 3: Download and Install Git
+Warp improves upon Command Prompt and PowerShell through its modern interface with tabs, intelligent autocompletion, built-in AI help accessible with the `#` symbol, and superior text rendering. Use Warp as your primary terminal moving forward.
 
-1. **Go to the Git website**:
-   - Type this address: `https://git-scm.com/`
-   - You should see a "Download" button or link
+**Important Note About PowerShell**: While PowerShell will technically work for most course commands, you will miss significant benefits by not using Warp Terminal. The integrated AI assistance in Warp helps you learn commands, debug errors, and understand what you are doing in real-time. PowerShell users will need to rely on external resources for the same support. Additionally, some course instructions may reference Warp-specific features that PowerShell lacks. We strongly recommend using Warp Terminal to ensure the best learning experience and to stay aligned with course materials.
 
-2. **Download Git for Windows**:
-   - Click "Download for Windows" 
-   - This should download a file like `Git-2.XX.X-64-bit.exe`
-   - Wait for download to complete
+#### Understanding Warp Better
 
-3. **Run the Git installer**:
-   - Go to Downloads folder
-   - Double-click the Git installer
-   - Click **Yes** when Windows asks for permission
+Warp is a modern terminal built for speed and efficiency. Key features include Command Palette for quick command access, Split Panes for multiple terminal sessions, Persistent Sessions that survive window closure, and Built-in Git Integration for repository management.
 
-4. **Installation wizard** (this one has many screens, but don't worry!):
-   - **Information screen**: Click **Next**
-   - **Select Destination**: Keep default location, click **Next**  
-   - **Select Components**: Keep all defaults checked, click **Next**
-   - **Select Start Menu**: Click **Next**
-   - **Default editor**: Choose "Use Visual Studio Code as Git's default editor", click **Next**
-   - **Default branch name**: Choose "Override... with 'main'", click **Next**
-   - **PATH environment**: Choose "Git from the command line and 3rd party software", click **Next**
-   - **HTTPS transport**: Choose "Use the OpenSSL library", click **Next**
-   - **Line ending conversions**: Choose "Checkout Windows-style...", click **Next**
-   - **Terminal emulator**: Choose "Use Windows' default console", click **Next**
-   - **Git pull behavior**: Choose "Default (fast-forward or merge)", click **Next**
-   - **Credential helper**: Choose "Git Credential Manager", click **Next**
-   - **Extra options**: Keep defaults, click **Next**
-   - **Experimental options**: Leave unchecked, click **Install**
-   - Wait for installation (2-3 minutes)
-   - Click **Finish**
+Warp offers Warp University and YouTube tutorials to help you master the terminal:
 
-5. **Verify Git works**:
-   - Press `Windows key + R`, type `cmd`, press Enter
-   - Type: `git --version`
-   - Press Enter  
-   - You should see something like `git version 2.42.0.windows.1`
-   - If you see a version number, success! Close command prompt.
+<VideoYT
+  url="https://youtu.be/O5E6ze3vqeo?si=TDD7f0t0XO1eNgDa"
+  title="Introduction to Warp"
+  caption="Learn the basics of Warp Terminal in this introductory video."
+/>
 
-### Step 4: Install Warp (Recommended)
+---
 
-Warp is a modern, intelligent terminal with built-in AI help that provides a much better command-line experience than the default Command Prompt:
+<VideoYT
+  url="https://youtu.be/fzb1JcZ0fFA?si=UM73XDb6_Eju6feJ"
+  title="Customize Warp"
+  caption="Customize whatever makes sense. You might skip over 2:25-4:05."
+/>
 
-1. **Go to the Warp website**:
-   - Type this address: `https://www.warp.dev/`
-   - You should see a "Download for Windows" button
+### Step 5: Install Claude Desktop
 
-2. **Download Warp**:
-   - Click "Download for Windows"
-   - This downloads a file like `Warp-x.x.x-x64.exe`
-   - Wait for download to complete
+While Claude Desktop does not have a traditional Windows installer like other tools, you can access Claude through the web interface at `https://claude.ai` or download the desktop app when available. Sign in with your existing Claude account or create one.
 
-3. **Install Warp**:
-   - Go to your Downloads folder
-   - Double-click the Warp installer
-   - Click **Yes** when Windows asks for permission
-   - Follow the installation wizard with default options
-   - Click **Install** and wait
-   - Click **Finish** and launch Warp
+Claude Pro is listed as a course requirement in lieu of textbook expenses. Visit claude.ai in your browser, sign in to your account, navigate to your subscription settings, and choose the Pro plan for $20 per month. Claude Pro provides enhanced performance, increased usage limits, and access to latest Claude models.
 
-**Why Warp is better**:
-- Built-in AI help - ask questions about commands with `#`
-- Modern interface with tabs and better text rendering
-- Intelligent autocompletion and suggestions
-- Much more pleasant to use than Command Prompt or PowerShell
+### Step 6: Install GitHub CLI
 
-### Step 5: Install GitHub CLI
+Visit `https://cli.github.com/` and click "Download for Windows" to download a file like `gh_2.XX.X_windows_amd64.msi`. Run the installer with administrator permission, maintaining all default options throughout the installation wizard.
 
-The GitHub CLI is a command-line tool that connects your computer to GitHub, making it easy to share and backup your code.
+Verify installation by opening Warp and typing `gh --version`. You should see output like `gh version 2.40.1`.
 
-1. **Download GitHub CLI**:
-   - Go to: `https://cli.github.com/`
-   - Click "Download for Windows"
-   - This downloads a file like `gh_2.XX.X_windows_amd64.msi`
+### Step 7: Authenticate GitHub CLI
 
-2. **Run the installer**:
-   - Go to your Downloads folder
-   - Double-click the GitHub CLI installer
-   - Click **Yes** when Windows asks for permission
-   - Click **Next** through the installation wizard
-   - Keep all default options
-   - Click **Install** and wait
-   - Click **Finish**
+Ensure you are logged into GitHub in your web browser before proceeding. In Warp, type `gh auth login` and press Enter. Follow the authentication prompts: Select "GitHub.com" for where you use GitHub. Choose "HTTPS" as your preferred protocol. Select "Yes" to authenticate Git with your GitHub credentials. Choose "Login with a web browser" for authentication method.
 
-3. **Verify GitHub CLI works**:
-   - Open Warp (or Command Prompt if you didn't install Warp)
-   - Type: `gh --version`
-   - Press Enter
-   - You should see something like `gh version 2.40.1`
-   - If you see a version number, success!
+Copy the one-time code displayed (like "7516-60CE"), press Enter to open GitHub in your browser, and paste the code when prompted. Click Authorize to complete authentication. Verify success by typing `gh auth status`, which should show "Logged in to github.com" with your username.
 
-### Step 6: Authenticate GitHub CLI
+### Step 8: Create Your Development Folder
 
-Before proceeding, make sure you are logged into GitHub in your web browser.
+Open File Explorer with Windows key + E. Navigate to your user folder by clicking "This PC", then your C: drive, then Users, then your username folder. Right-click in an empty area and select New → Folder. Name it exactly `Code` with a capital C.
 
-1. **Run the authentication command**:
-   - In Warp (or Command Prompt), type: `gh auth login`
-   - Press Enter
-
-2. **Follow the prompts**:
-   - **"Where do you use GitHub?"** → Select "GitHub.com"
-   - **"What is your preferred protocol?"** → Select "HTTPS"
-   - **"Authenticate Git with your GitHub credentials?"** → Select "Yes"
-   - **"How would you like to authenticate?"** → Select "Login with a web browser"
-
-3. **Complete web authentication**:
-   - You'll see something like: "First copy your one-time code: 7516-60CE"
-   - Copy that code
-   - Press Enter to open GitHub in your browser
-   - Paste the code when prompted
-   - Click "Authorize" in your browser
-
-4. **Verify authentication**:
-   - Back in your terminal, type: `gh auth status`
-   - Press Enter
-   - You should see "Logged in to github.com" with your username
-
-**Note**: You shouldn't have to run this authentication again unless something gets out of sync.
-
-### Step 7: Set Up Your Development Folder
-
-1. **Open File Explorer**:
-   - Press `Windows key + E` or click the folder icon in your taskbar
-
-2. **Navigate to your user folder**:
-   - Click on "This PC" in the left sidebar
-   - Double-click your C: drive
-   - Double-click the "Users" folder
-   - Double-click your username folder
-
-3. **Create a Code folder**:
-   - Right-click in an empty area
-   - Choose "New" → "Folder"
-   - Name it `Code` (exactly like that, with capital C)
-   - Press Enter
-
-4. **Test the setup**:
-   - Right-click on your new Code folder
-   - You should see "Open with Code" in the context menu
-   - Click it to open the folder in VS Code
-   - If VS Code opens with your Code folder in the sidebar, perfect!
-
-## Advanced Concepts & Comparisons
-
-### Windows vs. Mac Development Differences
-
-| Aspect | Windows | Mac | Why It Matters |
-|--------|---------|-----|----------------|
-| File paths | `C:\Users\Name\Code` | `/Users/Name/Code` | Different syntax in code |
-| Line endings | CRLF (`\r\n`) | LF (`\n`) | Git handles this automatically |
-| Case sensitivity | Not case sensitive | Case sensitive | File naming matters more on Mac |
-| Package managers | Chocolatey (optional) | Homebrew (essential) | Windows has more direct downloads |
-
-### Command Line Differences
-
-**Windows Command Prompt**:
-- `dir` (list files) vs. `ls` on Mac/Linux
-- `cd` (change directory) works the same
-- Backslashes in paths: `C:\Users\Name`
-
-**PowerShell** (newer Windows terminal):
-- More powerful than Command Prompt
-- Some commands work like Mac/Linux
-- Often blue background instead of black
-
-**Windows Terminal** (recommended upgrade):
-- Modern terminal with tabs
-- Better text rendering and colors
-- Supports multiple shell types
-
-### Optional: Install Windows Terminal
-
-Windows Terminal is a much better command-line experience:
-
-1. **Open Microsoft Store**:
-   - Press `Windows key`, type "Microsoft Store", press Enter
-
-2. **Search for Windows Terminal**:
-   - Type "Windows Terminal" in the search box
-   - Look for the one by Microsoft Corporation
-
-3. **Install**:
-   - Click "Get" or "Install"
-   - Wait for installation
-   - Click "Launch" when ready
-
-4. **Set as default** (optional):
-   - Right-click Start button → "Windows Terminal (Admin)"
-   - In Terminal, go to Settings (Ctrl + ,)
-   - Set "Default terminal application" to "Windows Terminal"
+Test the setup by right-clicking your Code folder. You should see "Open with Code" in the context menu. Click it to open the folder in VS Code. If VS Code opens with your Code folder visible in the sidebar, your setup is complete.
 
 ## Troubleshooting & Best Practices
 
-### Common Installation Issues
+### Common Installation Problems
 
-#### "Windows protected your PC" message
-- Click "More info"  
-- Click "Run anyway"
-- This is normal for downloaded installers
+When encountering "Windows protected your PC" messages, click "More info" then "Run anyway". This warning appears for downloaded installers as a security precaution but does not indicate actual danger for legitimate software.
 
-#### "Access Denied" or permission errors
-- Right-click the installer
-- Choose "Run as administrator"
-- Enter admin password if prompted
+Permission errors require running installers as administrator. Right-click the installer file and select "Run as administrator", entering your admin password if prompted.
 
-#### "'node' is not recognized" after installation
-- Restart your computer completely
-- The PATH environment variable needs to refresh
-- Try the `node --version` command again
+If commands are not recognized after installation, restart your computer completely to refresh the PATH environment variable. The system needs this restart to recognize newly installed command-line tools.
 
-#### Git installer seems stuck
-- The Git installer has many options - this is normal
-- Just follow our recommended choices above
-- It takes 5-10 minutes total with all the screens
+### Essential Windows Keyboard Shortcuts
 
-### Setting Up for Success
-
-#### Create a consistent folder structure:
-```
-C:\Users\YourName\
-├── Code\
-│   ├── SWIC-Course\        (this course's work)
-│   ├── Practice\           (random practice files)
-│   └── Projects\           (future projects)
-```
-
-#### Windows-specific tips:
-- **Pin VS Code to taskbar**: Right-click VS Code icon → "Pin to taskbar"
-- **Create desktop shortcut**: Right-click VS Code → "Send to" → "Desktop"
-- **File extensions**: Make sure Windows shows file extensions (View → File name extensions)
-- **Antivirus**: Add your Code folder to antivirus exclusions for faster performance
-
-### Essential Keyboard Shortcuts for Windows
-
-| Shortcut | Action | Why Important |
-|----------|--------|---------------|
-| `Windows + E` | Open File Explorer | Quick file navigation |
-| `Windows + R` | Open Run dialog | Fast way to open Command Prompt |
-| `Ctrl + Shift + P` | Command palette (in VS Code) | Access all VS Code features |
-| `Ctrl + `` ` `` | Open terminal (in VS Code) | Run code without leaving editor |
-
-### Backup and Recovery
-
-**What to backup**:
-- Your entire `C:\Users\YourName\Code` folder
-- VS Code settings (we'll cover this later)
-
-**How to backup**:
-- Copy Code folder to OneDrive, Google Drive, or external drive
-- Or use Git (which we'll learn next!) to sync to GitHub
+Master these keyboard shortcuts for efficient Windows development: Windows + E opens File Explorer for quick navigation. Windows + R opens the Run dialog for launching programs. Within VS Code, Ctrl + Shift + P opens the command palette for accessing all features, while Ctrl + backtick opens the integrated terminal.
 
 ## Wrap-Up & Assessment
 
-### Key Takeaways
+### HW: Installation Verification
 
-1. **VS Code is your main workspace** - where you'll write and edit code
-2. **Node.js lets you run JavaScript** outside of web browsers  
-3. **Git tracks changes** in your code over time
-4. **Proper setup saves hours** of frustration later
-5. **The Code folder** is your organized workspace for all programming work
-6. **Administrator rights** are needed for installing development tools
-
-### Installation Checklist
-
-Check off each item as you complete it:
-
-- [ ] VS Code installed and opens successfully
-- [ ] `node --version` shows a version number  
-- [ ] `npm --version` shows a version number
-- [ ] `git --version` shows a version number
-- [ ] Created `Code` folder in user directory
-- [ ] Can right-click Code folder and "Open with Code"
-- [ ] VS Code opens the Code folder correctly
-
-### Verifying Your Installation
-
-Let's make sure everything is working correctly. Open Windows Terminal (or Command Prompt) and run these commands:
+Open Warp Terminal and run these verification commands to confirm successful installation:
 
 ```bash
-# Check Git
+# Check each tool's version
 git --version
-
-# Check VS Code
 code --version
-
-# Check Node.js
 node --version
-
-# Check npm (comes with Node.js)
 npm --version
-
-# Check GitHub CLI and authentication
 gh --version
 gh auth status
 ```
 
-**Important note about spacing**: Notice the use of spaces between commands and flags (like `git --version`). These delimiter spaces are important. Without them, the terminal cannot tell the difference between the command and the flags.
+Each command should return a version number or status confirmation. The spacing between commands and flags (like `git --version`) is critical. These delimiter spaces allow the terminal to distinguish between the command and its options.
 
-### Common Problems and Solutions
+Submit screenshots or a video (no narration needed) to show the output of each command. Ensure the terminal window is large enough to read the text clearly. If any command fails, troubleshoot the installation steps or refer to the troubleshooting section below.
 
-#### Command Not Found
-- **Problem**: Windows Terminal doesn't recognize a command
-- **Solution**: Close and reopen Windows Terminal, then try again
-- **Still not working?** Make sure you completed each installation step
+### Troubleshooting Quick Reference
 
-#### Permission Denied  
-- **Problem**: Windows blocks the program from running
-- **Solution**: Right-click Windows Terminal and select "Run as administrator"
+If VS Code will not open, check your Start menu for "Visual Studio Code" or try running the installer again as administrator. For Node commands not found, restart your computer to refresh PATH, then reinstall Node.js if necessary, ensuring "Add to PATH" is selected. Git recognition issues may require checking for Git Bash in your Start menu or restarting your computer. If you cannot create the Code folder, verify you are in your user folder with appropriate permissions.
 
-#### GitHub Authentication Issues
-- **Problem**: `gh auth status` shows "not logged in"
-- **Solution**: Make sure you're logged into GitHub in your browser first, then run `gh auth login` again
+### What You've Accomplished
 
-#### Need help? 
-Reach out with:
-- What you were trying to do
-- What error message you saw (screenshot helps!)
-- What you've tried so far
-
-### Troubleshooting Assessment
-
-**What would you do if...**
-
-1. **VS Code won't open**: 
-   - Check Start menu for "Visual Studio Code"
-   - Try running installer again as administrator
-
-2. **Node command not found**:
-   - Restart computer to refresh PATH
-   - Reinstall Node.js, ensuring "Add to PATH" is checked
-
-3. **Git not recognized**:
-   - Check if Git Bash is installed (should be in Start menu)
-   - Restart computer and try again
-
-4. **Can't create Code folder**:
-   - Make sure you're in your user folder, not system folders
-   - Check you have permission to create folders there
+You have successfully established a professional Windows development environment including Visual Studio Code for code editing, Node.js for JavaScript execution, Git for version control, Warp Terminal for enhanced command-line access, GitHub CLI for repository management, and an organized folder structure for your projects. This setup matches what professional developers use at technology companies worldwide.
 
 ### Next Steps
 
-Now that you have your development environment set up, you're ready to:
+With your development environment ready, you will proceed to configure VS Code with essential extensions, learn Git fundamentals for version control, and write your first JavaScript programs. This foundation enables you to begin serious programming work immediately.
 
-1. **Configure VS Code** with essential extensions (next lesson)
-2. **Learn Git basics** for tracking your work
-3. **Write your first JavaScript** code
-
-**Congratulations!** You've successfully set up a professional development environment on Windows. This same setup is used by thousands of professional developers.
-
-## Homework Assignment - Setup Verification
-
-To verify that everything is installed correctly, complete this assignment:
-
-### Instructions
-
-1. **Open Windows Terminal** (or Command Prompt if you didn't install Windows Terminal)
-
-2. **Run these verification commands**:
-   - `git --version` (should show Git version)
-   - `code --version` (should show VS Code version) 
-   - `node --version` (should show Node.js version)
-   - `npm --version` (should show npm version)
-   - `gh --version` (should show GitHub CLI version)
-   - `gh auth status` (should show you're logged in to GitHub)
-
-3. **Take screenshots**:
-   - Take screenshots of each command result, or just one screenshot showing all of them
-   - **On Windows**: You can take a screenshot of a selected area using `Win + Shift + S`, or use the Snipping Tool for more screenshot options
-
-4. **Submit your screenshots** to verify your setup is working correctly
-
-### What This Proves
-
-This assignment demonstrates that:
-- All development tools are properly installed
-- Your PATH environment variables are configured correctly  
-- GitHub CLI is connected to your account
-- You can use the command line interface
-- Your development environment is ready for coding
-
-### Additional Resources
-
-- **VS Code Documentation**: https://code.visualstudio.com/docs
-- **Node.js Getting Started**: https://nodejs.org/en/learn
-- **Git Documentation**: https://git-scm.com/doc
-- **Windows Terminal Documentation**: https://docs.microsoft.com/en-us/windows/terminal/
-
-*Ready to configure VS Code with essential extensions? Let's move on to the VS Code Configuration lesson.*
+_Ready to configure VS Code with essential extensions? Let's move on to the VS Code Configuration lesson._
