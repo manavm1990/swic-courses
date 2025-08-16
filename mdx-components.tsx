@@ -34,7 +34,7 @@ let highlighter: Highlighter | null = null;
 async function getHighlighter() {
   if (!highlighter)
     highlighter = await createHighlighter({
-      langs: ["javascript", "css", "html", "typescript"],
+      langs: ["javascript", "css", "html", "bash", "json", "markdown"],
       themes: [theme],
     });
 
