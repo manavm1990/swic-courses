@@ -145,7 +145,7 @@ Homebrew will make installing everything else much easier.
 
 ### Step 3: Install Warp Terminal
 
-Warp Terminal is an AI powered terminal that you will use over Mac Terminal exclusively. It will make your command line experience more efficient and user-friendly, naturally.
+[Warp Terminal](https://app.warp.dev/referral/2KPYGE) is an AI powered terminal that you will use over Mac Terminal exclusively. It will make your command line experience more efficient and user-friendly, naturally.
 
 1. **Install Warp Terminal via Homebrew**:
    - In Terminal, type: `brew install --cask warp`
@@ -156,8 +156,6 @@ Warp Terminal is an AI powered terminal that you will use over Mac Terminal excl
    - Press `Cmd + Space`, type "Warp", press Enter
    - Warp Terminal should open with a Welcome screen
    - You may be prompted to sign in with your GitHub account for additional features. You should do this. Later in the lesson, we'll see how to customize some settings.
-
-{/* TODO: Add information ℹ️ connecting with GitHub account... */}
 
 3. **Close the Standard Terminal**:
    - Make sure to close the standard Mac Terminal application to avoid confusion.
@@ -439,7 +437,23 @@ git --version
 code .
 ```
 
-If all commands work without errors, you're ready for the next lesson!
+### HW: Installation Verification
+
+Open Warp Terminal and run these verification commands to confirm successful installation:
+
+```bash
+# Check each tool's version
+git --version
+code --version
+node --version
+npm --version
+gh --version
+gh auth status
+```
+
+Each command should return a version number or status confirmation. The spacing between commands and flags (like `git --version`) is critical. These delimiter spaces allow the terminal to distinguish between the command and its options.
+
+Submit screenshots or a video (no narration needed) to show the output of each command. Ensure the terminal window is large enough to read the text clearly. If any command fails, troubleshoot the installation steps or refer to the troubleshooting section below.
 
 ### Understanding What You've Built
 
