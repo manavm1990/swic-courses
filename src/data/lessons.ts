@@ -99,6 +99,13 @@ const lessons = [
           "Master the basics of Markdown syntax for formatting text documents.",
         video: null,
       },
+      {
+        id: "how-computers-and-web-work",
+        title: "How Computers and the Web Work",
+        description:
+          "Understanding the foundational concepts of how computers process information and how the web functions under the hood.",
+        video: null,
+      },
     ],
   },
 ] as const satisfies Module[];
