@@ -52,10 +52,10 @@ export async function getLessonContent(slug: string) {
 
 const lessons = [
   {
-    id: "fundamentals",
-    title: "Environment & Fundamentals",
+    id: "environment-setup",
+    title: "Development Environment & Setup",
     description:
-      "Get set up with the essential tools for web development and learn the fundamentals of programming mindset, version control, and JavaScript basics.",
+      "Get your development environment configured and learn essential tools for professional web development.",
     lessons: [
       {
         id: "how-to-learn-programming",
@@ -99,6 +99,14 @@ const lessons = [
           "Master the basics of Markdown syntax for formatting text documents.",
         video: null,
       },
+    ],
+  },
+  {
+    id: "web-fundamentals",
+    title: "Web Development Fundamentals",
+    description:
+      "Understanding how the web works and introduction to programming concepts that will guide your development journey.",
+    lessons: [
       {
         id: "how-computers-and-web-work",
         title: "How Computers and the Web Work",
