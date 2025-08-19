@@ -106,6 +106,20 @@ const lessons = [
           "Understanding the foundational concepts of how computers process information and how the web functions under the hood.",
         video: null,
       },
+      {
+        id: "javascript-introduction",
+        title: "What is JavaScript?",
+        description:
+          "Introduction to JavaScript: what it is, what it can do, and how it fits into modern web development.",
+        video: null,
+      },
+      {
+        id: "ai-reality-check",
+        title: "AI Reality Check: Beyond the Hype",
+        description:
+          "A balanced look at AI's role in development: separating hype from reality, addressing concerns, and using AI as a learning tool.",
+        video: null,
+      },
     ],
   },
 ] as const satisfies Module[];

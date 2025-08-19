@@ -63,7 +63,12 @@ async function CodeBlock({ code, lang }: { code: string; lang: string }) {
     ],
   });
 
-  return <div dangerouslySetInnerHTML={{ __html: out }} />;
+  return (
+    <div
+      className="max-w-full overflow-x-auto rounded-lg bg-gray-100 p-3 sm:p-4 dark:bg-gray-800"
+      dangerouslySetInnerHTML={{ __html: out }}
+    />
+  );
 }
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -144,6 +149,18 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       const { children: code, className } = child.props;
       const lang = className ? className.replace("language-", "") : "";
       return <CodeBlock code={code} lang={lang} />;
+    },
+    code: ({ children, className }) => {
+      // If it's inside a pre tag, let pre handle it
+      if (className?.startsWith("language-"))
+        return <code className={className}>{children}</code>;
+
+      // Otherwise, it's inline code
+      return (
+        <code className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm break-words dark:bg-gray-800">
+          {children}
+        </code>
+      );
     },
     VideoYT: VideoYT,
     Figure: Figure,

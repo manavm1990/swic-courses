@@ -27,17 +27,21 @@ We often hear things about 0s and 1s, or binary. But what does that mean? And ho
 
 The following video from Todd McLeod explains the concept of binary in a fun and engaging way.
 
-**Note**: The video mentions the Go programming language, but the concepts are universal. And yes, Go is a fantastic language - maybe not the "best programming language" as Todd suggests, but it is a great one.
-
-[TODO: Embed Todd McLeod's binary/computer fundamentals video here]
+<VideoYT
+  url="https://youtu.be/mOu1N7uTXyg?si=GlWjwqokCMNmMU5z"
+  title="How Computers Work"
+  caption="The video mentions the Go programming language, but the concepts are universal."
+/>
 
 ### From Binary to Human Language: UTF-8 and Unicode
 
 Now that you understand how computers work with binary (1s and 0s), you might wonder: how do computers represent the letters, symbols, and characters we use every day? How does a computer know that a certain pattern of 1s and 0s represents the letter "A" or an emoji?
 
-This fascinating video from Computerphile explains how human language translates to machine language through character encoding, specifically UTF-8 and the Unicode standard:
-
-**Video**: [Characters, Symbols and the Unicode Miracle - Computerphile](https://www.youtube.com/watch?v=MijmeoH9LT4)
+<VideoYT
+  url="https://www.youtube.com/watch?v=MijmeoH9LT4"
+  title="Characters, Symbols and the Unicode Miracle - Computerphile"
+  caption="This video explains how character encoding works, focusing on UTF-8 and Unicode."
+/>
 
 **Key concepts you'll learn**:
 
@@ -47,23 +51,29 @@ This fascinating video from Computerphile explains how human language translates
 - How emojis and international characters work
 - The connection between character encoding and web development
 
-**Why this matters for web developers**: Every webpage you create uses UTF-8 encoding to display text correctly across different languages and devices. Understanding this helps you avoid common character encoding issues and appreciate the complexity behind something as simple as typing text on a webpage.
+**Why this matters for web developers**: Maybe it doesn't on a day to day basis, but hopefully you have an appreciation for the complexity behind something as simple as typing text on a webpage. Understanding this helps you avoid common character encoding issues.
 
 **Fun Fact:** UTF-8 even includes constructed languages like Klingon from Star Trek! This universal approach to character encoding - representing all forms of human communication, real or imagined - is actually foundational to modern AI translation systems. When you use Google Translate or ChatGPT to translate between languages, those systems rely on the same Unicode standard that makes Klingon text possible. In a way, UTF-8's inclusivity is an early step toward the "universal translators" we see in science fiction!
 
 ### What Programming Really Is
 
-Before we dive deeper into JavaScript, it's worth understanding what programming actually means. This excellent introduction from Eloquent JavaScript provides crucial context:
+Before we dive deeper into JavaScript, it's worth understanding what programming actually means. This excellent introduction from [Eloquent JavaScript](https://eloquentjavascript.net/) provides crucial context:
 
 [Introduction: What is Programming?](https://eloquentjavascript.net/00_intro.html)
 
-**Key takeaway**: Programming is fundamentally about instructing computers to solve problems, step by step, in a language they can understand.
+> Because computers are dumb, pedantic beasts, programming is fundamentally tedious and frustrating.
+>
+> <cite>Marijn Haverbeke</cite>
+
+**Key takeaway**: Programming is fundamentally about instructing computers to solve problems, step by step, in a language they can understand. It can be frustrating and requires patience and persistence, just like most things worth doing well.
 
 ### Terminal Skills Reinforcement
 
-Since you'll be using the terminal regularly in your development work, let's reinforce and expand your command line skills with this comprehensive guide:
+Since you'll be using the terminal regularly in your development work, let's reinforce and expand your command line skills by working through these 3️⃣ sections of Mozilla's documentation 📝:
 
-[Basic Built-in Terminal Commands](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Environment_setup/Command_line#basic_built-in_terminal_commands)
+1. [Basic Built-in Terminal Commands](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Environment_setup/Command_line#basic_built-in_terminal_commands)
+1. After that section, you can skip down to [Connecting Commands Together With Pipes.](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Environment_setup/Command_line#connecting_commands_together_with_pipes)
+1. Continue on with [A Slightly More Complex Example.](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Environment_setup/Command_line#a_slightly_more_complex_example)
 
 **Focus areas**: File navigation, directory creation, file manipulation, and understanding file paths.
 
@@ -83,7 +93,9 @@ Finally, let's dive into the specific process of how browsers take your HTML, CS
 
 ## Hands-On Application
 
-### Connecting the Dots Exercise
+### HW: Connecting the Dots Exercise
+
+**Note:** Now that you have learned about MD, I will no longer accept MS Word documents for your assignments. You are to use GitHub gists with a shared link 🔗, or you can use Dillinger or any thing else that renders Markdown and that you can share as a link 🔗. **This applies to all documents, reflections or otherwise, going forward.**
 
 After reviewing all the resources above, complete this progression exercise:
 
@@ -91,23 +103,17 @@ After reviewing all the resources above, complete this progression exercise:
    - Write a paragraph about what surprised you most in Todd's video
    - Explain binary in your own words (pretend you're teaching a friend)
 
-2. **Character Encoding Exploration**:
-   - After watching the Computerphile video, explain the difference between ASCII and UTF-8
-   - Find a webpage with international characters or emojis and explain how UTF-8 makes this possible
-   - Try typing some emojis in your text editor and think about how they're being stored as numbers
-
-3. **Terminal Practice**:
-   - Try 5 new commands from the MDN terminal guide
-   - Create a folder structure for organizing your learning notes
-   - Document the commands you found most useful
-
-4. **Web Journey Mapping**:
-   - Draw or describe (in text) the complete journey of what happens when you type "google.com" in your browser
+2. **Terminal Practice**:
+   - Try 5 new commands or variations of the examples from the MDN terminal guide. In other words, make up your own examples and/or use Warp to learn 5 additional even more advanced commands.
+   - Take a screenshot of what you did and/or make a brief video of what you did and what you learned from it.
+3. **Web Journey Mapping**:
+   - Draw or describe (in text) the complete journey of what happens when you type "google.com" in your browser. If you do a drawing, you can just snap it on your phone and upload it to BrightSpace.
    - Include: DNS lookup, server communication, file transfer, browser parsing, rendering
+   - For this one, you are to take a 'selfie style video,' as if you are answering a question in an interview. You should not be nor should you sound like you are just reading a script from the screen, so use your mobile device for this. Preferably, your video should be submitted as a link that I can open up, however you want to share it (e.g. private YouTube link 🔗). I should not have to download a whole video file to grade it.
 
-5. **Personal Connection**:
+4. **Personal Connection**:
    - Write about how this knowledge changes your perspective on the websites you've built
-   - What questions do you now have about web development?
+   - What questions do you now have about web development that you would like answered at some point in this course?
 
 ## Advanced Concepts & Comparisons
 
@@ -144,58 +150,10 @@ Use these analogies to remember key concepts:
 - **Web requests**: Like mailing a letter and getting a response
 - **Browser rendering**: Like following assembly instructions to build furniture
 
-## Wrap-Up & Assessment
-
-### Key Takeaways
-
-1. **Computers process everything as binary** - 1s and 0s represent all information
-2. **Programming is problem-solving** - breaking complex tasks into simple instructions
-3. **The web involves multiple systems** - clients, servers, networks working together
-4. **Browsers are sophisticated programs** - parsing, rendering, and executing code
-5. **Understanding fundamentals helps** - knowing how things work makes you a better developer
-
-### HW: Foundation Knowledge Assessment
-
-**Part 1: Reflection & Documentation**
-
-- Complete the "Connecting the Dots Exercise" above
-- Document your learning in a new markdown file: `computer-web-fundamentals.md`
-- Commit your work with meaningful Git messages
-
-**Part 2: Terminal Mastery**
-
-- Practice the 5 new terminal commands you learned
-- Create a "cheat sheet" of your most-used terminal commands
-- Organize your SWIC course folder using only terminal commands
-
-**Part 3: Concept Integration**
-
-- Write a brief explanation (2-3 paragraphs) of how this lesson connects to:
-  - Your previous HTML/CSS work
-  - Your upcoming JavaScript learning
-  - Your long-term web development goals
-
-**Part 4: Curiosity Questions**
-
-- List 3 questions this lesson raised for you about web development
-- Research one of these questions and write a brief summary of what you found
-
-### Success Criteria
-
-- [ ] Watched and reflected on Todd McLeod's binary video
-- [ ] Watched and explored the Computerphile UTF-8/Unicode video
-- [ ] Completed character encoding exploration exercises
-- [ ] Read the Eloquent JavaScript introduction
-- [ ] Completed terminal command practice
-- [ ] Read both MDN web fundamentals articles
-- [ ] Created comprehensive learning documentation
-- [ ] Made meaningful Git commits with proper messages
-- [ ] Connected new knowledge to previous and future learning
-
 ### Next Steps
 
 In our next lesson, we'll start applying this foundational knowledge by diving into JavaScript fundamentals - variables, data types, and basic operations. You'll see how the binary concepts Todd explained translate into the code you write!
 
 ---
 
-_Remember: Every professional developer started by learning these fundamentals. Understanding how computers and the web work gives you the context to become not just a coder, but a true developer who understands the systems they're building on._
+_Remember: Every professional developer started (or should have started) by learning these fundamentals. Understanding how computers and the web work gives you the context to become not just a coder, but a true developer who understands something about the systems they're building on._
