@@ -151,4 +151,40 @@
       content: "`";
     }
   }
+
+  blockquote {
+    position: relative;
+    font-style: italic;
+    color: var(--color-gray-600);
+    border-left: 3px solid var(--color-gray-300);
+    padding-left: --spacing(6);
+    margin-left: 0;
+    margin-right: 0;
+
+    @variant dark {
+      color: var(--color-gray-500);
+      border-left-color: var(--color-gray-700);
+    }
+
+    p {
+      margin-top: 0;
+    }
+
+    cite {
+      display: block;
+      font-style: normal;
+      font-size: var(--text-xs);
+      line-height: var(--text-xs--line-height);
+      color: var(--color-gray-500);
+      margin-top: --spacing(3);
+
+      @variant dark {
+        color: var(--color-gray-600);
+      }
+
+      &::before {
+        content: "— ";
+      }
+    }
+  }
 }
