@@ -337,11 +337,18 @@ Let's see how Git saves you from disaster:
    git commit -m "Add important documentation"
    ```
 
-3. **"Accidentally" delete content** - edit the file to just say:
+   If you see "nothing to commit," make sure you saved the file first!
+
+3. **"Accidentally" mess up the file** - edit `important.txt` to just say:
 
    ```
    oops
    ```
+
+   **⚠️ IMPORTANT: Save the file!**
+   - In VS Code: Press `Cmd+S` (Mac) or `Ctrl+S` (Windows)
+   - Or use File → Save from the menu
+   - You'll know it's saved when the white dot next to the filename disappears
 
 4. **See what you broke**:
 
@@ -349,26 +356,36 @@ Let's see how Git saves you from disaster:
    git diff
    ```
 
-   Git shows exactly what changed!
+   You should see red lines (deleted text) and green lines (added text) showing your changes.
 
-5. **Restore the file**:
+   **Not seeing anything?** Make sure you:
+   - Saved the file after changing it
+   - Are in the right directory (`pwd` to check)
+   - Actually changed the content (not just opened and closed the file)
+
+5. **Restore the file** (this is the magic!):
 
    ```bash
    git checkout -- important.txt
    ```
 
-6. **Verify it's back**:
+   This command restores the file to its last committed state.
+
+6. **Verify it's restored**:
 
    ```bash
-   cat important.txt    # Mac/Linux
-   type important.txt   # Windows
+   cat important.txt
    ```
 
-   Here, we are using another terminal command to display the contents of the file.
+   You should see your original three lines of text back!
 
 You just saved yourself from a fake disaster! Now imagine this was 100 lines of carefully crafted code that took you three hours to write. Without Git, you'd be frantically trying to remember what you typed. With Git, recovery takes seconds. This scenario happens more often than you'd think - maybe you delete the wrong section, your cat walks across your keyboard, or you accidentally paste something over your work.
 
-## Troubleshooting & Best Practices
+### Troubleshooting This Exercise
+
+- **`git diff` shows nothing**: You need to save the file after editing! The file must be saved for Git to see changes.
+- **`git checkout` didn't restore anything**: Make sure the file was committed first (step 2) and that you saved your "oops" change.
+- **Can't see file contents**: Use `cat important.txt` in Warp Terminal to display the file contents. If it says "No such file or directory," double-check your spelling and current directory.
 
 ### Terminal Tips for Git with Warp
 
