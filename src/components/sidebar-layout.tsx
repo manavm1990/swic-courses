@@ -60,6 +60,17 @@ function CourseNavigation({
     <div className={clsx(className, "space-y-8")}>
       {modules.map((module) => (
         <div key={module.id}>
+          {/* Course 277 divider before JavaScript Fundamentals Review */}
+          {module.id === "js-fundamentals-review" && (
+            <div className="my-8 flex items-center gap-3">
+              <div className="h-px flex-1 bg-gray-300 dark:bg-gray-600" />
+              <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                CIS 277
+              </span>
+              <div className="h-px flex-1 bg-gray-300 dark:bg-gray-600" />
+            </div>
+          )}
+
           <h2 className="text-base/7 font-semibold text-pretty text-gray-950 sm:text-sm/6 dark:text-white">
             {module.title}
           </h2>
