@@ -1,0 +1,448 @@
+# Variables, Data Types, and Operators
+
+Review of JavaScript variables (var, let, const), primitive types, operators, and type coercion with a focus on modern best practices.
+
+## Introduction
+
+### Why This Review Matters
+
+You've written JavaScript before. You know `let x = 5` creates a variable. But after months away, it's the subtle details that slip - the difference between `null` and `undefined`, why `[] == false` is true, or why modifying an object affects all variables pointing to it.
+
+This lesson refreshes the fundamentals that trip up even experienced developers. We'll use browser DevTools experiments to rediscover JavaScript's quirks before you encounter them in frameworks like React.
+
+### What We'll Cover
+
+- Modern variable declarations and why `const` is your default
+- All seven primitive types and when you'll encounter each
+- Operators beyond basic math - the ones that actually matter
+- Type coercion - JavaScript's most surprising "feature"
+- Reference vs value - the root cause of many framework state bugs
+
+Open your browser's Developer Console now (F12 → Console tab). Everything we do today happens there.
+
+## Core Concept Overview
+
+### Variable Declarations: The Modern Trinity
+
+JavaScript has three ways to declare variables, but only two matter in modern code:
+
+```javascript
+// Type these in your console
+const permanent = "Can't reassign this";
+let changeable = "Can reassign this";
+var ancient = "Never use this"; // Seriously, never
+
+// Try to reassign each (you'll get an error for const)
+permanent = "Trying to change"; // TypeError!
+changeable = "This works"; // Fine
+ancient = "This works too"; // Works but has weird scoping
+```
+
+**The Rule**: Default to `const`. Only use `let` when you must reassign the actual value (not modify contents). Never use `var`.
+
+### The Five Primitive Types You'll Actually Use
+
+Primitives are JavaScript's atomic values - they can't be broken down further. Type these experiments to see each one:
+
+```javascript
+// The Five That Matter
+const text = "Hello"; // string
+const count = 42; // number
+const isActive = true; // boolean
+const empty = null; // null (intentional absence)
+let notYetSet; // undefined (unintentional absence)
+
+// Check their types
+console.log(typeof text); // "string"
+console.log(typeof count); // "number"
+console.log(typeof isActive); // "boolean"
+console.log(typeof empty); // "object" (JavaScript's oldest bug!)
+console.log(typeof notYetSet); // "undefined"
+```
+
+Note: JavaScript has two other primitive types (Symbol and BigInt) but you'll rarely encounter them in web development.
+
+### Objects: Everything Else
+
+If it's not a primitive, it's an object. This includes arrays, functions, dates, and actual objects:
+
+```javascript
+// All of these are objects
+const user = { name: "Alex", age: 30 }; // object
+const items = [1, 2, 3]; // array (object)
+const greet = function () {
+  return "Hi";
+}; // function (object)
+const today = new Date(); // date (object)
+
+// Proof they're all objects
+console.log(typeof user); // "object"
+console.log(typeof items); // "object" (arrays are objects!)
+console.log(typeof greet); // "function" (special case, but still object)
+console.log(typeof today); // "object"
+
+// Better way to check arrays
+console.log(Array.isArray(items)); // true
+console.log(Array.isArray(user)); // false
+```
+
+### Operators: Beyond Basic Math
+
+#### Arithmetic Operators
+
+```javascript
+// The basics you know
+10 + 5; // 15 - addition
+10 - 5; // 5  - subtraction
+10 * 5; // 50 - multiplication
+10 / 5; // 2  - division
+10 % 3; // 1  - remainder (super useful for cycling)
+10 ** 2; // 100 - exponentiation (power)
+
+// The shortcuts (only work with let, not const)
+let score = 10;
+score++; // 11 (increment)
+score--; // 10 (decrement)
+score += 5; // 15 (add and assign)
+score *= 2; // 30 (multiply and assign)
+```
+
+#### Comparison Operators
+
+```javascript
+// Always use strict equality
+5 === 5; // true  - same value and type
+5 === "5"; // false - different types
+5 !== "5"; // true  - not strictly equal
+
+// Never use loose equality (causes bugs)
+5 == "5"; // true - JavaScript converts types (bad!)
+0 == false; // true - confusing type coercion
+"" == false; // true - even more confusing
+
+// Ordering comparisons
+10 > 5; // true
+10 >= 10; // true
+5 < 10; // true
+5 <= 5; // true
+```
+
+#### Logical Operators
+
+```javascript
+// AND - both must be true
+true && true; // true
+true && false; // false
+
+// OR - at least one must be true
+true || false; // true
+false || false; // false
+
+// NOT - flips the boolean
+!true; // false
+!false; // true
+!!5; // true (double NOT converts to boolean)
+!!0; // false
+```
+
+## Hands-On Application
+
+### Experiment 1: The Reference Trap
+
+This is why state management in frameworks can be tricky. Type each line separately and predict the output:
+
+```javascript
+// Primitives: Each variable gets its own copy
+let num1 = 5;
+let num2 = num1; // num2 gets a COPY of 5
+num2 = 10;
+console.log(num1); // Still 5 - unchanged!
+console.log(num2); // 10
+
+// Objects: Variables share the same reference
+const obj1 = { value: 5 };
+const obj2 = obj1; // obj2 points to SAME object
+obj2.value = 10;
+console.log(obj1.value); // 10 - changed!
+console.log(obj1 === obj2); // true - same object
+
+// Arrays do this too
+const arr1 = [1, 2, 3];
+const arr2 = arr1;
+arr2.push(4);
+console.log(arr1); // [1, 2, 3, 4] - changed!
+console.log(arr1 === arr2); // true - same array
+```
+
+### Experiment 2: Type Coercion Chaos
+
+JavaScript tries to be "helpful" by converting types automatically. This causes bugs:
+
+```javascript
+// Addition with strings concatenates
+"5" + 3         // "53" - converts 3 to string
+5 + "3"         // "53" - converts 5 to string
+"5" + "3"       // "53" - both strings
+
+// Other operators convert to numbers
+"5" - 3         // 2 - converts "5" to number
+"5" * "3"       // 15 - converts both to numbers
+"10" / "2"      // 5 - converts both to numbers
+
+// Weird but true
+true + true     // 2 (true becomes 1)
+false + false   // 0 (false becomes 0)
+[] + []         // "" (empty string!)
+[] + {}         // "[object Object]" (wat?)
+
+// The equality mess
+0 == false      // true (both become 0)
+"" == false     // true (both become 0)
+[] == false     // true (array becomes "")
+[] == ![]       // true (mind-blown)
+```
+
+### Experiment 3: Falsy Values
+
+Memorize these six falsy values. Everything else is truthy:
+
+```javascript
+// The six falsy values
+Boolean(false); // false
+Boolean(0); // false
+Boolean(""); // false (empty string)
+Boolean(null); // false
+Boolean(undefined); // false
+Boolean(NaN); // false
+
+// Common gotchas - these are TRUTHY
+Boolean("0"); // true (non-empty string)
+Boolean("false"); // true (non-empty string)
+Boolean([]); // true (empty array is truthy!)
+Boolean({}); // true (empty object is truthy!)
+Boolean(-1); // true (any non-zero number)
+
+// Practical check
+if ([]) {
+  console.log("Empty array is truthy!"); // This runs!
+}
+
+// Common gotcha in frameworks
+const items = [];
+items.length && "Show this"; // Returns 0, not false!
+// In frameworks like React, this would render "0" on the page
+
+// The fix
+items.length > 0 && "Show this"; // Returns false properly
+```
+
+### Experiment 4: The const Gotcha
+
+Understanding why `const` works with objects is crucial for modern JavaScript:
+
+```javascript
+// const prevents reassignment of the variable binding
+const num = 5;
+// num = 10;  // Error! Can't reassign
+
+// But object/array CONTENTS can change
+const user = { name: "Sarah", age: 25 };
+user.age = 26; // Totally fine - modifying contents
+user.location = "NYC"; // Adding properties is fine
+delete user.age; // Removing properties is fine
+console.log(user); // { name: "Sarah", location: "NYC" }
+
+// The variable still points to the same object
+// user = { name: "John" };  // Error! Can't reassign
+
+// Same with arrays
+const numbers = [1, 2, 3];
+numbers.push(4); // Fine - modifying contents
+numbers[0] = 10; // Fine - changing elements
+console.log(numbers); // [10, 2, 3, 4]
+// numbers = [5, 6, 7];  // Error! Can't reassign
+```
+
+### Experiment 5: Nullish Operators
+
+Modern JavaScript adds operators specifically for handling `null` and `undefined`:
+
+```javascript
+// Nullish coalescing (??) - only null/undefined trigger default
+let username = null;
+console.log(username ?? "Anonymous"); // "Anonymous"
+
+username = "";
+console.log(username ?? "Anonymous"); // "" (empty string isn't null!)
+
+username = 0;
+console.log(username ?? "Anonymous"); // 0 (zero isn't null!)
+
+// Compare with OR operator
+username = "";
+console.log(username || "Anonymous"); // "Anonymous" (empty string is falsy)
+
+username = 0;
+console.log(username || "Anonymous"); // "Anonymous" (0 is falsy)
+
+// Optional chaining (?.) - safely access nested properties
+const user = { name: "Alex" };
+console.log(user.address?.street); // undefined (no error!)
+
+// Without optional chaining
+// console.log(user.address.street);  // TypeError!
+
+// Combining both
+const city = user.address?.city ?? "Unknown";
+console.log(city); // "Unknown"
+```
+
+## Advanced Concepts & Comparisons
+
+### JavaScript's Type System
+
+JavaScript is "dynamically typed" - variables don't have types, values do. The same variable can hold any type:
+
+```javascript
+let flexible = 42; // number
+flexible = "Hello"; // now string
+flexible = true; // now boolean
+flexible = [1, 2, 3]; // now array
+flexible = null; // now null
+```
+
+This flexibility is both a strength (quick prototyping) and weakness (runtime errors). TypeScript adds optional static typing to catch these errors early.
+
+### Why typeof null is "object"
+
+This is JavaScript's most famous bug, kept for backward compatibility:
+
+```javascript
+console.log(typeof null); // "object" - wrong but permanent
+
+// How to properly check for null
+const value = null;
+console.log(value === null); // true - correct way
+```
+
+### NaN: Not a Number (that's a number)
+
+```javascript
+console.log(typeof NaN); // "number" (ironic)
+console.log(NaN === NaN); // false (only value not equal to itself!)
+console.log(isNaN(NaN)); // true
+console.log(Number.isNaN(NaN)); // true (better - no type coercion)
+
+// How you get NaN
+console.log(0 / 0); // NaN
+console.log(parseInt("hello")); // NaN
+console.log(Math.sqrt(-1)); // NaN
+```
+
+## Troubleshooting & Best Practices
+
+### Common Mistakes to Avoid
+
+**Using == instead of ===**
+
+```javascript
+// Bad - unpredictable
+if (userInput == 5) {
+}
+
+// Good - explicit
+if (userInput === 5) {
+}
+if (Number(userInput) === 5) {
+} // If you need conversion
+```
+
+**Mutating when you meant to copy**
+
+```javascript
+// Bad - modifies original (problematic for state management)
+const original = [1, 2, 3];
+const copy = original;
+copy.push(4); // original is now [1, 2, 3, 4]!
+
+// Good - creates new array
+const original = [1, 2, 3];
+const copy = [...original]; // Spread creates new array
+copy.push(4); // original still [1, 2, 3]
+```
+
+**Forgetting that arrays/objects are truthy**
+
+```javascript
+// Bad - always true even when empty
+const items = [];
+if (items) {
+  // This is always true!
+  console.log("Has items");
+}
+
+// Good - check length
+if (items.length > 0) {
+  console.log("Has items");
+}
+```
+
+**Not handling null/undefined**
+
+```javascript
+// Bad - crashes if user is null
+const name = user.name;
+
+// Good - safe access
+const name = user?.name ?? "Guest";
+```
+
+### Best Practices
+
+1. **Use `const` by default** - Only `let` when you must reassign
+2. **Always use `===` for equality** - Never `==`
+3. **Be explicit with booleans** - `array.length > 0` not just `array.length`
+4. **Use optional chaining** - `user?.address?.city` prevents crashes
+5. **Provide defaults with ??** - `value ?? defaultValue` for null/undefined
+
+## Wrap-Up & Assessment
+
+### Quick Check
+
+Can you answer these without looking back?
+
+1. What's the difference between `null` and `undefined`?
+2. Why does `typeof null` return "object"?
+3. Name all six falsy values
+4. Why can you modify a `const` array?
+5. What's the difference between `??` and `||`?
+6. Why does `"5" + 3` give "53" but `"5" - 3` gives 2?
+
+### HW: Type Coercion Detective
+
+Create a new file called `coercion-detective.md` and explain WHY each of these produces its result. Don't just say what happens - explain the JavaScript logic behind it:
+
+```javascript
+console.log([] + []); // ""
+console.log([] + {}); // "[object Object]"
+console.log({} + []); // 0 (in some consoles) or "[object Object]"
+console.log(true + true); // 2
+console.log([] == ![]); // true
+console.log(NaN === NaN); // false
+console.log(0.1 + 0.2 === 0.3); // false
+console.log(typeof NaN); // "number"
+```
+
+For each one, write a 2-3 sentence explanation of what JavaScript is doing behind the scenes. This exercise builds your mental model of JavaScript's type system - crucial for debugging modern web applications.
+
+You can use GitHub Gist or Dillinger or whatever. Just share a link that renders MD.
+
+### Key Takeaways
+
+- **Primitives copy by value, objects copy by reference** - This will be crucial for state management
+- **JavaScript coerces types automatically** - Be explicit to avoid surprises
+- **Six falsy values to memorize** - Everything else is truthy (including `[]` and `{}`)
+- **`const` prevents reassignment, not modification** - You can change object contents
+- **Modern operators (`?.` and `??`)** prevent common null/undefined errors
+
+Next lesson: Functions and Scope - where closures become essential for modern JavaScript patterns.
