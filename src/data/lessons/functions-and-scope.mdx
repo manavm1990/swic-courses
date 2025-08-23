@@ -69,105 +69,198 @@ const Welcome = (props) => {
 - Single expression: implicit return (no `return` keyword needed)
 - Multiple statements: explicit return with curly braces required
 
-### Closures in Action
+### Closures: The Foundation of React Hooks
 
-This pattern is everywhere in modern JavaScript and React hooks. Let's look at a practical example of a simple form handler that uses closures to maintain state:
+Closures are everywhere in React - they're what makes hooks work! Let's understand them with a realistic shopping cart example:
 
 ```javascript
-// Simple form handler using closures
-function createFormHandler() {
-  let formData = {}; // Private variable to hold form data
+// A closure is when an inner function "remembers" variables from its outer scope
+function createShoppingCart() {
+  let items = []; // This stays "private" - like React state!
 
   return {
-    setField: (field, value) => {
-      formData[field] = value; // Update the field in formData
+    // These functions "close over" the items variable
+    addItem: (product, price) => {
+      items.push({ product, price });
+      console.log(`Added ${product} for $${price}`);
     },
-    getField: (field) => {
-      return formData[field]; // Retrieve the field value
+
+    removeItem: (product) => {
+      items = items.filter((item) => item.product !== product);
+      console.log(`Removed ${product}`);
     },
-    getFormData: () => {
-      return { ...formData }; // Return a copy of the form data
+
+    getTotal: () => {
+      return items.reduce((total, item) => total + item.price, 0);
     },
-    resetForm: () => {
-      formData = {}; // Reset the form data
+
+    getItems: () => {
+      return [...items]; // Return a copy (don't expose the original)
     },
   };
 }
 
-// Usage of the first form handler
-const formHandler1 = createFormHandler();
-formHandler1.setField("name", "Alice");
-formHandler1.setField("email", "alice@example.com");
+// Each cart gets its own private "items" array
+const userCart = createShoppingCart();
+const adminCart = createShoppingCart();
 
-function log(message) {
-  // Custom logging function for better structure
-  console.log(`[LOG]: ${message}`);
-}
+// Test the closures in action
+userCart.addItem("Coffee", 4.5);
+userCart.addItem("Muffin", 2.25);
+console.log("User total:", userCart.getTotal()); // $6.75
 
-// Usage of the first form handler
-const formHandler1 = createFormHandler();
-formHandler1.setField("name", "Alice");
-formHandler1.setField("email", "alice@example.com");
+adminCart.addItem("Laptop", 999.99);
+console.log("Admin total:", adminCart.getTotal()); // $999.99
 
-log(formHandler1.getField("name")); // "Alice"
-log(formHandler1.getFormData()); // { name: "Alice", email: "alice@example.com" }
-
-formHandler1.resetForm();
-log(formHandler1.getFormData()); // {}
-
-// Usage of a second form handler
-const formHandler2 = createFormHandler();
-formHandler2.setField("name", "Bob");
-formHandler2.setField("email", "bob@example.com");
-
-log(formHandler2.getField("name")); // "Bob"
-log(formHandler2.getFormData()); // { name: "Bob", email: "bob@example.com" }
-
-formHandler2.resetForm();
-log(formHandler2.getFormData()); // {}
+// The carts are completely separate!
+console.log("User items:", userCart.getItems().length); // 2
+console.log("Admin items:", adminCart.getItems().length); // 1
 ```
 
-This example illustrates how closures can be used to encapsulate state and provide a clean interface for interacting with that state. Each instance of the form handler maintains its own state, demonstrating a common pattern in React for managing component state.
+**Why this matters for React:**
 
-## Advanced Concepts & Comparisons
+- Each component instance gets its own "private" state (like our items array)
+- Functions can access and modify that state (like our cart methods)
+- The state stays private - other components can't accidentally break it
+- This is exactly how `useState` works under the hood!
 
-### Closure Patterns for State Management
+## Hands-On Application
 
-This pattern is the foundation of React hooks and state management:
+### Exercise 1: Build a Counter with Closures
+
+Let's create a counter that works like React's `useState`. Type this step-by-step:
 
 ```javascript
-// Factory pattern for creating stateful objects
-function createStatefulWidget(initialValue) {
-  let state = initialValue;
-  const listeners = [];
+// Step 1: Create a counter factory
+function createCounter(initialValue = 0) {
+  let count = initialValue;
 
   return {
-    getState: () => state,
-    setState: (newState) => {
-      const oldState = state;
-      state = newState;
-      listeners.forEach((listener) => listener(newState, oldState));
+    // Step 2: Add methods that use the closure
+    get: () => count,
+    increment: () => {
+      count++;
+      return count;
     },
-    subscribe: (listener) => {
-      listeners.push(listener);
-      return () => {
-        const index = listeners.indexOf(listener);
-        if (index > -1) listeners.splice(index, 1);
-      };
+    decrement: () => {
+      count--;
+      return count;
+    },
+    reset: () => {
+      count = initialValue;
+      return count;
     },
   };
 }
 
-// Usage (similar to React's useState pattern)
-const widget = createStatefulWidget(0);
-const unsubscribe = widget.subscribe((newState, oldState) => {
-  console.log(`State changed from ${oldState} to ${newState}`);
-});
+// Step 3: Test your counter
+const counter = createCounter(10);
+console.log("Start:", counter.get()); // 10
+console.log("After increment:", counter.increment()); // 11
+console.log("After decrement:", counter.decrement()); // 10
+console.log("After reset:", counter.reset()); // 10
 
-widget.setState(5); // "State changed from 0 to 5"
-widget.setState(10); // "State changed from 5 to 10"
-unsubscribe(); // Stop listening
-widget.setState(15); // No console output
+// Step 4: Prove each counter is independent
+const counter1 = createCounter(0);
+const counter2 = createCounter(100);
+
+counter1.increment();
+counter2.decrement();
+
+console.log("Counter1:", counter1.get()); // 1
+console.log("Counter2:", counter2.get()); // 99
+```
+
+### Exercise 2: Event Handler Practice
+
+Practice arrow functions with event handlers (React pattern):
+
+```javascript
+// Step 1: Create a simple "button" simulator
+function createButton(text) {
+  let clickCount = 0;
+
+  return {
+    // Step 2: Arrow function event handlers (React style)
+    onClick: () => {
+      clickCount++;
+      console.log(`${text} clicked ${clickCount} times`);
+    },
+
+    onDoubleClick: () => {
+      clickCount += 2;
+      console.log(`${text} double-clicked! Total: ${clickCount}`);
+    },
+
+    // Step 3: Method to simulate getting current state
+    getClickCount: () => clickCount,
+
+    // Step 4: Reset method
+    reset: () => {
+      clickCount = 0;
+      console.log(`${text} reset`);
+    },
+  };
+}
+
+// Test your button
+const saveButton = createButton("Save");
+const cancelButton = createButton("Cancel");
+
+// Simulate clicks
+saveButton.onClick(); // "Save clicked 1 times"
+saveButton.onClick(); // "Save clicked 2 times"
+cancelButton.onDoubleClick(); // "Cancel double-clicked! Total: 2"
+
+console.log("Save clicks:", saveButton.getClickCount()); // 2
+console.log("Cancel clicks:", cancelButton.getClickCount()); // 2
+```
+
+### Exercise 3: Component Props Simulator
+
+Build a mini component that handles props like React:
+
+```javascript
+// Step 1: Create a component factory
+function createComponent(name) {
+  let props = {};
+
+  return {
+    // Step 2: Set props (like React)
+    setProps: (newProps) => {
+      props = { ...props, ...newProps }; // Merge like React
+      console.log(`${name} props updated:`, props);
+    },
+
+    // Step 3: Get specific prop
+    getProp: (propName) => props[propName],
+
+    // Step 4: Render method (simulated)
+    render: () => {
+      const title = props.title || "No Title";
+      const isVisible = props.visible !== false; // Default to true
+
+      if (!isVisible) {
+        console.log(`${name} is hidden`);
+        return;
+      }
+
+      console.log(`Rendering ${name}: ${title}`);
+    },
+  };
+}
+
+// Test your component
+const header = createComponent("Header");
+
+header.setProps({ title: "Welcome" });
+header.render(); // "Rendering Header: Welcome"
+
+header.setProps({ visible: false });
+header.render(); // "Header is hidden"
+
+header.setProps({ visible: true, title: "Hello World" });
+header.render(); // "Rendering Header: Hello World"
 ```
 
 ## Troubleshooting & Best Practices
@@ -210,57 +303,124 @@ console.log(double(5)); // 10
 
 ## Wrap-Up & Assessment
 
-### Technical Interview Questions (HW)
+### Challenge: Build Your Own "useState" Hook
 
-Note that these technical interview questions are sometimes more 'silly' and less practical. Why? Unfortunately that's how some of these 'gate-keeping' questions are in real life.
-
-Use AI 🤖 to help set up your understanding and to help to guide you.
-
-Pick **two** of these questions to practice. You will want to give a 3-minute (approximate) video explanation walking through the code and answering in your own words. Use your own analogies and perspective to make the answer your own and to make it as memorable or distinctive as possible.
-
-**Closure & Scope Questions:**
-
-1. Explain what a closure is and provide a practical example of when you'd use one.
-
-**First-Class Functions:**
-
-2. Write a higher-order function that takes an array and a callback, and returns a new array with the callback applied to each element.
-
-**Advanced Patterns:**
-
-3. Implement a simple event emitter using closures that supports subscribe/unsubscribe/emit.
-
-### Hands-On Challenge: Mini State Manager
-
-Create a simple state management system using closures. Your solution should:
+Create a simple version of React's useState using closures:
 
 ```javascript
-// Should work like this:
-const state = createState({ count: 0, name: "Test" });
+// Your mission: Complete this useState implementation
+function createUseState() {
+  let stateValue; // This will hold our state
 
-// Get current state
-// Update state (should return new state object)
-const newState = state.set({ count: 1 });
-console.log(newState); // { count: 1, name: "Test" }
+  return function useState(initialValue) {
+    // Set initial value only if stateValue is undefined
+    if (stateValue === undefined) {
+      stateValue = initialValue;
+    }
 
-// Subscribe to changes
-const unsubscribe = state.subscribe((newState, oldState) => {Test" }
-  console.log("State changed:", newState);
-});
-const newState = state.set({ count: 1 });
-state.set({ name: "Updated" }); // Should trigger subscriber// { count: 1, name: "Test" }
-unsubscribe(); // Stop listening
+    // Return current state and setter function
+    const setState = (newValue) => {
+      stateValue = newValue;
+      console.log(`State updated to:`, stateValue);
+    };
+
+    return [stateValue, setState]; // Return array like React
+  };
+}
+
+// Test your implementation
+const useState = createUseState();
+
+// Simulate a React component using your hook
+function simulateComponent() {
+  const [count, setCount] = useState(0);
+
+  console.log(`Current count: ${count}`);
+
+  // Simulate button clicks
+  const handleIncrement = () => setCount(count + 1);
+  const handleDecrement = () => setCount(count - 1);
+
+  return { handleIncrement, handleDecrement };
+}
+
+// Test it
+const component = simulateComponent();
+component.handleIncrement(); // State updated to: 1
+component.handleIncrement(); // State updated to: 2
+component.handleDecrement(); // State updated to: 1
 ```
 
-This exercise combines closures, first-class functions, and modern JavaScript patterns you'll see in React state management.
+### Hands-On Project: Theme Manager
 
-You'll want to record a screencast of you walking through your code and explaining how it works. This will help reinforce your understanding and give you a reference to look back on.
+Build a theme manager using closures and arrow functions:
+
+```javascript
+// Challenge: Complete this theme manager
+function createThemeManager(defaultTheme = "light") {
+  let currentTheme = defaultTheme;
+  const listeners = [];
+
+  return {
+    // Get current theme
+    getTheme: () => currentTheme,
+
+    // Set new theme and notify listeners
+    setTheme: (newTheme) => {
+      const oldTheme = currentTheme;
+      currentTheme = newTheme;
+
+      // Notify all listeners (like React components)
+      listeners.forEach((listener) => listener(newTheme, oldTheme));
+    },
+
+    // Subscribe to theme changes (like useEffect)
+    subscribe: (callback) => {
+      listeners.push(callback);
+
+      // Return unsubscribe function (React pattern)
+      return () => {
+        const index = listeners.indexOf(callback);
+        if (index > -1) listeners.splice(index, 1);
+      };
+    },
+
+    // Toggle between light/dark
+    toggle: () => {
+      const newTheme = currentTheme === "light" ? "dark" : "light";
+      // Use the setTheme method to ensure listeners are notified
+      // Your code here...
+    },
+  };
+}
+
+// Test your theme manager
+const themeManager = createThemeManager();
+
+// Subscribe to changes
+const unsubscribe1 = themeManager.subscribe((newTheme, oldTheme) => {
+  console.log(`Header: Theme changed from ${oldTheme} to ${newTheme}`);
+});
+
+const unsubscribe2 = themeManager.subscribe((newTheme) => {
+  console.log(`Sidebar: Now using ${newTheme} theme`);
+});
+
+// Test the functionality
+themeManager.setTheme("dark"); // Both listeners should fire
+themeManager.toggle(); // Should go back to light
+themeManager.toggle(); // Should go to dark again
+
+// Unsubscribe one listener
+unsubscribe1();
+themeManager.setTheme("light"); // Only sidebar listener should fire
+```
 
 ### Key Takeaways
 
-- **State is encapsulated** - the `createState` function returns an object that manages its own state
-- **Subscribe/Unsubscribe pattern** - allows components to react to state changes
-- **Immutability** - the state is not mutated directly, but rather replaced with a new object
+- **Closures power React hooks** - `useState`, `useEffect`, and custom hooks all use closures
+- **Arrow functions simplify event handlers** - no more `.bind(this)` worries
+- **Private state through closures** - variables are encapsulated and can't be accessed directly
 - **Arrow functions inherit 'this'** from their enclosing scope - crucial for React event handlers
 - **Closures capture outer variables** - the foundation of React hooks and state management
 - **Functions are first-class citizens** - can be stored, passed, and returned like any value
