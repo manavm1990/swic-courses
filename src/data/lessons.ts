@@ -130,4 +130,25 @@ const lessons = [
       },
     ],
   },
+  {
+    id: "js-fundamentals-review",
+    title: "JavaScript Fundamentals Review",
+    description:
+      "This review will reacquaint you with the core concepts of JavaScript, including variables, functions, and control flow.",
+    lessons: [
+      {
+        id: "js-variables-and-types",
+        title: "Variables and Types",
+        description: "Understanding variables and data types in JavaScript.",
+        video: null,
+      },
+      {
+        id: "functions-and-scope",
+        title: "Functions and Scope - React Prep Review",
+        description:
+          "A review of function concepts in JavaScript, focusing on their relevance in React.",
+        video: null,
+      },
+    ],
+  },
 ] as const satisfies Module[];

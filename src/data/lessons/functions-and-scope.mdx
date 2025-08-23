@@ -1,0 +1,268 @@
+# Functions and Scope - React Prep Review
+
+## Introduction
+
+### Why This Review Matters
+
+After months writing JavaScript, you remember `function doSomething() {}`. But do you remember why arrow functions are cleaner for event handlers? When closures capture variables and when they don't? How scope rules affect the component patterns you'll write?
+
+Before diving into React's function components and hooks, let's refresh the function concepts that frameworks assume you know cold. We'll use console experiments to rediscover JavaScript's function behavior - the stuff that trips up developers during technical interviews and debugging sessions.
+
+### What We'll Cover
+
+- Function declarations vs expressions - and why the difference matters for hoisting
+- Arrow functions - why they're React's preferred syntax and how `this` behaves
+- Scope rules - lexical scope, closures, and how they power modern JavaScript patterns
+- First-class functions - functions as values, callbacks, and higher-order patterns
+- Modern parameter features - destructuring, defaults, rest/spread
+
+Open your browser's Developer Console (F12 → Console tab). Every concept gets hands-on practice there.
+
+## Core Concept Overview
+
+### Function Syntax Review: Traditional vs Arrow
+
+Let's review both function syntaxes you'll see in React:
+
+```javascript
+/**
+ * Function Declaration - traditional style.
+ *
+ * Use a 'verb' phrase to name it.
+ */
+function greetUser(name) {
+  return `Hello, ${name}!`;
+}
+
+// Arrow Function - modern React style
+const greetUser = (name) => {
+  return `Hello, ${name}!`;
+};
+
+// Concise arrow function (implicit return)
+const greetUser = (name) => `Hello, ${name}!`;
+```
+
+**Why React developers prefer arrow functions:**
+
+- Cleaner, more concise syntax
+- Implicit returns for simple transformations
+- Consistent modern JavaScript style
+- Perfect for event handlers and callbacks
+
+```javascript
+/**
+ * Function component - returns HTML string
+ *
+ * Use a capitalized 'noun' phrase to name it.
+ */
+const Welcome = (props) => {
+  return `<h1>Hello, ${props.name}!</h1>`;
+};
+```
+
+### Arrow Function Rules to Remember
+
+- Single parameter: `user => user.name` (parentheses optional)
+- Multiple parameters: `(a, b) => a + b` (parentheses required)
+- No parameters: `() => console.log('hello')` (parentheses required)
+- Single expression: implicit return (no `return` keyword needed)
+- Multiple statements: explicit return with curly braces required
+
+### Closures in Action
+
+This pattern is everywhere in modern JavaScript and React hooks. Let's look at a practical example of a simple form handler that uses closures to maintain state:
+
+```javascript
+// Simple form handler using closures
+function createFormHandler() {
+  let formData = {}; // Private variable to hold form data
+
+  return {
+    setField: (field, value) => {
+      formData[field] = value; // Update the field in formData
+    },
+    getField: (field) => {
+      return formData[field]; // Retrieve the field value
+    },
+    getFormData: () => {
+      return { ...formData }; // Return a copy of the form data
+    },
+    resetForm: () => {
+      formData = {}; // Reset the form data
+    },
+  };
+}
+
+// Usage of the first form handler
+const formHandler1 = createFormHandler();
+formHandler1.setField("name", "Alice");
+formHandler1.setField("email", "alice@example.com");
+
+function log(message) {
+  // Custom logging function for better structure
+  console.log(`[LOG]: ${message}`);
+}
+
+// Usage of the first form handler
+const formHandler1 = createFormHandler();
+formHandler1.setField("name", "Alice");
+formHandler1.setField("email", "alice@example.com");
+
+log(formHandler1.getField("name")); // "Alice"
+log(formHandler1.getFormData()); // { name: "Alice", email: "alice@example.com" }
+
+formHandler1.resetForm();
+log(formHandler1.getFormData()); // {}
+
+// Usage of a second form handler
+const formHandler2 = createFormHandler();
+formHandler2.setField("name", "Bob");
+formHandler2.setField("email", "bob@example.com");
+
+log(formHandler2.getField("name")); // "Bob"
+log(formHandler2.getFormData()); // { name: "Bob", email: "bob@example.com" }
+
+formHandler2.resetForm();
+log(formHandler2.getFormData()); // {}
+```
+
+This example illustrates how closures can be used to encapsulate state and provide a clean interface for interacting with that state. Each instance of the form handler maintains its own state, demonstrating a common pattern in React for managing component state.
+
+## Advanced Concepts & Comparisons
+
+### Closure Patterns for State Management
+
+This pattern is the foundation of React hooks and state management:
+
+```javascript
+// Factory pattern for creating stateful objects
+function createStatefulWidget(initialValue) {
+  let state = initialValue;
+  const listeners = [];
+
+  return {
+    getState: () => state,
+    setState: (newState) => {
+      const oldState = state;
+      state = newState;
+      listeners.forEach((listener) => listener(newState, oldState));
+    },
+    subscribe: (listener) => {
+      listeners.push(listener);
+      return () => {
+        const index = listeners.indexOf(listener);
+        if (index > -1) listeners.splice(index, 1);
+      };
+    },
+  };
+}
+
+// Usage (similar to React's useState pattern)
+const widget = createStatefulWidget(0);
+const unsubscribe = widget.subscribe((newState, oldState) => {
+  console.log(`State changed from ${oldState} to ${newState}`);
+});
+
+widget.setState(5); // "State changed from 0 to 5"
+widget.setState(10); // "State changed from 5 to 10"
+unsubscribe(); // Stop listening
+widget.setState(15); // No console output
+```
+
+## Troubleshooting & Best Practices
+
+### Common Function Mistakes
+
+**Forgetting to return from arrow functions with blocks**
+
+If you don't specify a `return`, the function returns `undefined` by default (except in the case of arrow function implicit returns).
+
+```javascript
+// Bad - no return statement
+const double = (x) => {
+  x * 2; // This does nothing!
+};
+console.log(double(5)); // undefined
+
+// Good - explicit return
+const double = (x) => {
+  return x * 2;
+};
+console.log(double(5)); // 10
+
+// Or use implicit return
+const double = (x) => x * 2;
+console.log(double(5)); // 10
+```
+
+### Best Practices
+
+1. Functions should focus on doing just one job. It's fine a function to call on another, but it shouldn't do too much work itself.
+1. Use verb phrases for function names (e.g., `getUser`, `setName`) to make their purpose clear.
+1. Use noun phrases for variable names (e.g., `user`, `name`) to make their role obvious.
+1. For function components, use PascalCase noun phrases.
+1. Generally, follow this structure in your code:
+   - Imports
+   - Constants
+   - Functions
+   - Component Logic
+
+## Wrap-Up & Assessment
+
+### Technical Interview Questions (HW)
+
+Note that these technical interview questions are sometimes more 'silly' and less practical. Why? Unfortunately that's how some of these 'gate-keeping' questions are in real life.
+
+Use AI 🤖 to help set up your understanding and to help to guide you.
+
+Pick **two** of these questions to practice. You will want to give a 3-minute (approximate) video explanation walking through the code and answering in your own words. Use your own analogies and perspective to make the answer your own and to make it as memorable or distinctive as possible.
+
+**Closure & Scope Questions:**
+
+1. Explain what a closure is and provide a practical example of when you'd use one.
+
+**First-Class Functions:**
+
+2. Write a higher-order function that takes an array and a callback, and returns a new array with the callback applied to each element.
+
+**Advanced Patterns:**
+
+3. Implement a simple event emitter using closures that supports subscribe/unsubscribe/emit.
+
+### Hands-On Challenge: Mini State Manager
+
+Create a simple state management system using closures. Your solution should:
+
+```javascript
+// Should work like this:
+const state = createState({ count: 0, name: "Test" });
+
+// Get current state
+// Update state (should return new state object)
+const newState = state.set({ count: 1 });
+console.log(newState); // { count: 1, name: "Test" }
+
+// Subscribe to changes
+const unsubscribe = state.subscribe((newState, oldState) => {Test" }
+  console.log("State changed:", newState);
+});
+const newState = state.set({ count: 1 });
+state.set({ name: "Updated" }); // Should trigger subscriber// { count: 1, name: "Test" }
+unsubscribe(); // Stop listening
+```
+
+This exercise combines closures, first-class functions, and modern JavaScript patterns you'll see in React state management.
+
+You'll want to record a screencast of you walking through your code and explaining how it works. This will help reinforce your understanding and give you a reference to look back on.
+
+### Key Takeaways
+
+- **State is encapsulated** - the `createState` function returns an object that manages its own state
+- **Subscribe/Unsubscribe pattern** - allows components to react to state changes
+- **Immutability** - the state is not mutated directly, but rather replaced with a new object
+- **Arrow functions inherit 'this'** from their enclosing scope - crucial for React event handlers
+- **Closures capture outer variables** - the foundation of React hooks and state management
+- **Functions are first-class citizens** - can be stored, passed, and returned like any value
+- **Hoisting affects function declarations** but not expressions or arrow functions
+- **Modern parameter features** (destructuring, defaults, rest) make React props handling cleaner
