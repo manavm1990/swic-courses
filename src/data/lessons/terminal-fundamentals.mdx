@@ -437,53 +437,15 @@ history
 !42
 ```
 
-### Combining Commands
-
-#### Chain Commands with `&&`
-
-```bash
-# Run second command only if first succeeds
-mkdir new-project && cd new-project
-
-# Create files then list them
-touch index.html style.css && ls -la
-
-# Complex project setup
-mkdir -p my-app/{src,dist,docs} && cd my-app && touch README.md && ls -la
-```
-
-#### Redirect Output
-
-```bash
-# Save command output to file
-ls -la > file-list.txt
-
-# Append to existing file
-date >> log.txt
-
-# Create file with content
-echo "# My Project" > README.md
-echo "Description here" >> README.md
-```
-
-### Platform-Specific Considerations
-
-#### Mac/Linux Permissions
-
-```bash
-# View file permissions
-ls -la
-
-# Make file executable
-chmod +x script.sh
-
-# Change file ownership (use carefully)
-sudo chown username:group filename
-```
-
 ### Warp's AI Assistant
 
 Unique to Warp users - leverage built-in AI help:
+
+<VideoYT
+  url="https://youtu.be/9gr5mZP3h_o?si=bhGMeBa92O7dQWxz"
+  title="Using Warp AI for Terminal Help"
+  caption="Learn how to leverage Warp's AI assistant to get help with commands and improve your terminal workflow."
+/>
 
 ```bash
 # Ask for help with any command
@@ -493,7 +455,7 @@ Unique to Warp users - leverage built-in AI help:
 # "show me how to create a git repository"
 ```
 
-This feature alone makes Warp incredibly valuable for learning.
+This feature makes Warp incredibly valuable for learning.
 
 ## Troubleshooting & Best Practices
 
