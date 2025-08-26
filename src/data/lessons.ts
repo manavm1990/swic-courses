@@ -86,6 +86,13 @@ const lessons = [
         video: null,
       },
       {
+        id: "terminal-fundamentals",
+        title: "Terminal Fundamentals",
+        description:
+          "Learn the basics of using the terminal, including navigation, file manipulation, and command execution.",
+        video: null,
+      },
+      {
         id: "git-fundamentals",
         title: "Git Fundamentals",
         description:
