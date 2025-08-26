@@ -196,7 +196,7 @@ Let's learn Git with simple text files first.
 
 1. **Create a README MarkDown file**:
 
-     You can do this with the `touch` command: `touch README.md`. Alternatively, you can open up VS Code with `code .` and create the file there.
+   You can do this with the `touch` command: `touch README.md`. Alternatively, you can open up VS Code with `code .` and create the file there.
 
    Create the file in VS Code with this content:
 
@@ -366,11 +366,11 @@ Let's see how Git saves you from disaster:
 
 5. **Restore the file** (this is the magic!):
 
-   ```bash
-   git checkout -- important.txt
-   ```
+   `git restore important.txt`
 
    This command restores the file to its last committed state.
+
+   **Note:** You might see older tutorials use git checkout -- important.txt - this does the same thing, but git restore is the modern, clearer command designed specifically for restoring files.
 
 6. **Verify it's restored**:
 
@@ -385,7 +385,7 @@ You just saved yourself from a fake disaster! Now imagine this was 100 lines of 
 ### Troubleshooting This Exercise
 
 - **`git diff` shows nothing**: You need to save the file after editing! The file must be saved for Git to see changes.
-- **`git checkout` didn't restore anything**: Make sure the file was committed first (step 2) and that you saved your "oops" change.
+- **`git restore` didn't work**: Make sure the file was committed first (step 2) and that you saved your "oops" change.
 - **Can't see file contents**: Use `cat important.txt` in Warp Terminal to display the file contents. If it says "No such file or directory," double-check your spelling and current directory.
 
 ### Terminal Tips for Git with Warp
@@ -582,6 +582,14 @@ git log --oneline           # View commit history
 git diff                    # Unstaged changes
 git diff --staged           # Staged changes
 git show                    # Last commit details
+
+# Restoring files (modern commands)
+git restore [file]          # Restore file to last committed state
+git restore --staged [file] # Unstage file (move from staging back to working)
+
+# Legacy commands (you might see in older tutorials)
+git checkout -- [file]     # Old way to restore (use git restore instead)
+git reset HEAD [file]      # Old way to unstage (use git restore --staged instead)
 
 # Emergency exit from VIM
 # Press Esc, then type :q! and press Enter
