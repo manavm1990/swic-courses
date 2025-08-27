@@ -1,0 +1,564 @@
+# Terminal + Git
+
+Reinforce terminal navigation and Git workflow fundamentals while learning to keep repositories properly organized.
+
+## Introduction
+
+### Bridging the Terminal-Git Gap
+
+You've been exposed to [terminal commands](/terminal-fundamentals) and the basics of [Git](/git-fundamentals), but these concepts can seem disconnected at first. This lesson reinforces both skills while addressing a critical mistake that trips up many new developers: accidentally turning their home directory or entire Code folder into a Git repository.
+
+**Real-world scenario**: A junior developer at a startup accidentally runs `git init` in their home directory. Weeks later, they're confused why their personal files, photos, and multiple projects are all being tracked by the same Git repository. Their commit history is chaos, and they can't figure out why `git status` shows hundreds of unrelated files. This lesson prevents that scenario.
+
+### What You'll Learn Today
+
+- How to navigate confidently between directories using terminal commands
+- The critical difference between directories and Git repositories
+- Why each project needs its own separate repository
+- How to fix Git repositories created in the wrong location
+- The complete workflow from local Git to GitHub (preview)
+
+### Success Criteria
+
+By the end of this lesson, you'll confidently navigate your file system, create properly isolated Git repositories, and understand exactly where each project lives on your computer.
+
+## Core Concept Overview
+
+### Terminal Navigation Review
+
+Before working with Git, let's reinforce essential terminal navigation:
+
+```bash
+cd              # Go to home directory
+cd ~/Code       # Go to Code directory
+pwd             # Print current working directory
+ls              # List contents of current directory
+ls -a           # List ALL contents (including hidden files that start with .)
+mkdir project   # Create new directory
+```
+
+**Understanding flags**: The `-a` in `ls -a` is called a "flag" or "option" - it modifies how the command works. Flags start with a dash (`-`) followed by a letter. The `-a` flag stands for "all" and tells `ls` to show hidden files (files whose names start with a dot like `.git`).
+
+**Key principle**: Always know where you are before running Git commands.
+
+### Directories vs Git Repositories
+
+**A directory** is simply a folder that organizes files:
+
+- Contains files and subdirectories
+- Part of your computer's file system
+- Created with `mkdir`
+
+**A Git repository** is a special directory that tracks changes:
+
+- Contains your project files
+- Has a hidden `.git` folder with version history
+- Created with `git init`
+- Shows branch name in terminal prompt (usually `main` or `master`)
+
+### The Golden Rule of Git Repositories
+
+**One project = One repository**
+
+✅ **Correct structure**:
+
+```
+~/Code/
+├── my-website/          (Git repo for website project)
+│   ├── .git/
+│   ├── index.html
+│   └── style.css
+├── todo-app/            (Git repo for todo app)
+│   ├── .git/
+│   ├── app.js
+│   └── README.md
+└── practice-exercises/   (Git repo for course exercises)
+    ├── .git/
+    ├── week1/
+    └── week2/
+```
+
+❌ **Wrong structure**:
+
+```
+~/                       (Git repo - NEVER!)
+├── .git/               (This tracks EVERYTHING)
+├── Code/
+├── Documents/
+├── Desktop/
+└── Downloads/
+```
+
+### Identifying Git Repositories
+
+**In the terminal prompt**, look for branch indicators:
+
+```bash
+# Not a Git repository
+user@computer ~/Code $
+
+# Inside a Git repository
+user@computer ~/Code/my-project main $
+```
+
+**Use `git status`** to check:
+
+```bash
+# Inside a Git repository
+git status
+# On branch main
+# nothing to commit, working tree clean
+
+# Not in a Git repository
+git status
+# fatal: not a git repository (or any of the parent directories): .git
+```
+
+## Hands-On Application
+
+### Exercise 1: Verify Your Current Location
+
+Let's start by understanding exactly where you are:
+
+1. **Go to your home directory**:
+
+   ```bash
+   cd
+   ```
+
+2. **Check your location**:
+
+   ```bash
+   pwd
+   ```
+
+   You should see something like `/Users/yourname` (Mac) or `C:\Users\yourname` (Windows)
+
+3. **List directory contents**:
+
+   ```bash
+   ls
+   ```
+
+   You should see familiar folders: `Desktop`, `Documents`, `Downloads`, etc.
+
+4. **Check for hidden Git files**:
+
+   ```bash
+   ls -a
+   ```
+
+   **What `-a` means**: The `-a` flag stands for "all" - it shows ALL files, including hidden ones that start with a dot (`.`). Without `-a`, `ls` only shows visible files.
+
+   Look through the list - you should NOT see a `.git` folder anywhere. If you do see `.git`, STOP and ask for help.
+
+   **Note**: You might see `.gitconfig` - that's normal! It's your Git configuration file. We're looking for `.git` (without "config").
+
+   **Fun fact**: Advanced users can filter this list with `ls -a | grep git` to only show Git-related items - the `|` symbol "pipes" the output of one command into another, and `grep` searches for patterns. But scanning the list visually is perfect for now and helps you learn what's actually in your directories!
+
+### Exercise 2: Navigate to Your Code Directory
+
+1. **List your directories to find your Code folder**:
+
+   ```bash
+   ls
+   ```
+
+2. **Navigate to your Code directory**:
+
+   ```bash
+   cd Code
+
+   ```
+
+3. **Confirm your location**:
+
+   ```bash
+   pwd
+   ```
+
+   Should show something like `/Users/yourname/Code`
+
+4. **Check that Code directory is NOT a Git repository**:
+
+   ```bash
+   git status
+   ```
+
+   Should say "fatal: not a git repository" - this is GOOD!
+
+### Exercise 3: Create a Proper Git Repository
+
+Now let's create a new project with its own Git repository:
+
+1. **Create a new project directory**:
+
+   ```bash
+   mkdir terminal-git-practice
+   ```
+
+2. **Navigate into the project**:
+
+   ```bash
+   cd terminal-git-practice
+   ```
+
+3. **Verify you're in the right place**:
+
+   ```bash
+   pwd
+   ```
+
+   Should show `/Users/yourname/Code/terminal-git-practice`
+
+4. **Initialize Git repository** (only now!):
+
+   ```bash
+   git init
+   ```
+
+5. **Confirm Git repository creation**:
+
+   ```bash
+   git status
+   ```
+
+   Should show "On branch main" and "No commits yet"
+
+6. **Check your terminal prompt** - it should now show the branch name
+
+### Exercise 4: Work with Files in Your Repository
+
+1. **Create a README file**:
+
+   ```bash
+   touch README.md
+   ```
+
+2. **Open VS Code from your current location**:
+
+   ```bash
+   code .
+   ```
+
+   This opens VS Code with your project folder loaded
+
+3. **Add content to README.md** in VS Code:
+
+   ```markdown
+   # Terminal Git Practice
+
+   This project helps me practice:
+
+   - Terminal navigation
+   - Git repository management
+   - Keeping repositories separate and organized
+
+   ## What I learned
+
+   - Each project gets its own Git repository
+   - Never make home directory a Git repository
+   - Always check location with `pwd` before `git init`
+   ```
+
+4. **Save the file** (Ctrl+S / Cmd+S)
+
+5. **Return to terminal and check Git status**:
+
+   ```bash
+   git status
+   ```
+
+   Should show README.md as an untracked file
+
+6. **Stage and commit the file**:
+
+   ```bash
+   git add README.md
+   git commit -m "Add README with terminal and Git practice notes"
+   ```
+
+7. **View your commit history**:
+   ```bash
+   git log --oneline
+   ```
+
+### Exercise 5: Practice Navigation Between Projects
+
+Let's simulate working with multiple projects:
+
+1. **Go back to your Code directory**:
+   ```bash
+   cd ..
+   ```
+2. **Verify you're in Code directory**:
+   ```bash
+   pwd
+   ls
+   ```
+3. **Create another project**:
+
+   ```bash
+   mkdir website-project
+   cd website-project
+   git init
+   ```
+
+4. **Create some files**:
+
+   ```bash
+   touch index.html style.css
+   ```
+
+5. **Navigate between projects**:
+
+   ```bash
+   cd ../terminal-git-practice
+   git status  # Should show clean working tree
+
+   cd ../website-project
+   git status  # Should show untracked files
+   ```
+
+Each project has its own Git history and status - they're completely separate!
+
+## Advanced Concepts & Comparisons
+
+### Understanding the .git Directory
+
+When you run `git init`, Git creates a hidden `.git` directory:
+
+```bash
+ls -a
+# Should show:
+# .  ..  .git  README.md
+```
+
+**Why we need `-a`**: The `.git` directory is "hidden" because its name starts with a dot. The `-a` flag (all files) is required to see it.
+
+This `.git` directory contains:
+
+- All commit history
+- Branch information
+- Configuration settings
+- Staging area data
+
+**Never manually edit files in .git** - let Git manage this directory.
+
+### Visual Studio Code Integration
+
+VS Code automatically detects Git repositories and shows:
+
+- **Source Control panel** (Git icon in sidebar)
+- **File status indicators** (M for modified, U for untracked)
+- **Branch name** in bottom status bar
+- **Git integration** in command palette
+
+When you open a project with `code .`, VS Code immediately knows if it's a Git repository.
+
+### Multiple Repository Management
+
+Professional developers work with many repositories:
+
+```bash
+~/Code/
+├── client-website/     (Client work - separate repo)
+├── personal-blog/      (Personal project - separate repo)
+├── learning-react/     (Course work - separate repo)
+└── todo-app/          (Practice project - separate repo)
+```
+
+Each repository maintains its own:
+
+- Commit history
+- Branch structure
+- Remote connections (GitHub links)
+- Configuration
+
+## Troubleshooting & Best Practices
+
+### Emergency: Home Directory Is a Git Repository
+
+If you accidentally made your home directory a Git repository:
+
+1. **Navigate to home directory**:
+
+   ```bash
+   cd ~
+   ```
+
+2. **Confirm it's a Git repository** (unfortunately):
+
+   ```bash
+   git status
+   ```
+
+3. **CAREFULLY remove Git tracking**:
+
+   ```bash
+   rm -rf .git
+   ```
+
+4. **Verify Git is gone**:
+   ```bash
+   git status
+   # Should say "fatal: not a git repository" - this is good!
+   ```
+
+⚠️ **Warning**: `rm -rf .git` permanently deletes all Git history. Make sure you're in the right directory!
+
+### Prevention Strategies
+
+**Before running `git init`, always**:
+
+1. **Check your location**:
+
+   ```bash
+   pwd
+   ```
+
+2. **Make sure you're in a project directory**, not home or Code
+
+3. **Verify no existing .git**:
+
+   ```bash
+   ls -a
+   ```
+
+   **Remember**: The `-a` flag shows ALL files, including hidden ones that start with a dot. Scan the list to make sure there's no `.git` folder
+
+   **Advanced technique**: `ls -a | grep git` would automatically filter this list to only show items containing "git" - the `|` symbol "pipes" the output of `ls -a` into the `grep` command which searches for patterns. But visual scanning is perfectly fine and actually better for learning what's in your directories!
+
+### Common Navigation Mistakes
+
+**Mistake**: Running Git commands in the wrong directory
+**Solution**: Always run `pwd` to confirm location
+
+**Mistake**: Creating nested Git repositories
+**Solution**: Never run `git init` inside an existing Git repository
+
+**Mistake**: Losing track of which project you're working on
+**Solution**: Use `pwd` and `git status` frequently
+
+### Best Practices
+
+1. **One project, one repository** - never combine unrelated projects
+
+2. **Meaningful directory names** - use clear, descriptive project names
+
+3. **Consistent structure** - keep all projects in your Code directory
+
+4. **Regular status checks** - run `git status` before making changes
+
+5. **Clean working directories** - commit or stash changes before switching projects
+
+## Wrap-Up & Assessment
+
+### Key Terminal Commands Mastered
+
+```bash
+pwd                    # Where am I?
+ls                     # What's here?
+ls -a                  # Show ALL files (including hidden ones starting with .)
+cd                     # Go home
+cd directory-name      # Go to specific directory
+cd ..                  # Go up one level
+mkdir project-name     # Create new directory
+```
+
+**Understanding command flags**: The `-a` in `ls -a` is a "flag" that modifies the command's behavior. Flags start with a dash and tell the command to do something different - in this case, show "all" files including hidden ones.
+
+### Key Git Commands Mastered
+
+```bash
+git init               # Create new repository (only in project directories!)
+git status            # Check repository status
+git add filename      # Stage file for commit
+git commit -m "msg"   # Save staged changes
+git log --oneline     # View commit history
+```
+
+### Directory Structure Understanding
+
+You now understand:
+
+- **Home directory** (`~`) - never a Git repository
+- **Code directory** (`~/Code`) - container for projects, not a Git repository itself
+- **Project directories** (`~/Code/my-project`) - each one can be its own Git repository
+
+### HW: Multi-Project Practice
+
+**Part 1: Create Three Separate Projects**
+
+Create three different projects, each with its own Git repository:
+
+1. **Personal portfolio** (`~/Code/portfolio`)
+2. **JavaScript exercises** (`~/Code/js-practice`)
+3. **Web development notes** (`~/Code/web-dev-notes`)
+
+For each project:
+
+- Navigate to Code directory
+- Create project directory
+- Navigate into project directory
+- Initialize Git repository
+- Create at least 2 files
+- Make at least 2 commits with meaningful messages
+- Verify separation with `git log --oneline`
+
+**Part 2: Navigation Challenge**
+
+Without looking at the lesson, complete this sequence:
+
+1. Start from home directory
+2. Navigate to your first project
+3. Check Git status
+4. Navigate to your second project
+5. Check Git status
+6. Create a new file in second project
+7. Stage and commit the file
+8. Navigate to third project
+9. Check that it has different commit history
+
+**Part 3: Verification Screenshots**
+
+Submit screenshots showing:
+
+- `pwd` output from each project directory
+- `git log --oneline` from each project (showing different histories)
+- Terminal prompt showing branch names in each project
+
+### Understanding Check
+
+Answer these questions to verify your understanding:
+
+1. **What command shows your current directory location?**
+
+2. **What indicates that a directory is a Git repository?**
+
+3. **Why should your home directory never be a Git repository?**
+
+4. **How do you safely remove Git tracking from a directory?**
+
+5. **What's the difference between your Code directory and a project directory?**
+
+### What's Next: Connecting to GitHub
+
+In your next Git lesson, you'll learn how to:
+
+- Connect your local repositories to GitHub
+- Push your commits to the cloud
+- Share your code with others
+- Collaborate on projects
+
+The foundation you've built with terminal navigation and local Git repositories makes the GitHub workflow much easier to understand.
+
+### Key Takeaways
+
+- **Location awareness** - always know where you are with `pwd`
+- **Repository isolation** - each project gets its own Git repository
+- **Terminal confidence** - navigate efficiently between projects
+- **Git workflow** - create, stage, commit, repeat
+- **Problem prevention** - verify location before `git init`
+
+You now have the terminal and Git skills needed for professional development workflows. These fundamentals will serve you throughout your programming career.

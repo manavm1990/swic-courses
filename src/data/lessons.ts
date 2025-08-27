@@ -106,6 +106,12 @@ const lessons = [
           "Master the basics of Markdown syntax for formatting text documents.",
         video: null,
       },
+      {
+        id: "terminal-x-git",
+        title: "Terminal + Git",
+        description: "Reinforce using Git and Terminal commands.",
+        video: null,
+      },
     ],
   },
   {
