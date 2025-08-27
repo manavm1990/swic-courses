@@ -6,7 +6,7 @@ export function Figure({
   width,
   height,
   caption,
-  unoptimized,
+  unoptimized = false,
 }: {
   src: string;
   alt: string;
