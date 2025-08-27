@@ -6,12 +6,14 @@ export function Figure({
   width,
   height,
   caption,
+  unoptimized,
 }: {
   src: string;
   alt: string;
   width: number;
   height: number;
   caption?: string;
+  unoptimized?: boolean;
 }) {
   return (
     <figure className="my-6">
@@ -22,6 +24,7 @@ export function Figure({
           width={width}
           height={height}
           className="h-auto w-full"
+          unoptimized={unoptimized}
         />
       </div>
       {caption && (

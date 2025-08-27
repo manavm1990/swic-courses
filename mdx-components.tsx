@@ -7,7 +7,7 @@ import React, { type ReactNode } from "react";
 import { createHighlighter, type Highlighter } from "shiki";
 import theme from "./src/app/syntax-theme.json";
 
-const IMAGE_DIMENSION_REGEX = /^[^|]+\|\d+x\d+$/;
+const IMAGE_PROPS_REGEX = /^[^|]+\|\d+x\d+(\|unoptimized)?$/;
 
 function getTextContent(node: ReactNode): string {
   if (typeof node === "string") return node;
@@ -123,16 +123,20 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     },
     img: ({ alt, ...props }) => {
       const schemePlaceholder = encodeURIComponent("{scheme}");
-      let width, height;
+      let width, height, unoptimized;
 
       /**
        * MD is annotated with image dimensions after the alt tag
+       * Can also include unoptimized flag for animated images
        *
        * @example ![alt text|300x200](image.png)
+       * @example ![alt text|300x200|unoptimized](animated.gif)
        */
-      if (IMAGE_DIMENSION_REGEX.test(alt)) {
-        [width, height] = alt.split("|")[1].split("x").map(Number);
-        alt = alt.split("|")[0];
+      if (IMAGE_PROPS_REGEX.test(alt)) {
+        const parts = alt.split("|");
+        [width, height] = parts[1].split("x").map(Number);
+        alt = parts[0];
+        unoptimized = parts[2] === "unoptimized";
       }
 
       if (props.src.includes(schemePlaceholder))
@@ -145,6 +149,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
               height={height}
               src={props.src.replace(schemePlaceholder, "light")}
               className="dark:hidden"
+              unoptimized={unoptimized}
             />
 
             <Image
@@ -154,11 +159,20 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
               height={height}
               src={props.src.replace(schemePlaceholder, "dark")}
               className="not-dark:hidden"
+              unoptimized={unoptimized}
             />
           </>
         );
 
-      return <Image {...props} alt={alt} width={width} height={height} />;
+      return (
+        <Image
+          {...props}
+          alt={alt}
+          width={width}
+          height={height}
+          unoptimized={unoptimized}
+        />
+      );
     },
     async pre(props) {
       const child = React.Children.only(props.children);
