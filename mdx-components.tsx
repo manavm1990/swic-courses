@@ -33,13 +33,21 @@ function generateId(text: string) {
 
 let highlighter: Highlighter | null = null;
 
+// Cleanup for Shikli Highlighter
+export function disposeHighlighter() {
+  if (highlighter) {
+    highlighter.dispose();
+    highlighter = null;
+  }
+}
+
 async function getHighlighter() {
-  if (!highlighter)
+  if (!highlighter) {
     highlighter = await createHighlighter({
       langs: ["javascript", "css", "html", "bash", "json", "markdown"],
       themes: [theme],
     });
-
+  }
   return highlighter;
 }
 
@@ -116,10 +124,17 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     img: ({ alt, ...props }) => {
       const schemePlaceholder = encodeURIComponent("{scheme}");
       let width, height;
+
+      /**
+       * MD is annotated with image dimensions after the alt tag
+       *
+       * @example ![alt text|300x200](image.png)
+       */
       if (IMAGE_DIMENSION_REGEX.test(alt)) {
         [width, height] = alt.split("|")[1].split("x").map(Number);
         alt = alt.split("|")[0];
       }
+
       if (props.src.includes(schemePlaceholder))
         return (
           <>
@@ -131,6 +146,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
               src={props.src.replace(schemePlaceholder, "light")}
               className="dark:hidden"
             />
+
             <Image
               {...props}
               alt={alt}
@@ -141,6 +157,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
             />
           </>
         );
+
       return <Image {...props} alt={alt} width={width} height={height} />;
     },
     async pre(props) {
