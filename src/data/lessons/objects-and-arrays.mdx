@@ -1,0 +1,759 @@
+# Objects and Arrays - React Prep Review
+
+## Introduction: Working with Complex Data
+
+Welcome to one of the most crucial lessons in this JavaScript review! We're diving deep into **objects** and **arrays** - the two most important data structures in JavaScript. These aren't just academic concepts; they're the building blocks you'll use constantly in React and modern web development.
+
+### Real-World Scenario: Student Information System
+
+Imagine you're building a student information system for SWIC. You need to store and manipulate data about students, their grades, courses, and schedules. How would you organize this complex information? That's where objects and arrays shine!
+
+### Learning Objectives
+
+By the end of this lesson, you'll be able to:
+
+- Create and manipulate JavaScript objects using multiple syntax approaches
+- Work with arrays and their powerful built-in methods
+- Combine objects and arrays to represent complex data structures
+- Understand how these concepts directly apply to React development
+- Use modern JavaScript features like destructuring and spread operators
+
+---
+
+## Core Concept Overview: Objects
+
+Objects in JavaScript are collections of key-value pairs. Think of them as digital filing cabinets where each piece of information has a label (key) and content (value).
+
+### Object Basics
+
+```js
+// Object literal syntax - the most common way
+const student = {
+  firstName: "Maria",
+  lastName: "Rodriguez",
+  age: 19,
+  major: "Computer Science",
+  gpa: 3.8,
+  isEnrolled: true,
+};
+
+// Accessing properties
+console.log(student.firstName); // "Maria"
+console.log(student["lastName"]); // "Rodriguez"
+```
+
+### Why Two Ways to Access Properties?
+
+**Dot notation** (`student.firstName`) is cleaner and more common, but **bracket notation** (`student["firstName"]`) is more flexible:
+
+```js
+const student = {
+  firstName: "Maria",
+  // ❌ BAD: Property names with spaces (avoid this!)
+  "favorite course": "Web Development",
+
+  // ✅ GOOD: Use camelCase instead
+  favoriteCourse: "Web Development",
+};
+
+// These won't work with dot notation:
+// console.log(student.favorite course); // Syntax error
+console.log(student["favorite course"]); // "Web Development" (works but ugly)
+
+// Much better - use proper camelCase naming:
+console.log(student.favoriteCourse); // "Web Development" (clean and readable)
+
+// Dynamic property access (this is where bracket notation shines)
+const propertyName = "firstName";
+console.log(student[propertyName]); // "Maria"
+```
+
+### Objects Can Hold Any Type of Data
+
+```js
+const student = {
+  // Primitive values
+  name: "Maria Rodriguez",
+  age: 19,
+
+  // Arrays
+  courses: ["Math 101", "CS 277", "English 102"],
+
+  // Other objects (nested objects)
+  address: {
+    street: "123 College Ave",
+    city: "Belleville",
+    state: "Illinois",
+  },
+
+  // Method to get full address
+  // We don't do this in modern React. No need for `this` references.
+  getFullAddress() {
+    return `${this.address.street}, ${this.address.city}, ${this.address.state}`;
+  },
+};
+```
+
+### Key Terms
+
+- **Property**: A key-value pair in an object
+- **Method**: A function that belongs to an object. Not really used in React with functional style.
+- **Object literal**: Creating objects using `{}` syntax
+- **Dot notation**: Accessing properties with `.` (e.g., `obj.property`)
+- **Bracket notation**: Accessing properties with `[]` (e.g., `obj["property"]`)
+
+---
+
+## Core Concept Overview: Arrays
+
+Arrays are ordered lists of values. Each value has a numerical index starting from 0. So, like object literals, we use a 🔑 to access a value, but object literals use named strings and arrays are auto indexed numerically.
+
+### Array Basics
+
+```js
+// Array literal syntax
+const courses = ["Math 101", "CS 277", "English 102"];
+
+// Mixed data types (can be done, but not common or usually necessary).
+const mixedData = [
+  "JavaScript",
+  42,
+  true,
+  { name: "Object" },
+  ["nested", "array"],
+];
+
+// Accessing elements
+console.log(courses[0]); // "Math 101"
+console.log(courses[1]); // "CS 277"
+console.log(courses.length); // 3
+
+// Getting the last element
+console.log(courses[courses.length - 1]); // "English 102"
+console.log(courses.at(-1)); // "English 102" (modern approach)
+```
+
+`courses[courses.length - 1]` Depending on where you are in this review, this code snippet may be difficult to understand. Recall that an array has a property `length`, which returns the number of total elements in the array. Recall that the first element is at index 0, so the last element is at index `length - 1`.
+
+`.at` is a modern method for accessing elements in an array. It allows for negative indexing, meaning you can count back from the end of the array. For example, `courses.at(-1)` gives you the last element, just like `courses[courses.length - 1]`.
+
+### Essential Array Methods
+
+Arrays come with powerful built-in methods for manipulation:
+
+#### Adding and Removing Elements
+
+```js
+const fruits = ["apple", "banana"];
+
+// Add to end
+fruits.push("orange");
+console.log(fruits); // ["apple", "banana", "orange"]
+
+// Remove from end
+const lastFruit = fruits.pop();
+console.log(lastFruit); // "orange"
+console.log(fruits); // ["apple", "banana"]
+
+// Add to beginning
+fruits.unshift("grape");
+console.log(fruits); // ["grape", "apple", "banana"]
+
+// Remove from beginning
+const firstFruit = fruits.shift();
+console.log(firstFruit); // "grape"
+console.log(fruits); // ["apple", "banana"]
+```
+
+Note that the above methods are fine and dandy, but not really used in modern React where we want to avoid mutating an array in place.
+
+#### Searching and Finding
+
+```js
+const numbers = [1, 5, 3, 8, 5, 9];
+
+// Check if element exists
+console.log(numbers.includes(5)); // true
+console.log(numbers.includes(10)); // false
+
+// Find index of element
+// Rarely used
+console.log(numbers.indexOf(5)); // 1 (first occurrence)
+console.log(numbers.lastIndexOf(5)); // 4 (last occurrence)
+
+// Find element with condition
+const students = [
+  { name: "Maria", gpa: 3.8 },
+  { name: "John", gpa: 3.2 },
+  { name: "Sarah", gpa: 3.9 },
+];
+
+const highAchiever = students.find((student) => student.gpa > 3.5);
+console.log(highAchiever); // { name: "Maria", gpa: 3.8 }
+```
+
+`const highAchiever = students.find((student) => student.gpa > 3.5);` Now we're talking functional programming! What's happening here?
+
+Recall that a **callback function** is being used. The `find` method takes a function as an argument and applies it to each element in the array until it finds one that returns `true`. In this case, it's looking for a student with a GPA greater than 3.5.
+
+---
+
+## Hands-On Application: Building a Course Management System
+
+Let's build a practical example that combines objects and arrays. This mimics what you'll do in React applications!
+
+### Step 1: Create the Data Structure
+
+```js
+// Course data structure - just plain objects and arrays
+const course = {
+  id: "CS277",
+  title: "Web Development Fundamentals",
+  instructor: "Prof. Johnson",
+  credits: 3,
+  students: [
+    {
+      id: "s001",
+      name: "Maria Rodriguez",
+      email: "mrodriguez@swic.edu",
+      grades: [85, 92, 78, 88],
+    },
+    {
+      id: "s002",
+      name: "John Smith",
+      email: "jsmith@swic.edu",
+      grades: [90, 87, 95, 92],
+    },
+    {
+      id: "s003",
+      name: "Sarah Chen",
+      email: "schen@swic.edu",
+      grades: [78, 85, 82, 90],
+    },
+  ],
+};
+
+// Separate functions that work with the data (like React!)
+const getStudentAverage = (students, studentId) => {
+  const student = students.find((s) => s.id === studentId);
+  if (!student || student.grades.length === 0) return 0;
+
+  const total = student.grades.reduce((sum, grade) => sum + grade, 0);
+  return Math.round(total / student.grades.length);
+};
+
+const getHighPerformers = (students, threshold = 85) => {
+  return students.filter((student) => {
+    const avg = getStudentAverage(students, student.id);
+    return avg >= threshold;
+  });
+};
+
+// 💡 Quick Review: Default Parameters
+// Notice `threshold = 85` above? That's a default parameter!
+// If no threshold is provided, it defaults to 85.
+// This is common in React for optional props and function parameters.
+
+// Examples:
+getHighPerformers(course.students); // uses default 85
+getHighPerformers(course.students, 90); // uses 90
+getHighPerformers(course.students, 70); // uses 70
+```
+
+### Step 2: Working with the Data
+
+```js
+// Get Maria's average grade using our function
+console.log(getStudentAverage(course.students, "s001")); // 86
+
+// Get all high performers (>= 85 average)
+const topStudents = getHighPerformers(course.students, 85);
+console.log(topStudents.map((s) => s.name)); // ["Maria Rodriguez", "John Smith"]
+
+// Add a new student (creating new array - React style!)
+const newStudent = {
+  id: "s004",
+  name: "David Wilson",
+  email: "dwilson@swic.edu",
+  grades: [95, 89, 93, 91],
+};
+const updatedCourse = {
+  ...course,
+  students: [...course.students, newStudent],
+};
+
+// Update a student's grades (immutable way)
+const updateStudentGrades = (students, studentId, newGrade) => {
+  return students.map((student) =>
+    student.id === studentId
+      ? { ...student, grades: [...student.grades, newGrade] }
+      : student,
+  );
+};
+
+const courseWithUpdatedGrades = {
+  ...course,
+  students: updateStudentGrades(course.students, "s001", 94),
+};
+```
+
+### Step 3: Essential Array Operations for React
+
+Now let's practice the three most important array methods you'll use constantly in React:
+
+```js
+// 1. MAP - Transform each element (like rendering a list in React)
+const studentNames = course.students.map((student) => student.name);
+console.log("All student names:", studentNames);
+// ["Maria Rodriguez", "John Smith", "Sarah Chen"]
+
+// 2. FILTER - Select elements based on a condition
+// The function you pass is called a 'predicate function'
+// Whether an element is included is PREDICATED on returning true/false
+
+const topPerformers = course.students.filter((student) => {
+  const avg = getStudentAverage(course.students, student.id);
+  return avg >= 90; // This is the predicate - true/false determines inclusion
+});
+console.log(
+  "Top performers:",
+  topPerformers.map((s) => s.name),
+);
+
+// 3. FIND - Get the first element that matches a condition
+const firstHighAchiever = course.students.find((student) => {
+  const avg = getStudentAverage(course.students, student.id);
+  return avg >= 85; // Predicate function again!
+});
+console.log("First high achiever:", firstHighAchiever.name);
+
+// Bonus: Check if something is an array (useful for defensive programming)
+if (Array.isArray(course.students)) {
+  console.log(`We have ${course.students.length} students`);
+}
+```
+
+---
+
+## Advanced Concepts & Modern JavaScript Features
+
+### Object Destructuring
+
+Destructuring allows you to extract properties from objects into variables:
+
+```js
+const student = {
+  name: "Maria Rodriguez",
+  age: 19,
+  major: "Computer Science",
+  gpa: 3.8,
+};
+
+// Old way
+const name = student.name;
+const age = student.age;
+
+// Destructuring way
+const { name, age, major } = student;
+console.log(name, age, major); // "Maria Rodriguez" 19 "Computer Science"
+
+// Rename variables
+const { name: studentName, gpa: gradePointAverage } = student;
+console.log(studentName, gradePointAverage); // "Maria Rodriguez" 3.8
+
+// Default values
+const { name, graduationYear = 2025 } = student;
+console.log(graduationYear); // 2025 (default since it doesn't exist)
+```
+
+### Array Destructuring
+
+```js
+const grades = [85, 92, 78, 88, 94];
+
+// Extract first few grades
+const [first, second, third] = grades;
+console.log(first, second, third); // 85 92 78
+
+// Skip elements
+const [firstGrade, , thirdGrade] = grades;
+console.log(firstGrade, thirdGrade); // 85 78
+
+// Rest operator
+const [highest, ...remainingGrades] = grades.sort((a, b) => b - a);
+console.log(highest); // 94
+console.log(remainingGrades); // [92, 88, 85, 78]
+```
+
+### Spread Operator
+
+The spread operator (`...`) is incredibly useful for copying and combining arrays and objects. Mainly, for React, we need to use it to avoid mutating data in place. Spread (similar to `map` and `filter`) creates a shallow copy of the original data structure.
+
+What's a shallow copy? Well, it means that if our data structure is complex, with nested objects, just using `...` alone will not prevent data mutations. In that situation, we can use [`structuredClone`](https://developer.mozilla.org/en-US/docs/Web/API/Window/structuredClone). But that's something that we can deal with another time.
+
+```js
+// Array spreading
+const originalGrades = [85, 92, 78];
+const newGrades = [88, 94];
+const allGrades = [...originalGrades, ...newGrades];
+console.log(allGrades); // [85, 92, 78, 88, 94]
+
+// Object spreading (copying and extending)
+const basicStudent = {
+  name: "John Doe",
+  age: 20,
+};
+
+const detailedStudent = {
+  ...basicStudent,
+  major: "Engineering",
+  gpa: 3.5,
+  age: 21, // This overrides the age from basicStudent
+};
+
+console.log(detailedStudent);
+// { name: "John Doe", age: 21, major: "Engineering", gpa: 3.5 }
+```
+
+### Object Methods Deep Dive
+
+JavaScript provides powerful methods for working with objects:
+
+```js
+const student = {
+  firstName: "Maria",
+  lastName: "Rodriguez",
+  age: 19,
+  major: "Computer Science",
+};
+
+// Get all keys
+const keys = Object.keys(student);
+console.log(keys); // ["firstName", "lastName", "age", "major"]
+
+// Get all values
+const values = Object.values(student);
+console.log(values); // ["Maria", "Rodriguez", 19, "Computer Science"]
+
+// Get key-value pairs. More complex. Less common.
+const entries = Object.entries(student);
+console.log(entries);
+// [["firstName", "Maria"], ["lastName", "Rodriguez"], ["age", 19], ["major", "Computer Science"]]
+
+// Iterate over object properties
+for (const [key, value] of Object.entries(student)) {
+  console.log(`${key}: ${value}`);
+}
+```
+
+---
+
+## React Connection: Why This Matters
+
+Understanding objects and arrays is crucial for React development. Here's how these concepts directly apply:
+
+### Component Props (Objects)
+
+```js
+// React component receives props as an object
+function StudentCard({ name, age, major, gpa }) {
+  // This is destructuring the props object!
+  return (
+    <div>
+      <h3>{name}</h3>
+      <p>Age: {age}</p>
+      <p>Major: {major}</p>
+      <p>GPA: {gpa}</p>
+    </div>
+  );
+}
+
+// Usage
+<StudentCard
+  name="Maria Rodriguez"
+  age={19}
+  major="Computer Science"
+  gpa={3.8}
+/>;
+```
+
+### State Management (Objects and Arrays)
+
+```js
+// React state often contains objects and arrays
+const [students, setStudents] = useState([
+  { id: 1, name: "Maria", gpa: 3.8 },
+  { id: 2, name: "John", gpa: 3.2 },
+]);
+
+// Adding a student (using spread operator). NO MUTATION!
+const addStudent = (newStudent) => {
+  setStudents([...students, newStudent]);
+};
+
+// Updating a student (using map). NO MUTATION!
+const updateStudentGPA = (id, newGPA) => {
+  setStudents(
+    students.map((student) =>
+      student.id === id ? { ...student, gpa: newGPA } : student,
+    ),
+  );
+};
+```
+
+### Array Rendering (map method)
+
+```js
+// Rendering arrays in React
+function StudentList({ students }) {
+  return (
+    <ul>
+      {students.map((student) => (
+        <li key={student.id}>
+          {student.name} - GPA: {student.gpa}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+---
+
+## Troubleshooting & Best Practices
+
+### Common Pitfalls
+
+1. **Mutating arrays directly in React**
+
+```js
+// ❌ Don't do this in React
+students.push(newStudent); // Mutates original array
+setStudents(students);
+
+// ✅ Do this instead
+setStudents([...students, newStudent]); // Creates new array
+```
+
+2. **Forgetting array methods return new arrays**
+
+```js
+const numbers = [1, 2, 3];
+
+// ❌ map() returns a new array, doesn't modify original
+numbers.map((n) => n * 2);
+console.log(numbers); // Still [1, 2, 3]
+
+// ✅ Capture the returned array
+const doubled = numbers.map((n) => n * 2);
+console.log(doubled); // [2, 4, 6]
+```
+
+3. **Confusing reference vs value**
+
+```js
+// Objects are passed by reference
+const student1 = { name: "Maria", age: 19 };
+const student2 = student1; // Same reference!
+student2.age = 20;
+console.log(student1.age); // 20 - both changed!
+
+// Create a copy instead
+const student3 = { ...student1 }; // New object with same properties
+```
+
+### Industry Best Practices
+
+1. **Use descriptive property names**
+
+```js
+// ❌ Unclear
+const u = { n: "Maria", a: 19 };
+
+// ✅ Clear and descriptive
+const user = { name: "Maria", age: 19 };
+```
+
+2. **Prefer immutable operations**
+
+```js
+// ❌ Mutating (changing original)
+const addGrade = (student, newGrade) => {
+  student.grades.push(newGrade);
+  return student;
+};
+
+// ✅ Immutable (creating new)
+const addGrade = (student, newGrade) => ({
+  ...student,
+  grades: [...student.grades, newGrade],
+});
+```
+
+3. **Use array methods instead of loops**
+
+```js
+// ❌ Manual loop
+const highGrades = [];
+for (let i = 0; i < grades.length; i++) {
+  if (grades[i] >= 90) {
+    highGrades.push(grades[i]);
+  }
+}
+
+// ✅ Array method
+const highGrades = grades.filter((grade) => grade >= 90);
+```
+
+4. **Validate data structure**
+
+```js
+const getStudentAverage = (student) => {
+  // Defensive programming
+  if (
+    !student ||
+    !Array.isArray(student.grades) ||
+    student.grades.length === 0
+  ) {
+    return 0;
+  }
+
+  return (
+    student.grades.reduce((sum, grade) => sum + grade, 0) /
+    student.grades.length
+  );
+};
+```
+
+---
+
+## Wrap-Up & Assessment
+
+### Key Takeaways
+
+1. **Objects** are collections of key-value pairs, perfect for representing complex entities
+2. **Arrays** are ordered lists, ideal for collections of similar items
+3. **Modern JavaScript features** like destructuring and spread operators make working with these structures much cleaner
+4. **Array methods** like `map`, `filter`, `find`, and `reduce` are essential for data manipulation
+5. **Immutable patterns** are crucial for React development
+6. Understanding **reference vs value** prevents many common bugs
+
+### Advanced Practice Challenge
+
+Put your object and array skills to work! Create a comprehensive grade book system that can track students, assignments, and calculate grades across multiple courses:
+
+```js
+const gradeBook = {
+  courses: [
+    {
+      id: "CS277",
+      name: "Web Development",
+      students: [
+        {
+          id: 1,
+          name: "Maria",
+          assignments: [
+            { name: "Project 1", points: 85, maxPoints: 100 },
+            { name: "Quiz 1", points: 18, maxPoints: 20 },
+          ],
+        },
+        {
+          id: 2,
+          name: "John",
+          assignments: [
+            { name: "Project 1", points: 92, maxPoints: 100 },
+            { name: "Quiz 1", points: 19, maxPoints: 20 },
+          ],
+        },
+      ],
+    },
+  ],
+
+  // Calculate student's percentage in a course
+  getStudentPercentage(courseId, studentId) {
+    // Your implementation here
+  },
+
+  // Get class average for a course
+  getClassAverage(courseId) {
+    // Your implementation here
+  },
+
+  // Add new assignment to all students
+  addAssignment(courseId, assignmentName, maxPoints) {
+    // Your implementation here
+  },
+};
+```
+
+### 💡 Console Tips for Your Homework
+
+Since we're still working in the browser's JavaScript console, here are some tips to make your life easier:
+
+**Multi-line Code:**
+
+- Use `Shift + Enter` to create new lines without executing
+- This lets you write proper functions and objects across multiple lines
+
+**Reset Your Environment:**
+
+- Open a **new blank tab** to get a fresh console environment
+- This clears all your previous variables and functions
+- Use `Ctrl/Cmd + Shift + T` to quickly open a new tab
+
+**Useful Console Features:**
+
+- `console.clear()` - Clear the console output
+- Use `console.log()` liberally to debug your functions
+- `console.table(arrayOfObjects)` - Shows arrays of objects in a nice table format
+- Arrow keys ↑/↓ to navigate through previous commands
+
+**Copy/Paste Your Code:**
+
+- Write your functions in a text editor first, then paste into console
+- This makes it easier to edit and prevents losing work
+
+### HW: Implementation & Video Walkthrough
+
+Implement the three missing methods in the grade book system above:
+
+1. **`getStudentPercentage(courseId, studentId)`** - Calculate a student's percentage based on their assignments
+2. **`getClassAverage(courseId)`** - Calculate the class average percentage for a course
+3. **`addAssignment(courseId, assignmentName, maxPoints)`** - Add a new assignment to all students (immutably!)
+
+**Requirements:**
+
+- Use `map`, `filter`, and/or `find` appropriately
+- Ensure all operations are immutable (no mutations!)
+- Include defensive programming (check for valid data)
+- Test your functions with console.log statements
+
+**Video Walkthrough Required:**
+Record a 3-5 minute video explaining:
+
+- How you implemented each method
+- Why you chose certain array methods
+- How you ensured immutability
+- What challenges you encountered and how you solved them
+- Walk through your test cases. This just means showing the input and output for each case.
+
+**Challenge Questions to Address in Your Video:**
+
+1. Why did you choose specific array methods for each implementation?
+2. How did you handle edge cases (empty arrays, missing data)?
+3. What would break if you used mutating methods instead?
+
+### Looking Ahead
+
+These object and array concepts are the foundation for everything we'll do in React:
+
+- **Props** are objects passed to components
+- **State** often contains arrays and objects
+- **Event handlers** frequently manipulate arrays and objects
+- **API responses** are typically arrays of objects
+
+Next up: We'll put all these JavaScript fundamentals together in a hands-on vanilla JavaScript project where you'll see exactly why we need frameworks like React for complex applications!
+
+---
+
+_Ready to master these concepts? Open your browser's developer console and start experimenting with the code examples. The best way to learn is by doing!_
