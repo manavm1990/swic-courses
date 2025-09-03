@@ -151,20 +151,20 @@ const lessons = [
     lessons: [
       {
         id: "js-variables-and-types",
-        title: "Variables and Types - React Prep",
+        title: "Variables and Types",
         description: "Understanding variables and data types in JavaScript.",
         video: null,
       },
       {
         id: "functions-and-scope",
-        title: "Functions and Scope - React Prep",
+        title: "Functions and Scope",
         description:
           "A review of function concepts in JavaScript, focusing on their relevance in React.",
         video: null,
       },
       {
         id: "objects-and-arrays",
-        title: "Objects and Arrays - React Prep",
+        title: "Objects and Arrays",
         description:
           "Master JavaScript objects and arrays - essential data structures for React development.",
         video: null,
