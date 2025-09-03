@@ -112,6 +112,13 @@ const lessons = [
         description: "Reinforce using Git and Terminal commands.",
         video: null,
       },
+      {
+        id: "node-template-repo",
+        title: "Node.js Template Repository",
+        description:
+          "Learn how to set up a Node.js template repository for your projects.",
+        video: null,
+      },
     ],
   },
   {

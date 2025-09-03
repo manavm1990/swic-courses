@@ -1,0 +1,691 @@
+# Node.js Template Repository
+
+In this lesson, we will learn how to set up a Node.js template repository that can be used as a starting point for new projects. This template will include essential configurations and files to streamline the development process.
+
+**Note:** This process may be tedious and boring. We will only go through it once because you will want to have some idea about the tooling and why things are set up in a certain way.
+
+## Setting Up Your Project Folder in the Terminal
+
+<VideoYT
+  url="https://youtu.be/3wxxnGIsX88?si=D9lhyexb3jQmnUgC"
+  title="Setting Up a Node.js Template Repository I"
+/>
+
+Let's walk through the process of creating a new Node.js project folder using the terminal. This is a foundational skill for developers and helps you organize your code from the very beginning.
+
+### What Happened and Why
+
+1. **Navigating to Your Development Folder**
+   - Used `cd` (change directory) to move into your main development folder. This keeps all your projects organized in one place.
+2. **Creating a New Project Directory**
+   - The command `mkdir NodeTemplateRepo` created a new folder for your project. This is where all your code and configuration files will live.
+3. **Moving Into Your Project Directory**
+   - With `cd NodeTemplateRepo/`, you entered your new project folder so you could start adding files and folders inside it.
+4. **Creating a Source Code Folder**
+   - `mkdir src` made a `src` directory, which is a common convention for storing your source code files.
+5. **Adding an Entry Point File**
+   - `touch src/index.js` created an empty JavaScript file. This is usually the main file where your application starts running.
+6. **Checking Your Work**
+   - Commands like `ls`, `tree`, and `pwd` were used to list files, show the folder structure, and confirm your current location. This helps you verify that everything is set up correctly.
+7. **Setting Up VS Code Configuration**
+   - You created a `.vscode` folder and added `extensions.json` and `settings.json`. These files help you and your teammates use recommended extensions and consistent editor settings in VS Code.
+8. **Reviewing the Structure**
+   - More listing commands (`ls -a`, `ls -al`, `ls -R`, `ls -aR`) were used to double-check the folder and file setup.
+
+### Why Is This Important?
+
+- Organizing your project from the start makes it easier to manage code, collaborate, and avoid confusion later.
+- Using a consistent structure is a best practice in professional development environments.
+- Setting up VS Code configuration files helps everyone on your team work with the same tools and settings.
+
+## JSON
+
+How about the 2️⃣ JSON files that we mentioned. And...what was JSON again?
+
+First, recall that JSON stands for: JavaScript Object Notation. It's a universal portable data format that uses comma separated key value pairs that resemble JS objects. So, it's not strictly something for JavaScript.
+
+### The Two JSON Files
+
+1. **`extensions.json`**
+   - This file is used to recommend VS Code extensions for your project. It helps ensure that all team members are using the same tools, which can improve collaboration and reduce "works on my machine" issues.
+
+2. **`settings.json`**
+   - This file contains project-specific settings for VS Code. You can customize various aspects of the editor, such as formatting rules, linting preferences, and more. This ensures a consistent development environment for everyone working on the project.
+
+<VideoYT
+  url="https://youtu.be/b1VKtGB2Ezo"
+  title="VS Code Settings and Extensions"
+/>
+
+#### `extensions.json`
+
+Open up VS Code with: `code .` Open up the `.vscode/extensions.json` file (you can use 'ctrl+P' and then type the file name) and then copy/paste the following:
+
+```json
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "bierner.github-markdown-preview",
+    "christian-kohler.path-intellisense",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens",
+    "vivaxy.vscode-conventional-commits"
+  ]
+}
+```
+
+You can Google any of these extension identifiers to see what they are, exactly. Summarily, these are the recommended extensions for enhancing your development experience in VS Code. It's likely that you already have these installed, but in case you don't, once you close out and come back in you will be prompted to install any that are missing.
+
+**Note:** the filename must be exactly `extensions.json`.
+
+**Note:** Please don't install other extensions that are not listed here, as they may not be compatible with our project setup. Installing things like themes should be fine, but be wary of potential conflicts.
+
+<Figure
+  src="https://d8n3.c1.e2-8.dev/swic/reco-extensions.png"
+  alt="A visual overview of recommended VS Code extensions"
+  width={550}
+  height={606}
+  caption="DON'T install other 'recommended' extensions"
+/>
+
+#### `settings.json`
+
+These settings help ensure that your code is consistently formatted, automatically saved, and easy to read. They enable features like automatic bracket closing, colorized bracket pairs, and linked editing, which make coding faster and reduce errors. The default formatter and code actions on save help maintain clean code style across your team.
+
+Open up the `.vscode/settings.json` file and copy/paste the following:
+
+```json
+{
+  "editor.autoClosingBrackets": "beforeWhitespace",
+  "editor.autoClosingComments": "always",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.linkedEditing": true,
+  "files.autoSave": "onFocusChange"
+}
+```
+
+## Initializing a `package.json` and Installing ESLint
+
+<VideoYT url="https://youtu.be/XPmR3D4DBdQ" title="'package.json' and ESLint" />
+
+Before we can install ESLint, we need to initialize our project with a **manifest file** called `package.json`. This file is used to keep track of various information ℹ️ about the project including the name, versions, keywords, licenses, and most importantly, a list of all of the packages 📦 that we using in our project, such as ESLint.
+
+We can easily set this up with defaults by 🏃🏾‍♂️‍➡️: `npm init -y`. This uses the 📦 manager that we installed with Node, called `npm`. It will initialize the project with some defaults.
+
+Upon completion, you can do an `ls` and you will see a `package.json` file created in your project directory. You can check it out with `cat package.json`. There is some excess stuff in there that we don't need, but it's fine to leave it, you may remove it. The details are shown in the video ☝️.
+
+The [ESLint website](https://eslint.org/) states that ESLint will, "Find and fix problems in your JavaScript code." It is a static code analysis tool that helps identify and fix potential issues in your JavaScript code, ensuring that it adheres to specified coding standards and best practices.
+
+To get started, we'll copy and paste this command directly from their homepage: `npm init @eslint/config@latest`. You can use your arrow keys and the space bar to select options as follows:
+
+```sh
+> npx
+> "create-config"
+
+@eslint/create-config: v1.10.0
+
+✔ What do you want to lint? · javascript, json, jsonc, json5, md
+✔ How would you like to use ESLint? · problems
+✔ What type of modules does your project use? · esm
+✔ Which framework does your project use? · none
+✔ Does your project use TypeScript? · No / Yes
+✔ Where does your code run? · node
+✔ What flavor of Markdown do you want to lint? · gfm
+The config that you've selected requires the following dependencies:
+
+eslint, @eslint/js, globals, @eslint/json, @eslint/markdown
+✔ Would you like to install them now? · No / Yes
+✔ Which package manager do you want to use? · npm
+☕️Installing...
+
+added 152 packages, and audited 153 packages in 6s
+
+78 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+Successfully created /Users/codefinity/Dev/SWIC/NodeTemplateRepo/eslint.config.js file.
+```
+
+This initialization did a few things.
+
+1. It added `"devDependencies"` to the `package.json` file, which is where we keep track of all the packages we need for development.
+1. It created a `package-lock.json` file, which locks the versions of the installed packages to ensure consistent installs across different environments.
+1. It installed the necessary ESLint packages into `node_modules`. The packages were installed from the npm 📦 registry. This is what makes the `package.json` file critical. Without the list of the necessary packages, whenever we shared this project, others would not be able to install the required dependencies easily.
+1. Last, but not least, it created an `eslint.config.js` file, which is the configuration file for ESLint. This file contains the rules and settings that ESLint will use to analyze your code. In the video ☝️ I trim this file down a bit, but it's not wholly necessary.
+
+Now, if we try this out by opening up `src/index.js` and typing some 💩 code like: `var x = 5`. ESLint will start to warn us that we have declared `x` but haven't used it anywhere in the code. Now, this is a bit silly b/c if we just created the variable, of course we haven't used it yet.
+
+But, what's more concerning is the fact that ESLint is not yelling at us for using `var`❗
+
+![That doesn't work for me brother|665x375](https://d8n3.c1.e2-8.dev/swic/hogan.jpeg)
+
+## Fixing ESLint, Adding Prettier 🎨, and Pushing to GitHub
+
+<VideoYT
+  url="https://youtu.be/TmGVs6MSAMI"
+  title="ESLint, Prettier and GitHub"
+/>
+
+ESLint's default configuration inexplicably still allows var in 2025. Let's fix that by updating our `eslint.config.js` with sensible modern defaults. Replace the contents of the configuration file with this:
+
+```js
+import js from "@eslint/js";
+import globals from "globals";
+import json from "@eslint/json";
+import markdown from "@eslint/markdown";
+
+// Clean Code principle: Named constants instead of magic numbers
+const ESLINT_THRESHOLDS = {
+  MAX_CYCLOMATIC_COMPLEXITY: 5,
+  MAX_LINES_PER_FUNCTION: 50, // Functions should do one thing
+  MAX_FUNCTION_PARAMS: 3, // Functions should have 2 or fewer params ideally
+};
+
+export default [
+  {
+    files: ["**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: globals.node,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+
+      // Variables (Clean Code)
+      "no-var": "error",
+      "prefer-const": "error",
+      "no-magic-numbers": [
+        "warn",
+        {
+          ignore: [0, 1, -1],
+          ignoreArrayIndexes: true,
+          ignoreDefaultValues: true,
+        },
+      ],
+
+      // Functions (Clean Code)
+      "max-params": ["warn", ESLINT_THRESHOLDS.MAX_FUNCTION_PARAMS],
+      "max-lines-per-function": [
+        "warn",
+        ESLINT_THRESHOLDS.MAX_LINES_PER_FUNCTION,
+      ],
+      "no-nested-ternary": "error", // Avoid complex conditionals
+      complexity: ["warn", ESLINT_THRESHOLDS.MAX_CYCLOMATIC_COMPLEXITY],
+      "prefer-arrow-callback": "error",
+
+      // Objects and Arrays
+      "prefer-destructuring": [
+        "warn",
+        {
+          array: false,
+          object: true,
+        },
+      ],
+      "object-shorthand": ["error", "always"],
+      "no-array-constructor": "error",
+      "no-new-object": "error",
+      "prefer-template": "warn",
+      "prefer-spread": "error",
+
+      // Clean Code Basics
+      eqeqeq: ["error", "always"],
+      "no-else-return": "warn",
+      "no-lonely-if": "warn",
+      "no-unneeded-ternary": "error",
+      "operator-assignment": ["error", "always"],
+
+      // Side Effects & Immutability
+      "no-param-reassign": ["warn", { props: true }],
+
+      // General Quality
+      "no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
+      "no-shadow": "error",
+      "no-redeclare": "error",
+      "no-use-before-define": [
+        "error",
+        {
+          functions: false,
+        },
+      ],
+
+      "no-console": [
+        "warn",
+        {
+          allow: ["info", "warn", "error", "table"],
+        },
+      ],
+
+      // Comments (Clean Code)
+      "no-warning-comments": [
+        "warn",
+        {
+          terms: ["todo", "fixme", "hack"],
+          location: "start",
+        },
+      ],
+      "multiline-comment-style": ["warn", "separate-lines"],
+    },
+  },
+  {
+    files: ["**/*.json", "**/*.jsonc"],
+    language: "json/json",
+    ...json.configs.recommended,
+  },
+  {
+    files: ["**/*.md"],
+    language: "markdown/gfm",
+    ...markdown.configs.recommended,
+  },
+];
+```
+
+### Testing Our Configuration
+
+With the updated configuration, your ESLint will now catch modern JavaScript issues. Let's test it by adding some intentionally problematic code to `src/index.js`:
+
+```javascript
+// These will all trigger ESLint warnings/errors:
+var oldWay = "This should error"; // Error: Unexpected var
+let shouldBeConst = 42; // Error: 'shouldBeConst' is never reassigned. Use 'const' instead
+console.log("Wrong method"); // Warning: Unexpected console statement
+
+// Function with multiple issues
+function doTooManyThings(a, b, c, d, e) {
+  // Warning: Too many parameters (max: 3)
+  if (a == b) {
+    // Error: Expected '===' and instead saw '=='
+    return true;
+  } else {
+    // Warning: Unnecessary else after return
+    if (c) {
+      // Warning: Lonely if
+      return false;
+    }
+  }
+
+  if (d > 21) {
+    // Warning: No magic number
+    return "adult";
+  }
+}
+
+const grades = new Array(85, 92, 78); // Error: Use array literal notation []
+```
+
+Save the file and watch VS Code highlight all the issues. This immediate feedback helps build good coding habits from the start.
+
+### Understanding Our ESLint Rules
+
+These rules enforce Clean Code principles that you'll appreciate as your projects grow:
+
+1. **`no-var: "error"`** - Forces modern variable declarations (`let`/`const`)
+2. **`prefer-const: "error"`** - If a variable is never reassigned, it should be `const`
+3. **`max-params: 3`** - Functions with many parameters are hard to understand
+4. **`no-magic-numbers`** - Numbers should have descriptive names
+5. **`eqeqeq: "always"`** - Use `===` instead of `==` to avoid type coercion bugs
+6. **`no-console`** - Use specific methods like `console.info()` instead of `console.log()`
+
+### Clean Code Example
+
+Here's how to fix the problematic code:
+
+```javascript
+// Use const for values that don't change
+const greeting = "Hello, World!";
+
+// Named constant instead of magic number
+const LEGAL_DRINKING_AGE = 21;
+
+// Function with fewer parameters
+function checkAge(age) {
+  return age >= LEGAL_DRINKING_AGE ? "adult" : "minor";
+}
+
+// Use array literal notation
+const grades = [85, 92, 78];
+
+// Use console.info for general output
+console.info("Application started");
+```
+
+### Adding Prettier for Code Formatting
+
+While ESLint catches problems, Prettier ensures consistent formatting. Install it:
+
+```bash
+npm install --save-dev prettier eslint-config-prettier
+```
+
+That's it. Prettier works out of the box with sensible defaults. VS Code will format your code on save.
+
+To make ESLint and Prettier play nicely together, update your `eslint.config.js`. Add this import at the top:
+
+```javascript
+import prettier from "eslint-config-prettier";
+```
+
+And add `prettier` as the last item in your export array:
+
+```javascript
+export default [
+  // ... all your existing config ...
+  prettier, // Must be last to override formatting rules
+];
+```
+
+### Setting Up Git
+
+Initialize Git and create a `.gitignore`:
+
+```bash
+git init
+```
+
+Create `.gitignore`:
+
+```
+node_modules/
+.env
+.DS_Store
+*.log
+dist/
+build/
+coverage/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+```
+
+### Pushing to GitHub as a Template Repository
+
+Now let's get this template on GitHub so you can use it for all future projects:
+
+1. **Make your first commit**:
+
+```bash
+git add .
+git commit -m "Initial commit"
+```
+
+For the initial commit, this is not written with an imperative verb. It's 🆗 for this initial commit.
+
+2. Make sure that you are authenticated via GitHub CLI with: `gh auth status`
+
+```bash
+gh auth status
+github.com
+  ✓ Logged in to github.com account manavm1990 (keyring)
+```
+
+3. `gh repo create`
+
+```sh
+? What would you like to do? Push an existing local repository to github.com
+? Path to local repository .
+? Repository name node-template-repo
+? Repository owner manavm1990
+? Description
+? Visibility Public
+✓ Created repository manavm1990/node-template-repo on github.com
+  https://github.com/manavm1990/node-template-repo
+? Add a remote? Yes
+? What should the new remote be called? origin
+✓ Added remote git@github.com:manavm1990/node-template-repo.git
+? Would you like to push commits from the current branch to "origin"? Yes
+Enumerating objects: 11, done.
+Counting objects: 100% (11/11), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (9/9), done.
+Writing objects: 100% (11/11), 19.12 KiB | 6.37 MiB/s, done.
+Total 11 (delta 0), reused 0 (delta 0), pack-reused 0
+To github.com:manavm1990/node-template-repo.git
+ * [new branch]      HEAD -> main
+branch 'main' set up to track 'origin/main'.
+✓ Pushed commits to git@github.com:manavm1990/node-template-repo.git
+```
+
+4. **Make it a template repository**:
+   - Go to your repository Settings on GitHub
+   - Check "Template repository"
+   - Now you can use "Use this template" button for all future projects!
+
+## Creating a README
+
+Every project needs documentation. Create `README.md`:
+
+````markdown
+# Node.js Template Repository
+
+A starter template for Node.js projects with ESLint, Prettier, and VS Code configurations.
+
+## Getting Started
+
+1. Clone this repository
+2. Run `npm install`
+3. Start coding in `src/index.js`
+
+## Features
+
+- ✅ Modern JavaScript enforcement (no `var`, prefer `const`)
+- 📝 ESLint with Clean Code principles
+- 💅 Prettier for consistent formatting
+- 🔧 VS Code settings and recommended extensions
+- 📦 Git configuration with .gitignore
+
+## Scripts
+
+To run your code:
+
+```bash
+npm start
+```
+````
+
+ESLint and Prettier run automatically in VS Code - no need for manual commands!
+
+## Why This Setup Matters
+
+This template gives you professional-grade code quality without the complexity:
+
+- **No `var`** - ESLint catches outdated syntax
+- **Clean Code rules** - Build good habits from day one
+- **Automatic formatting** - Your code always looks consistent
+- **Zero configuration** - Just code and let VS Code handle the tools
+
+This foundation will serve you throughout your JavaScript journey. Every professional Node.js project uses similar tooling. By starting with this template, you're learning industry-standard practices while avoiding common pitfalls.
+
+## Wrap-Up & Assessment
+
+### Key Takeaways
+
+1. **Project Organization** - Consistent folder structure and configuration files streamline development
+2. **ESLint Configuration** - Modern JavaScript enforcement prevents common bugs and enforces clean code principles
+3. **Development Environment** - VS Code settings and extensions create a professional coding experience
+4. **Template Repositories** - Reusable project templates save time and ensure consistency across projects
+5. **Clean Code Principles** - Automated tooling helps build good coding habits from the start
+
+### HW: Create Your Personal Node.js Template and First Project
+
+**Note:** We haven't gone over setting up and configuring Copilot in VS Code yet. You may already have it working but use with discretion. It may or may not be properly configured.
+
+**Part 1: Template Customization and GitHub Setup**
+
+Starting from the template repository we created in class:
+
+1. **Customize your template repository**
+   - Update the `package.json` with your name and preferred project defaults
+   - Modify the README.md with your personal template description
+   - Ensure it's marked as a template repository on GitHub
+
+2. **Test the ESLint configuration**
+   - Add intentionally problematic code to `src/index.js` (use `var`, magic numbers, etc.)
+   - Verify ESLint catches all the issues
+   - Fix the code and confirm no warnings remain
+
+**Part 2: Use Your Template - Create New Project**
+
+Now practice the complete template workflow:
+
+1. **Create a new repository from your template**
+   - Use the "Use this template" button on GitHub
+   - Name it `node-grade-calculator`
+   - Make it public
+
+2. **Clone your new project locally**
+   - Navigate to your new repository on GitHub
+   - Click the green "Code" button
+   - Copy the `gh repo clone` command shown
+   - Run it in your terminal from your Code directory
+
+   <Figure
+     src="https://d8n3.c1.e2-8.dev/swic/clone.png"
+     alt="GitHub clone command interface"
+     width={400}
+     height={300}
+     caption="Copy the gh repo clone command from GitHub"
+   />
+
+   ```bash
+   cd ~/Code  # Adjust to match your directory structure
+   # Paste the copied command here
+   gh repo clone [your-username]/node-grade-calculator
+   cd node-grade-calculator
+   ```
+
+3. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+4. **Verify the setup works**
+   - Open in VS Code: `code .`
+   - Check that ESLint and Prettier are working
+   - Run `git status` to confirm clean working directory
+
+**Part 3: Build the Grade Calculator**
+
+Create a Node.js program that calculates student grades in `src/index.js`:
+
+```javascript
+// Grade calculation constants
+const GRADE_A_THRESHOLD = 90;
+const GRADE_B_THRESHOLD = 80;
+const GRADE_C_THRESHOLD = 70;
+const GRADE_D_THRESHOLD = 60;
+
+const calculateLetterGrade = (numericGrade) => {
+  // Add your grade calculation logic here
+};
+
+// Test cases
+const testGrades = [95, 87, 74, 58, 92, 68];
+
+// Run tests and display results
+```
+
+**Requirements:**
+
+- No ESLint errors or warnings
+- Code automatically formatted by Prettier
+- Use `console.info()` for output
+- Use meaningful variable and function names
+- Handle edge cases (exactly 90, exactly 80, etc.)
+
+**Expected Output:**
+
+```
+Grade 95: A
+Grade 87: B
+Grade 74: C
+Grade 58: F
+Grade 92: A
+Grade 68: D
+```
+
+**Part 4: Git Workflow Practice**
+
+Practice professional Git workflow:
+
+1. **Make meaningful commits as you work**
+   - Commit your work in logical stages (constants, function implementation, testing)
+   - Write clear commit messages using imperative verbs
+   - Example: `git commit -m "Add grade calculation constants"`
+
+2. **Push your final solution**
+
+   ```bash
+   git push origin main
+   ```
+
+3. **Verify on GitHub**
+   - Check that your commits appear on GitHub
+   - Ensure code is properly formatted and readable
+
+**Part 5: Reflection Document**
+
+Create a Markdown document via GitHub Gist that addresses the following questions:
+
+1. How does using a template repository save time compared to starting from scratch?
+2. What was the most challenging part of the template setup process?
+3. Why do we use named constants instead of "magic numbers" in code?
+4. Which ESLint rule did you find most helpful and why?
+5. What's the difference between `git clone` and using a template repository?
+6. How do meaningful commit messages help in professional development?
+7. How does this workflow mirror what development teams do in industry?
+8. What aspect of this setup do you think will be most valuable in your programming career?
+
+**Submission Requirements:**
+
+- **Template repository link** - Your customized Node.js template (marked as template)
+- **Project repository link** - Your `node-grade-calculator` repository
+- **Reflection document link** - GitHub Gist link with your Markdown reflection
+
+### Validation Checklist
+
+Before submitting:
+
+- [ ] Template repository is properly configured and marked as template on GitHub
+- [ ] New project created successfully from template
+- [ ] Grade calculator runs without ESLint errors/warnings
+- [ ] Code follows Clean Code principles (named constants, arrow functions)
+- [ ] Multiple meaningful Git commits with good messages
+- [ ] Final code pushed to GitHub and visible online
+- [ ] Reflection document addresses all required questions thoughtfully
+
+### Assessment Criteria
+
+Your submission will be evaluated on:
+
+- **Template Usage** - Successfully created and used template repository
+- **Code Quality** - Follows ESLint rules and Clean Code principles
+- **Git Workflow** - Proper commit messages and repository management
+- **Problem Solving** - Grade calculator works correctly with test cases
+- **Reflection Quality** - Demonstrates understanding of concepts and professional practices
+
+### Professional Context
+
+This workflow mirrors how development teams work:
+
+- **Template repositories** ensure consistent project setup across teams
+- **ESLint configurations** maintain code quality standards
+- **Git workflows** enable collaboration and code review
+- **Clear documentation** helps teammates understand and use templates
