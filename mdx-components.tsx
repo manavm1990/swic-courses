@@ -31,28 +31,22 @@ function generateId(text: string) {
     .replace(/[^a-z0-9-]/g, "");
 }
 
-let highlighter: Highlighter | null = null;
-
-// Cleanup for Shikli Highlighter
-export function disposeHighlighter() {
-  if (highlighter) {
-    highlighter.dispose();
-    highlighter = null;
-  }
-}
+// Create a singleton promise to ensure only one highlighter instance
+let highlighterPromise: Promise<Highlighter> | null = null;
 
 async function getHighlighter() {
-  if (!highlighter) {
-    highlighter = await createHighlighter({
+  if (!highlighterPromise) {
+    highlighterPromise = createHighlighter({
       langs: ["javascript", "css", "html", "bash", "json", "markdown"],
       themes: [theme],
     });
   }
-  return highlighter;
+  return highlighterPromise;
 }
 
 async function CodeBlock({ code, lang }: { code: string; lang: string }) {
-  const out = (await getHighlighter()).codeToHtml(code, {
+  const highlighter = await getHighlighter();
+  const out = highlighter.codeToHtml(code, {
     lang,
     theme: theme.name,
     transformers: [
