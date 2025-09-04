@@ -399,7 +399,7 @@ Initialize Git and create a `.gitignore`:
 git init
 ```
 
-Create `.gitignore`:
+Create a `.gitignore` file. As the name implies this specially named hidden file tells Git which files/folders to ignore when we make commits. Open up `.gitignore` and copy/paste the following:
 
 ```
 node_modules/
@@ -409,10 +409,9 @@ node_modules/
 dist/
 build/
 coverage/
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
 ```
+
+Most of the above should be self-explanatory. The `node_modules/` folder is where all of our installed packages live. We don't want to commit that b/c it can be reinstalled from the `package.json` file. The `.env` file is where we will store environment variables (more on that later). The `.DS_Store` file is a macOS system file that we don't want to track. Log files, build output folders, and coverage reports are also typically ignored.
 
 ### Pushing to GitHub as a Template Repository
 
