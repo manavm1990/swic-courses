@@ -206,14 +206,6 @@ export default [
       // Variables (Clean Code)
       "no-var": "error",
       "prefer-const": "error",
-      "no-magic-numbers": [
-        "warn",
-        {
-          ignore: [0, 1, -1],
-          ignoreArrayIndexes: true,
-          ignoreDefaultValues: true,
-        },
-      ],
 
       // Functions (Clean Code)
       "max-params": ["warn", ESLINT_THRESHOLDS.MAX_FUNCTION_PARAMS],
@@ -320,11 +312,6 @@ function doTooManyThings(a, b, c, d, e) {
       return false;
     }
   }
-
-  if (d > 21) {
-    // Warning: No magic number
-    return "adult";
-  }
 }
 
 const grades = new Array(85, 92, 78); // Error: Use array literal notation []
@@ -337,11 +324,10 @@ Save the file and watch VS Code highlight all the issues. This immediate feedbac
 These rules enforce Clean Code principles that you'll appreciate as your projects grow:
 
 1. **`no-var: "error"`** - Forces modern variable declarations (`let`/`const`)
-2. **`prefer-const: "error"`** - If a variable is never reassigned, it should be `const`
-3. **`max-params: 3`** - Functions with many parameters are hard to understand
-4. **`no-magic-numbers`** - Numbers should have descriptive names
-5. **`eqeqeq: "always"`** - Use `===` instead of `==` to avoid type coercion bugs
-6. **`no-console`** - Use specific methods like `console.info()` instead of `console.log()`
+1. **`prefer-const: "error"`** - If a variable is never reassigned, it should be `const`
+1. **`max-params: 3`** - Functions with many parameters are hard to understand
+1. **`eqeqeq: "always"`** - Use `===` instead of `==` to avoid type coercion bugs
+1. **`no-console`** - Use specific methods like `console.info()` instead of `console.log()`
 
 ### Clean Code Example
 
@@ -535,7 +521,7 @@ Starting from the template repository we created in class:
    - Ensure it's marked as a template repository on GitHub
 
 2. **Test the ESLint configuration**
-   - Add intentionally problematic code to `src/index.js` (use `var`, magic numbers, etc.)
+   - Add intentionally problematic code to `src/index.js` (use `var`, etc.)
    - Verify ESLint catches all the issues
    - Fix the code and confirm no warnings remain
 
