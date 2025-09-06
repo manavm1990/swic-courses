@@ -131,12 +131,21 @@ This console environment will always output the result of the last expression ev
 
 Variables let you store and reuse information. Let's practice in the browser console!
 
+**First, let's learn about comments**: Comments are notes you can add to your code to explain what it does. They start with `//` and JavaScript completely ignores them. Comments help you (and others) understand your code later.
+
+```javascript
+// This is a comment - it explains what the code does
+const age = 25; // You can also put comments at the end of a line
+```
+
+Comments are like sticky notes for your code - use them to remind yourself what you were thinking!
+
 1. **In the console, type each line and press Enter**:
 
    ```javascript
    // This is a comment - it explains what the code does
    // Comments start with // and are ignored by JavaScript
-
+   
    // Creating variables with const (default choice)
    const firstName = "Alex";
    ```
@@ -463,19 +472,6 @@ console.log("Game status:", gameLevel, gameScore, gameLives);
 - **Building larger applications** with multiple files and functions
 - **Learning advanced JavaScript** concepts like functions and objects
 
-### JavaScript Basics Checklist
-
-Master these fundamentals through challenges:
-
-- [ ] **Console mastery**: Navigate browser console confidently
-- [ ] **Variable decisions**: Choose `const` vs `let` appropriately for real scenarios
-- [ ] **Data type understanding**: Predict and verify types for meaningful data
-- [ ] **Problem-solving**: Apply math operations to solve personal calculations
-- [ ] **String building**: Create professional output combining multiple variables
-- [ ] **Modern syntax**: Use template literals for cleaner string formatting
-- [ ] **Creative application**: Add personal touches to demonstrate understanding
-- [ ] **Professional presentation**: Display information in organized, readable format
-
 ### JavaScript Quick Reference
 
 ```javascript
@@ -502,7 +498,7 @@ const product = 6 * 7; // 42
 const quotient = 15 / 3; // 5
 const remainder = 17 % 5; // 2
 
-// String combination
+// String concatenation
 const full = "Hello" + " " + "World"; // "Hello World"
 const modern = `Hello ${text}`; // Template literal
 
