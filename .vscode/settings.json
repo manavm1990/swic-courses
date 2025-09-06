@@ -32,5 +32,6 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "workbench.colorCustomizations": {
     "@import": "./src/app/syntax-theme.json"
-  }
+  },
+  "cSpell.words": ["firstname"]
 }

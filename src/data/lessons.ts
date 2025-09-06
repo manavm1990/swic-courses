@@ -163,6 +163,13 @@ const lessons = [
           "Explore JavaScript's core data types, operators, and how to work with them effectively.",
         video: null,
       },
+      {
+        id: "program-structure",
+        title: "Program Structure & Variables",
+        description:
+          "Learn about variables, program structure, and hands-on JavaScript coding using the browser console.",
+        video: null,
+      },
     ],
   },
   {

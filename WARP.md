@@ -108,3 +108,7 @@ The platform is designed as a static site that can be deployed to any static hos
 - Interactive code examples and hands-on activities
 - Building core programming concepts through JavaScript
 - Industry best practices and modern development tools
+
+### Lesson Timing
+- **Target duration**: Aim for ~2 hours total per lesson (including pre-work reading)
+- Design lessons appropriate for community college students who are new to programming

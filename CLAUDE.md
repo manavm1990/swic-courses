@@ -14,6 +14,7 @@ Claude assists with content creation, code development, and educational design f
 - **Practical Focus**: Emphasize real-world, applicable skills over theoretical concepts
 - **Interactive Approach**: Include hands-on activities, code examples, and assessments
 - **Clear Progression**: Each lesson should build logically on previous knowledge
+- **Appropriate Pacing**: Design lessons for ~2 hours total (including pre-work), suitable for community college students new to programming
 
 ### Lesson Template Usage
 
