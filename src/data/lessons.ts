@@ -135,7 +135,7 @@ const lessons = [
         video: null,
       },
       {
-        id: "javascript-introduction",
+        id: "js-introduction",
         title: "What is JavaScript?",
         description:
           "Introduction to JavaScript: what it is, what it can do, and how it fits into modern web development.",
@@ -146,6 +146,21 @@ const lessons = [
         title: "AI Reality Check: Beyond the Hype",
         description:
           "A balanced look at AI's role in development: separating hype from reality, addressing concerns, and using AI as a learning tool.",
+        video: null,
+      },
+    ],
+  },
+  {
+    id: "js-basics",
+    title: "JavaScript Basics",
+    description:
+      "Learn the fundamentals of JavaScript, including variables, data types, operators, and basic syntax.",
+    lessons: [
+      {
+        id: "js-values-types-ops",
+        title: "Values, Types, and Operators",
+        description:
+          "Explore JavaScript's core data types, operators, and how to work with them effectively.",
         video: null,
       },
     ],
