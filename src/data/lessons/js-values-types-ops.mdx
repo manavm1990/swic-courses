@@ -1,0 +1,748 @@
+# JavaScript Values, Types, and Operators
+
+Your first steps with JavaScript: variables, console.log, and running files with Node.js.
+
+## Introduction
+
+### Welcome to JavaScript!
+
+You're about to write your first JavaScript code! JavaScript is the programming language of the web - it runs in every browser and powers interactive websites. But it's also much more: with Node.js, JavaScript runs on servers, mobile apps, and even desktop applications.
+
+**Real-world scenario**: When you click "Like" on a social media post, submit a form on a website, or see a live chat message appear, that's JavaScript in action. Companies like Facebook, Netflix, and Spotify rely heavily on JavaScript for their user interfaces and server operations.
+
+### What You'll Learn Today
+
+- What JavaScript is and why it's everywhere
+- How to create and use variables to store information
+- How to display messages with console.log()
+- How to run JavaScript files using Node.js
+- Writing your first working JavaScript programs
+
+### Why Start with JavaScript?
+
+- **Beginner-friendly**: Forgiving syntax and immediate feedback
+- **Versatile**: Works in browsers, servers, and mobile apps
+- **High demand**: Most requested programming language in job postings
+- **Great community**: Tons of resources and help available
+
+## Core Concept Overview
+
+### What is JavaScript?
+
+**JavaScript is a programming language that:**
+
+- Makes websites interactive and dynamic
+- Runs in web browsers and on servers or just your local computer outside of a browser via Node.js
+- Is used for front-end (user interface) and back-end (server) development
+- Enables features like animations, form validation, and real-time updates
+- Powers web applications like Gmail, Facebook, and Twitter
+- Is essential for modern web development
+- Communicates with databases and APIs. Here, APIs are third-party services that provide data or functionality your app can use, like weather information or payment processing.
+
+**JavaScript is NOT Java** (despite the name):
+
+- The name was a controversial marketing decision in the 90s, and 30 years later, the confusion remains as [does an ongoing lawsuit against Oracle.](https://youtu.be/pOF11EDprxc?si=qb36or98EsLgZkrw)
+- For all intents and purposes, Java is to JavaScript as car is to carpet.
+- If you are studying Java at the same time, please review [Mozilla's comparison of the 2️⃣](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction#javascript_and_java). If this is your first time programming, you **may actually find JavaScript easier to learn** than others who might be coming in with other preconceptions.
+
+### What is EcmaScript?
+
+- The standardized specification that JavaScript follows
+- Ensures consistency across different environments (browsers, Node.js)
+- New versions introduce modern features (ES6, ES7, etc.). As of this writing ✍️, we are currently on ES2024.
+
+**Before continuing on,** please reference [Mozilla's explanation on JS and EcmaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Introduction#javascript_and_the_ecmascript_specification) You can stop when you get to, "Getting Started with JavaScript."
+
+### JavaScript Environments, Runtimes, and Engines
+
+- **Environment**: Where JavaScript runs (browser, server, etc.)
+- **Runtime**: The platform that executes JavaScript code (Node.js, V8 engine)
+- **Engine**: The core component that interprets and runs JavaScript (V8, SpiderMonkey)
+
+Summarily, each browser has its own JavaScript engine (e.g., Chrome uses V8, Firefox uses SpiderMonkey). Node.js uses the V8 engine from Chrome to run JavaScript on servers and local machines.
+
+Because of EcmaScript, JavaScript behaves similarly across different environments, but there can be some edge cases where behavior differs slightly.
+
+For consistency, we will encourage the use of Chrome browser, but any modern browser should work fine. If you would like to use FireFox, get the [FireFox Developer Edition](https://www.firefox.com/en-US/channel/desktop/developer/), which has extra tools for developers. **Note:** For Mac, don't waste time manually installing. Use `brew install --cask firefox-developer-edition` to install via Homebrew.
+
+---
+
+**Before continuing on,** please read [Values, Types and Operators](https://eloquentjavascript.net/01_values.html)
+
+---
+
+## Values
+
+Everything on a computer is ultimately represented as data. In programming, we work with different types of data to perform operations and create functionality.
+
+### Numbers
+
+In JavaScript, numbers are used to represent both integers (whole numbers) and floating-point numbers (decimals). There is no differentiating between the two types like in some other languages. `42` and `3.14` are both of the same type: `number`. As are `-7`, `0`, `2.71828`, and `2.998e8` (scientific notation).
+
+Even, `Infinity` and `-Infinity` are considered numbers in JavaScript.
+
+And last and certainly least as it's not a bright spot on the design of JavaScript, we have `NaN` (Not-a-Number). Yes, you read that right. `NaN`, 'Not a Number' is actually a number type in JavaScript. It represents bad math such as `0/0`. Here, the `/` is the division operator, so we are trying to divide zero by zero, which is mathematically undefined. In JavaScript, this one way to end up with `NaN`.
+
+Summarily, if you see `NaN` in your code, it means something went wrong with a calculation.
+
+### Strings
+
+Strings are sequences of characters used to represent text. In JavaScript, strings are enclosed in single quotes (`'...'`), double quotes (`"..."`), or backticks (`` `...` ``). Backticks are typically used for something more advanced called **template literals**, which we will cover later.
+
+For simplicity, just think of strings as human dialogue or text, so use double quotes for strings like you would in English.
+
+`"Hello, World!"` and `"12345"` are both strings, even though the second one looks like a number. If it's in quotes, it's a string. If it's not in quotes, it's a number (assuming it's a valid number).
+
+### Booleans
+
+Booleans represent logical values and can be either `true` or `false`. They are often used in conditional statements to control the flow of a program based on certain conditions.
+
+Simply put, `true` means "yes" or "on", and `false` means "no" or "off".
+
+Going back to strings, if you see something like `"true"` or `"false"` (with quotes), that is a string, not a boolean. Only the unquoted `true` and `false` are booleans, and that's almost always what you want unless you are literally communicating the words or **strings,** `"true"` or `"false"` to a user.
+
+### Empty Values
+
+JavaScript has two special values that represent the absence of a meaningful value: `null` and `undefined`.
+
+> The difference in meaning between undefined and null is an accident of JavaScript’s design, and it doesn’t matter most of the time. In cases where you actually have to concern yourself with these values, I recommend treating them as mostly interchangeable.
+
+Most of the time we are dealing with meaningful values, so the only time that these confusing 😕 empty values will come up is when JS returns them to us.
+
+## Types 🏷️
+
+We classify data into different **types** based on what kind of information it represents. The data type determines what operations can be performed on it and how it is stored in memory.
+
+### Primitive Data Types
+
+We just reviewed 3️⃣ of the most common types 🏷️ ☝️:
+
+1. **Number**: Represents numeric values (e.g., `42`, `3.14`, `-7`)
+2. **String**: Represents text (e.g., `"Hello, World!"`, `"12345"`)
+3. **Boolean**: Represents logical values (`true` or `false`
+
+Each of these specific types is more generally categorized as a **primitive data type.**
+
+Primitive data types are the most basic building blocks of data in programming. They represent a single, indivisible value. This means that they are a **discrete** or single data point. Case and point, if you took the entire text of _Moby Dick_ or _It_ or any other book and wrapped it in quotes, it would be a single string.
+
+Primitive data types are also immutable. They cannot be changed or broken apart further. You can create new values based on them, and you can even discard or garbage collect the previous value, but you cannot change the original value itself, ever.
+
+## Operators
+
+In order to do anything useful with the aforementioned data types, aside from a way to classify or type them, we need to perform **operations** on them. Operations are actions that can be performed on data, such as arithmetic calculations, comparisons, or manipulations.
+
+**Operators** operate on **operands**, which are the values or variables that the operators act upon.
+
+### Arithmetic Operations
+
+JavaScript supports several arithmetic operations, including:
+
+- **Addition (`+`)**: Adds two numbers or concatenates two strings.
+- **Subtraction (`-`)**: Subtracts one number from another.
+- **Multiplication (`*`)**: Multiplies two numbers.
+- **Division (`/`)**: Divides one number by another.
+- **Modulus (`%`)**: Returns the remainder of a division operation.
+
+### String Concatenation
+
+The `+` operator is also used for string concatenation, which combines two or more strings into one: `"Hello, " + "World!"` results in `"Hello, World!"`.
+
+### Unary Operators
+
+Unary operators operate on a single operand. Common unary operators include:
+
+- **Negation (`-`)**: Negates a number (e.g., `-5` becomes `5`).
+- **Increment (`++`)**: Increases a number by 1 (e.g., `x++`).
+- **Decrement (`--`)**: Decreases a number by 1 (e.g., `x--`).
+- **Typeof (`typeof`)**: Returns the type of a variable or value (e.g., `typeof 42` returns `"number"`).
+
+As a reminder, primitive data types such as numbers are immutable, so using `++` or `--` does not change the original value but creates a new value based on the operation.
+
+And, note that `typeof` always returns a string.
+
+### Logical Operations
+
+Logical operators are used to combine or modify boolean values:
+
+- **AND (`&&`)**: Returns true if both operands are true (e.g., `true && false` is `false`).
+- **OR (`||`)**: Returns true if at least one operand is true (e.g., `true || false` is `true`).
+- **NOT (`!`)**: Reverses the boolean value (e.g., `!true` is `false`).
+
+### Comparison Operators
+
+Comparison operators are used to compare two values and return a boolean result:
+
+- **Equal (`==`)**: Returns true if two values are equal (e.g., `5 == 5` is `true`).
+- **Strict Equal (`===`)**: Returns true if two values are equal and of the same type (e.g., `5 === '5'` is `false`).
+- **Not Equal (`!=`)**: Returns true if two values are not equal (e.g., `5 != 4` is `true`).
+- **Strict Not Equal (`!==`)**: Returns true if two values are not equal or not of the same type (e.g., `5 !== '5'` is `true`).
+- **Greater Than (`>`)**: Returns true if the left value is greater than the right value (e.g., `5 > 4` is `true`).
+- **Less Than (`<`)**: Returns true if the left value is less than the right value (e.g., `5 < 4` is `false`).
+- **Greater Than or Equal (`>=`)**: Returns true if the left value is greater than or equal to the right value (e.g., `5 >= 5` is `true`).
+- **Less Than or Equal (`<=`)**: Returns true if the left value is less than or equal to the right value (e.g., `5 <= 4` is `false`).
+
+---
+
+**Before continuing on,** open up your browser console (F12 or right-click → Inspect → Console tab) and try out some of these operations. Type them in and hit Enter to see the results.
+
+![Browser Console Tab|156x80](https://d8n3.c1.e2-8.dev/swic/console-tab.png)
+
+For best results, open this up from a fresh tab in your browser so you don't have any other code from a website 🏃🏾‍♂️‍➡️ that might interfere.
+
+---
+
+## Template Literals
+
+Template literals are a modern way to work with strings in JavaScript. They allow for easier string **interpolation** and multi-line strings. To create a template literal, you use backticks (`` ` ``) instead of single or double quotes. To be clear, these are backticks, not apostrophes. The key for these is usually located to the left of the `1` key on most keyboards.
+
+**String interpolation** allows you to embed expressions inside a string using `${}` syntax. This makes it easier to create dynamic strings without needing to use the `+` operator for concatenation.
+
+```javascript
+`Is it true that 5 + 5 = ${5 + 5}?`;
+```
+
+Without template literals, you would have to write:
+
+```javascript
+"Is it true that 5 + 5 = " + (5 + 5) + "?";
+```
+
+---
+
+**Before continuing on,** please revisit your browser console and try out some template literals. Type them in and hit Enter to see the results.
+
+---
+
+## JS is a Dynamically Typed Language
+
+JavaScript is a **dynamically typed** language, meaning 3️⃣ things:
+
+1. You don't need to declare variable types explicitly (the interpreter figures it out for you)
+2. Variables can change types during execution. Something that was a number in one moment can become a string in the next.
+3. JavaScript performs type coercion, automatically converting values between types when necessary (e.g., when using the `+` operator with a string and a number).
+
+`"2" + 2` results in `"22"` (string concatenation), while `"2" * 2` results in `4` (numeric multiplication). In either case, because JS is dynamically typed, it figures out what you mean based on the context.
+
+Summarily, even though we said earlier that the type of a value determines what operations can be performed on it, JavaScript is flexible and will try to make sense of what you mean based on the situation. And with the basic operations that we are currently performing, almost any combination of types will work. Worst case, you get `NaN` if something goes really wrong with a calculation.
+
+### Key Terms
+
+- **Variable**: A named storage location for data
+- **String**: Text data enclosed in quotes
+- **Number**: Numeric data (integers or decimals)
+- **Boolean**: True or false values
+- **console.log()**: Function that displays output
+- **Node.js**: JavaScript runtime for running files
+
+## Hands-On Application
+
+### Step 1: Create Your First JavaScript File
+
+1. **Open VS Code** and navigate to your SWIC-Course folder
+
+2. **Create a new folder for JavaScript practice**:
+   - Right-click in SWIC-Course folder
+   - Select "New Folder"
+   - Name it `javascript-basics`
+
+3. **Create your first JavaScript file**:
+   - Right-click in the javascript-basics folder
+   - Select "New File"
+   - Name it `hello.js` (the `.js` extension is important!)
+
+4. **Write your first JavaScript code**:
+
+   ```javascript
+   console.log("Hello, World!");
+   console.log("I'm learning JavaScript!");
+   ```
+
+5. **Save the file** (Ctrl/Cmd + S)
+
+### Step 2: Run Your JavaScript Code
+
+1. **Open the integrated terminal in VS Code**:
+   - Press `Ctrl + `` ` ``(Windows) or `Cmd +`` ` `` (Mac)
+   - Or go to View → Terminal
+
+2. **Navigate to your javascript-basics folder**:
+
+   ```bash
+   cd javascript-basics
+   ```
+
+3. **Run your JavaScript file**:
+
+   ```bash
+   node hello.js
+   ```
+
+4. **See the output**:
+   You should see:
+   ```
+   Hello, World!
+   I'm learning JavaScript!
+   ```
+
+**Congratulations!** You just ran your first JavaScript program!
+
+### Step 3: Working with Variables
+
+Variables let you store and reuse information. Let's practice!
+
+1. **Create a new file** called `variables.js`
+
+2. **Add this code**:
+
+   ```javascript
+   // This is a comment - it explains what the code does
+   // Comments start with // and are ignored by JavaScript
+
+   // Creating variables with let
+   let firstName = "Alex";
+   let age = 25;
+   let isStudent = true;
+
+   // Display the variables
+   console.log("First Name:", firstName);
+   console.log("Age:", age);
+   console.log("Is Student:", isStudent);
+   ```
+
+3. **Run the file**:
+
+   ```bash
+   node variables.js
+   ```
+
+4. **You should see**:
+   ```
+   First Name: Alex
+   Age: 25
+   Is Student: true
+   ```
+
+### Step 4: Understanding Variable Types
+
+Let's explore different types of data you can store:
+
+1. **Create** `data-types.js`:
+
+   ```javascript
+   // Different types of data
+   let message = "JavaScript is awesome!"; // String
+   let score = 95; // Number
+   let temperature = 72.5; // Number (decimal)
+   let isComplete = false; // Boolean
+   let userName = "coder2024"; // String
+
+   // Display each variable with its type
+   console.log("Message:", message);
+   console.log("Score:", score);
+   console.log("Temperature:", temperature + " degrees");
+   console.log("Complete:", isComplete);
+   console.log("Username:", userName);
+
+   // JavaScript can tell you the type of any variable
+   console.log("Type of message:", typeof message);
+   console.log("Type of score:", typeof score);
+   console.log("Type of isComplete:", typeof isComplete);
+   ```
+
+2. **Run it**:
+   ```bash
+   node data-types.js
+   ```
+
+### Step 5: Basic Operations with Variables
+
+Variables become powerful when you can change and combine them:
+
+1. **Create** `operations.js`:
+
+   ```javascript
+   // Math with numbers
+   let num1 = 10;
+   let num2 = 5;
+   let sum = num1 + num2;
+   let product = num1 * num2;
+
+   console.log(num1 + " + " + num2 + " = " + sum);
+   console.log(num1 + " * " + num2 + " = " + product);
+
+   // Combining strings
+   let firstName = "Jane";
+   let lastName = "Smith";
+   let fullName = firstName + " " + lastName;
+
+   console.log("Full name:", fullName);
+
+   // Changing variable values
+   let counter = 0;
+   console.log("Counter starts at:", counter);
+
+   counter = counter + 1;
+   console.log("Counter after adding 1:", counter);
+
+   counter = counter + 5;
+   console.log("Counter after adding 5:", counter);
+   ```
+
+2. **Run it**:
+   ```bash
+   node operations.js
+   ```
+
+### Step 6: Interactive Program with Input
+
+Let's make a simple program that works with user information:
+
+1. **Create** `about-me.js`:
+
+   ```javascript
+   // About Me Program
+   // Fill in your own information!
+
+   let myName = "Put your name here";
+   let myAge = 20; // Put your age here
+   let myCity = "Your city here";
+   let myHobby = "Your favorite hobby";
+   let isLearningProgramming = true;
+
+   // Create a personal introduction
+   console.log("=== About Me ===");
+   console.log("My name is " + myName);
+   console.log("I am " + myAge + " years old");
+   console.log("I live in " + myCity);
+   console.log("My favorite hobby is " + myHobby);
+   console.log("Am I learning programming? " + isLearningProgramming);
+
+   // Do some calculations
+   let yearsUntil30 = 30 - myAge;
+   console.log("Years until I turn 30: " + yearsUntil30);
+
+   // Create a fun fact
+   let daysAlive = myAge * 365; // Approximate!
+   console.log("I've been alive for approximately " + daysAlive + " days!");
+   ```
+
+2. **Customize it with your information** and run:
+   ```bash
+   node about-me.js
+   ```
+
+## Advanced Concepts & Comparisons
+
+### let, const, and var: Variable Declaration Keywords
+
+| Keyword | When to Use              | Can Change Value? | Example                       |
+| ------- | ------------------------ | ----------------- | ----------------------------- |
+| `let`   | Most variables           | ✅ Yes            | `let age = 25; age = 26;`     |
+| `const` | Values that don't change | ❌ No             | `const name = "Alex";`        |
+| `var`   | (Older style)            | ✅ Yes            | `var count = 0;` (avoid this) |
+
+**Best practice**: Use `const` by default, `let` when you need to change the value, avoid `var`.
+
+```javascript
+// Good examples
+const PI = 3.14159; // Never changes
+const userName = "alex2024"; // Won't change in this program
+let score = 0; // Will change as game progresses
+let currentLevel = 1; // Will increase over time
+
+// This would cause an error:
+// PI = 3.14;  // Can't change const variables!
+```
+
+### JavaScript vs. Other Languages
+
+| Feature     | JavaScript              | Python                 | Java                   |
+| ----------- | ----------------------- | ---------------------- | ---------------------- |
+| **Syntax**  | `let x = 5;`            | `x = 5`                | `int x = 5;`           |
+| **Strings** | `"hello"` or `'hello'`  | `"hello"` or `'hello'` | `"hello"`              |
+| **Output**  | `console.log()`         | `print()`              | `System.out.println()` |
+| **Types**   | Dynamic (auto-detected) | Dynamic                | Static (must specify)  |
+
+**Why JavaScript is beginner-friendly**:
+
+- No need to declare variable types
+- Forgiving about syntax errors
+- Immediate feedback with console.log()
+- Runs everywhere (browsers, servers, etc.)
+
+### String Operations and Template Literals
+
+**Traditional string combination**:
+
+```javascript
+let name = "Sarah";
+let age = 28;
+let message = "Hi, I'm " + name + " and I'm " + age + " years old.";
+```
+
+**Modern template literals** (easier!):
+
+```javascript
+let name = "Sarah";
+let age = 28;
+let message = `Hi, I'm ${name} and I'm ${age} years old.`;
+```
+
+Template literals use backticks (`) and `${}` for variables.
+
+### Numbers and Math Operations
+
+```javascript
+let a = 10;
+let b = 3;
+
+console.log("Addition:", a + b); // 13
+console.log("Subtraction:", a - b); // 7
+console.log("Multiplication:", a * b); // 30
+console.log("Division:", a / b); // 3.333...
+console.log("Remainder:", a % b); // 1
+
+// Built-in Math functions
+console.log("Square root of 16:", Math.sqrt(16)); // 4
+console.log("Random number:", Math.random()); // 0.something
+console.log("Round 3.7:", Math.round(3.7)); // 4
+```
+
+## Troubleshooting & Best Practices
+
+### Common Beginner Errors
+
+#### "SyntaxError: Unexpected token"
+
+```javascript
+// ❌ Wrong - missing quotes
+let name = Alex;
+
+// ✅ Correct - strings need quotes
+let name = "Alex";
+```
+
+#### "ReferenceError: variable is not defined"
+
+```javascript
+// ❌ Wrong - typo in variable name
+let firstName = "John";
+console.log(firstname); // lowercase 'f'
+
+// ✅ Correct - exact spelling matters
+let firstName = "John";
+console.log(firstName);
+```
+
+#### "node: command not found"
+
+- **Solution**: Make sure Node.js is installed correctly
+- **Test**: Open new terminal window and try `node --version`
+- **If still broken**: Reinstall Node.js from previous lesson
+
+### JavaScript Best Practices
+
+#### Naming conventions:
+
+```javascript
+// ✅ Good variable names (camelCase)
+let firstName = "John";
+let userAge = 25;
+let isLoggedIn = true;
+let bankAccountBalance = 1500.75;
+
+// ❌ Avoid these naming styles
+let first_name = "John"; // snake_case (Python style)
+let UserAge = 25; // PascalCase (for classes only)
+let x = true; // Not descriptive
+let a1b2c3 = 1500.75; // Meaningless
+```
+
+#### Code organization:
+
+```javascript
+// Group related variables together
+let userName = "alex2024";
+let userEmail = "alex@email.com";
+let userAge = 22;
+
+// Add blank lines between different sections
+let gameScore = 0;
+let gameLevel = 1;
+let gameLives = 3;
+
+// Use comments to explain what sections do
+// === Player Statistics ===
+console.log("Player:", userName);
+console.log("Score:", gameScore);
+```
+
+#### Console.log() tips:
+
+```javascript
+// ✅ Descriptive output
+console.log("User name:", userName);
+console.log("Current score:", gameScore);
+
+// ❌ Hard to understand output
+console.log(userName);
+console.log(gameScore);
+
+// ✅ Use multiple values in one log
+console.log("Game status:", gameLevel, gameScore, gameLives);
+```
+
+### Setting Up Your JavaScript Environment
+
+**File organization**:
+
+```
+SWIC-Course/
+├── javascript-basics/
+│   ├── hello.js
+│   ├── variables.js
+│   ├── data-types.js
+│   ├── operations.js
+│   └── about-me.js
+└── git-practice/
+    └── (your Git files)
+```
+
+**VS Code shortcuts for JavaScript**:
+
+- `Ctrl/Cmd + /`: Toggle comment on current line
+- `Alt + ↑/↓`: Move line up/down
+- `Ctrl/Cmd + D`: Select next occurrence of word
+- `Ctrl/Cmd + Enter`: New line below current line
+
+## Wrap-Up & Assessment
+
+### Key Takeaways
+
+1. **JavaScript runs everywhere** - browsers, servers, mobile apps
+2. **Variables store information** using `let` and `const` keywords
+3. **console.log() displays output** - your main debugging tool
+4. **Node.js runs JavaScript files** outside of browsers
+5. **Strings, numbers, and booleans** are the basic data types
+6. **Good naming makes code readable** - use descriptive variable names
+
+### JavaScript Basics Checklist
+
+Master these fundamentals:
+
+- [ ] Create `.js` files in VS Code
+- [ ] Run JavaScript files with `node filename.js`
+- [ ] Declare variables with `let` and `const`
+- [ ] Store strings, numbers, and booleans in variables
+- [ ] Use `console.log()` to display values
+- [ ] Perform basic math operations (+, -, \*, /)
+- [ ] Combine strings with + or template literals
+- [ ] Use meaningful variable names
+
+### Quick Assessment
+
+**Test your understanding:**
+
+1. **What's the difference between `let` and `const`?**
+   - Answer: `let` allows changing the value, `const` doesn't
+
+2. **How do you run a JavaScript file called `test.js`?**
+   - Answer: `node test.js` in the terminal
+
+3. **Which is correct for storing text?**
+   - a) `let name = Alex;`
+   - b) `let name = "Alex";`
+   - Answer: b) - strings need quotes
+
+### Hands-On Assessment
+
+Create a file called `practice.js` and write code that:
+
+1. **Creates variables** for your name, favorite number, and whether you like pizza
+2. **Displays each variable** with descriptive labels
+3. **Does a calculation** with your favorite number (multiply by 2, add 10)
+4. **Creates a sentence** combining your name with whether you like pizza
+
+**Example output**:
+
+```
+Name: Sarah
+Favorite number: 7
+Likes pizza: true
+Favorite number times 2 plus 10: 24
+Sarah likes pizza: true
+```
+
+If you can create this program, you understand JavaScript basics!
+
+### Understanding What You've Built
+
+**Your JavaScript skills now include**:
+
+- **Variable creation and manipulation** using proper syntax
+- **Data type understanding** (strings, numbers, booleans)
+- **Console output** for debugging and displaying results
+- **Basic operations** (math and string concatenation)
+- **File execution** using Node.js runtime environment
+- **Best practices** for naming and code organization
+
+**This foundation enables**:
+
+- **Interactive web pages** with user input and response
+- **Data processing** and calculations in programs
+- **Building larger applications** with multiple files and functions
+- **Learning advanced JavaScript** concepts like functions and objects
+
+### Next Steps
+
+With JavaScript basics mastered, you're ready to:
+
+1. **Complete practice exercises** and homework assignments
+2. **Learn functions** for organizing and reusing code
+3. **Build interactive programs** that respond to user input
+4. **Explore web development** with HTML, CSS, and JavaScript
+
+**Congratulations!** You've written your first JavaScript programs and understand the fundamental building blocks of programming.
+
+### Additional Resources
+
+- **JavaScript.info**: https://javascript.info/ (comprehensive tutorial)
+- **MDN Web Docs**: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+- **FreeCodeCamp**: https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/
+- **Node.js Documentation**: https://nodejs.org/en/docs/
+
+### JavaScript Quick Reference
+
+```javascript
+// Variables
+let changeable = "can be updated";
+const permanent = "cannot be changed";
+
+// Data types
+let text = "Hello"; // String
+let number = 42; // Number
+let decimal = 3.14; // Number
+let truth = true; // Boolean
+let falsy = false; // Boolean
+
+// Output
+console.log("Display this message");
+console.log("Variable value:", text);
+console.log(text, number, truth);
+
+// Operations
+let sum = 5 + 3; // 8
+let difference = 10 - 4; // 6
+let product = 6 * 7; // 42
+let quotient = 15 / 3; // 5
+let remainder = 17 % 5; // 2
+
+// String combination
+let full = "Hello" + " " + "World"; // "Hello World"
+let modern = `Hello ${text}`; // Template literal
+
+// Running files
+// In terminal: node filename.js
+```
+
+_Ready for your practice exercises and homework? Let's move on to Practice & Next Steps!_
