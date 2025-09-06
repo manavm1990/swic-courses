@@ -1,0 +1,326 @@
+# Control Flow, Conditionals and Loops
+
+## Pre-Work
+
+1. Read starting from [Control Flow](https://eloquentjavascript.net/02_program_structure.html#h-rDxYNPd65Z) through the end of the chapter
+2. Read [Conditional Branching](https://javascript.info/ifelse) and work through the exercises in your Developer Console
+
+## Introduction
+
+### From Recipe Instructions to Smart Programs
+
+**Real-world scenario**: Think about following a recipe. Most recipes aren't just "do step 1, then step 2, then step 3." They have decision points: "If the mixture is too thick, add more milk." They have repetition: "Stir until smooth." They adapt to conditions: "Bake until golden brown."
+
+Your JavaScript programs need the same flexibility. So far, they've been like reading a grocery list - straight from top to bottom. Now we're learning to write smart programs that can make decisions and adapt to different situations.
+
+### What You'll Learn Today
+
+- How programs make decisions (like a choose-your-own-adventure book)
+- How to repeat actions without copy-pasting code
+- Mental models for thinking about program flow
+- Just enough about loops to understand programming fundamentals
+
+## Core Concept Overview
+
+### Programs as Decision Trees
+
+Think of your program as a **conversation with a helpful assistant**. The assistant needs to know: "What should I do if this happens? What about if that happens instead?"
+
+```javascript
+const temperature = 75;
+
+// The assistant asks: "What should I do with this temperature?"
+if (temperature > 80) {
+  console.log("Turn on the air conditioning");
+} else if (temperature < 65) {
+  console.log("Turn on the heat");
+} else {
+  console.log("Temperature is comfortable");
+}
+```
+
+**Mental model**: The `if/else` structure is like a **decision tree** or **flowchart**. Your program encounters a fork in the road and chooses which path to take based on the conditions you've set up.
+
+### The Traffic Light Analogy
+
+Conditionals work like **traffic lights for your code**:
+
+- **Green light (true condition)**: Code proceeds into that block
+- **Red light (false condition)**: Code stops and looks for the next option
+- **Yellow light (else)**: The default action when nothing else applies
+
+```javascript
+const accountBalance = 250;
+
+if (accountBalance >= 500) {
+  console.log("🟢 Premium features unlocked");
+} else if (accountBalance >= 100) {
+  console.log("🟡 Standard features available");
+} else {
+  console.log("🔴 Basic features only");
+}
+```
+
+### Loops: The Efficient Assistant
+
+**Mental model**: Think of loops as asking your **most reliable employee** to do a repetitive task. You don't want to write "Send email to customer 1, send email to customer 2, send email to customer 3..." for 1000 customers. Instead, you say "Send an email to each customer on this list."
+
+#### The while Loop: "Keep doing this until..."
+
+```javascript
+let coffeeCups = 0;
+
+// Like telling someone: "Keep making coffee until we have 3 cups"
+while (coffeeCups < 3) {
+  console.log("Making coffee cup number", coffeeCups + 1);
+  coffeeCups = coffeeCups + 1;
+}
+console.log("Coffee service complete!");
+```
+
+**Mental model**: A `while` loop is like setting a **thermostat**. "Keep heating until the temperature reaches 70 degrees." The loop keeps checking the condition and repeating the action until the goal is met.
+
+#### The for Loop: "Do this exact number of times"
+
+```javascript
+// Like saying: "Print 5 tickets, numbered 1 through 5"
+for (let ticketNumber = 1; ticketNumber <= 5; ticketNumber++) {
+  console.log("Ticket #" + ticketNumber + " printed");
+}
+```
+
+**Mental model**: A `for` loop is like a **ticket dispenser machine**. You know exactly how many tickets you need, and the machine counts them out for you automatically.
+
+### Key Terms
+
+- **Condition**: A yes/no question your program asks
+- **Code block**: A set of instructions grouped together with `{}`
+- **Branching**: When your program chooses different paths
+- **Iteration**: One trip through a loop (like one lap around a track)
+
+## Hands-On Application
+
+### Exercise 1: The Smart Thermostat
+
+**Analogy**: You're programming a smart thermostat that gives helpful advice based on the temperature.
+
+```javascript
+const currentTemp = 78; // Try different temperatures
+
+if (currentTemp > 85) {
+  console.log("🔥 It's hot! Consider using AC or a fan");
+  console.log("Stay hydrated!");
+} else if (currentTemp > 75) {
+  console.log("🌤️ Warm and comfortable");
+  console.log("Perfect weather for outdoor activities");
+} else if (currentTemp > 60) {
+  console.log("😊 Nice and mild");
+  console.log("Great weather for a walk");
+} else {
+  console.log("🧥 Getting chilly!");
+  console.log("You might want a jacket");
+}
+```
+
+**Your turn**: Add a condition for freezing temperatures (below 32°F) with an appropriate message.
+
+### Exercise 2: The Bouncer Program
+
+**Analogy**: You're the digital bouncer at a club, checking if people meet the requirements.
+
+```javascript
+const age = 19;
+const hasID = true;
+
+if (age >= 21) {
+  console.log("✅ Welcome! You can enter and order drinks");
+} else if (age >= 18 && hasID) {
+  console.log("✅ You can enter, but no alcohol");
+} else if (age >= 18) {
+  console.log("❌ Need to see ID first");
+} else {
+  console.log("❌ Sorry, must be 18 or older");
+}
+```
+
+### Exercise 3: The Patient Counter (Understanding Loops)
+
+**Analogy**: You're a nurse calling patients from a waiting room, one by one.
+
+```javascript
+console.log("=== Calling Patients ===");
+
+// Method 1: The inefficient way (don't do this!)
+console.log("Patient 1, please come back");
+console.log("Patient 2, please come back");
+console.log("Patient 3, please come back");
+// Imagine doing this for 100 patients...
+
+// Method 2: The smart way with a loop
+console.log("\n=== Using a loop ===");
+for (let patientNumber = 1; patientNumber <= 3; patientNumber++) {
+  console.log("Patient " + patientNumber + ", please come back");
+}
+
+console.log("All patients have been called!");
+```
+
+**The insight**: Loops prevent you from writing repetitive code. They're not about making your code fancy - they're about being practical and efficient.
+
+## Advanced Concepts & Comparisons
+
+### The Truthiness Concept: More Than Just True/False
+
+**Mental model**: JavaScript is like a **very accommodating friend** who tries to make sense of whatever you tell them. When you ask "if this thing," JavaScript asks "does this thing seem true-ish to me?"
+
+**The "empty container" rule**: Empty things are considered false-ish:
+
+```javascript
+const userName = ""; // Empty string
+
+if (userName) {
+  console.log("Hello, " + userName);
+} else {
+  console.log("Please tell me your name"); // This runs for empty string
+}
+```
+
+**Falsy values** (things JavaScript considers "empty" or "nothing"):
+
+- `false`
+- `0`
+- `""` (empty string)
+- `null`
+- `undefined`
+
+Everything else is truthy!
+
+### When Loops Make Sense (and When They Don't)
+
+**Important perspective**: In modern JavaScript development, you'll mostly use loops to understand how things work "under the hood." Once you learn array methods like `map()` and `filter()`, you'll rarely write traditional loops.
+
+**Think of loops like learning long division in elementary school**: You need to understand how it works to really understand programming, but most of the time you'll use the "calculator" of array methods.
+
+```javascript
+// You'll learn this basic loop concept...
+for (let i = 1; i <= 3; i++) {
+  console.log("Item " + i);
+}
+
+// ...so you can understand when you later see:
+const items = [1, 2, 3];
+items.map((item) => console.log("Item " + item));
+```
+
+## Troubleshooting & Best Practices
+
+### The Infinite Loop Trap
+
+**Mental model**: An infinite loop is like giving someone directions that say "keep driving until you reach the corner of Main and Main." If that corner doesn't exist, they'll drive forever.
+
+```javascript
+// ❌ The "driving forever" problem
+let count = 0;
+while (count < 5) {
+  console.log(count);
+  // Forgot to change count - this goes forever!
+}
+
+// ✅ The fix - make sure the condition can become false
+let count = 0;
+while (count < 5) {
+  console.log(count);
+  count++; // This ensures we eventually reach 5
+}
+```
+
+**Browser rescue**: If you create an infinite loop, most browsers will detect it and ask if you want to stop the script. Say yes!
+
+### Common Logical Errors
+
+**The "assignment vs. comparison" mixup**:
+
+```javascript
+// ❌ This assigns 5 to score (and always runs the if block)
+if ((score = 5)) {
+  console.log("Perfect score!");
+}
+
+// ✅ This compares score to 5
+if (score === 5) {
+  console.log("Perfect score!");
+}
+```
+
+**Mental tip**: Read `===` as "is exactly equal to" and `=` as "becomes."
+
+## Wrap-Up & Assessment
+
+### The Big Picture: Why This Matters
+
+You've learned the fundamental building blocks that make programs **intelligent** instead of just **sequential**. Every complex application - from Netflix recommendations to GPS navigation - uses these same basic concepts:
+
+- **Conditionals**: "If user likes action movies, show action recommendations"
+- **Loops**: "Check each movie in the database for matches"
+
+### Quick Mental Model Check
+
+**Test your understanding**:
+
+1. **Traffic light analogy**: If you see `if (temperature > 90)`, what "color" is the light when temperature is 75?
+   - Answer: Red (false) - the condition isn't met, so this block doesn't run
+
+2. **Thermostat analogy**: In a `while` loop, what's like the thermostat's target temperature?
+   - Answer: The condition (like `while (count < 5)`) - it's what the loop keeps checking
+
+### HW: Smart Decision Maker
+
+**Part 1: The Study Buddy App**
+
+Create a program that advises students based on their study hours:
+
+```javascript
+const hoursStudied = 3; // Try different values
+
+// Your code here:
+// - Less than 1 hour: "You need to study more!"
+// - 1-2 hours: "Good start, keep going"
+// - 3-4 hours: "Great work!"
+// - More than 4 hours: "Excellent! Don't forget to take breaks"
+```
+
+**Part 2: The Simple Counter**
+
+Create a countdown from 5 to 1, then say "Blast off!" (just to prove you understand loops):
+
+```javascript
+// Expected output:
+// 5
+// 4
+// 3
+// 2
+// 1
+// Blast off!
+```
+
+**Part 3: Learning Reflection Document**
+
+Create a Markdown document (GitHub Gist or similar) addressing the reflection questions listed in the submission requirements below.
+
+**Submission Requirements**:
+
+- Screenshots of both programs running successfully
+- **Video walkthrough** (2-3 minutes, "selfie style"): Record yourself explaining your code line by line. Walk through your logic, test different values, and explain which mental model helped you most. This should sound like you're teaching a friend, not reading from a script.
+- **Reflection document link** (Markdown via GitHub Gist or similar platform)
+
+**Remember**: Use AI tools to _understand_ concepts, not to write your code for you. If you can't explain your code in your own words on video, you probably relied too heavily on AI assistance. Review our [AI Reality Check lesson](/ai-reality-check) if you need a refresher on using AI as a learning tool rather than a crutch.
+
+### Key Takeaways
+
+1. **Conditionals** are like traffic lights directing your code's path
+2. **Loops** are efficient assistants that handle repetitive tasks
+3. **Truthiness** means JavaScript tries to make sense of non-boolean values
+4. **Traditional loops** teach fundamentals, but modern JavaScript has better tools
+5. **Mental models** help you think through logic before writing code
+
+Next lesson: We'll learn about functions - reusable blocks of code that make programs modular and organized!

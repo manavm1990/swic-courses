@@ -170,6 +170,13 @@ const lessons = [
           "Learn about variables, program structure, and hands-on JavaScript coding using the browser console.",
         video: null,
       },
+      {
+        id: "control-flow-and-loops",
+        title: "Control Flow, Conditionals and Loops",
+        description:
+          "Learn how programs make decisions with conditionals and handle repetitive tasks with loops - the building blocks of intelligent programs.",
+        video: null,
+      },
     ],
   },
   {
