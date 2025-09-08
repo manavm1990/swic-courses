@@ -17,10 +17,36 @@ By the end of this lesson, you'll be able to:
 - Combine objects and arrays to represent complex data structures
 - Understand how these concepts directly apply to React development
 - Use modern JavaScript features like destructuring and spread operators
+- Apply professional Git workflow with meaningful commits
+
+## Getting Started: Setup Your Project
+
+**Important**: Before diving into objects and arrays, you'll need your development environment.
+
+### 1. Get Your Assignment Template From BrightSpace
+
+You probably came here from that assignment link, so no worries there. Just make sure that you have accepted the GitHub Classroom assignment and have your repository ready.
+
+This gives you a personalized copy of our Node.js template with ESLint and proper project structure.
+
+### 2. Follow the Setup Instructions
+
+**Refer to the README.md file in your assignment repository** for complete setup instructions including:
+
+- How to clone your repository
+- Installing dependencies with `npm install`
+- Verifying your development environment
+- Running your first test
+
+**Quick verification**: Once set up, you should be able to run `node src/test.js` and see output in your terminal.
+
+As indicated, "Hands On" is where you will be required to start writing code and making commits. However, you may wish to code the 'basics' examples also for additional practice.
 
 ---
 
 ## Core Concept Overview: Objects
+
+**Note**: The following sections contain code examples for understanding concepts. You're not required to code along until the "Hands-On Application" section, but feel free to experiment with any examples that help your understanding. When you see React code later, don't try to run it in Node.js.
 
 Objects in JavaScript are collections of key-value pairs. Think of them as digital filing cabinets where each piece of information has a label (key) and content (value).
 
@@ -202,10 +228,66 @@ Recall that a **callback function** is being used. The `find` method takes a fun
 
 Let's build a practical example that combines objects and arrays. This mimics what you'll do in React applications!
 
-### Step 1: Create the Data Structure
+Comments are used extensively to explain each part. You can include them or not. You may also add your own comments to help your understanding. In fact, it is encouraged, and if your comments match exactly what's here, it probably means that you did too much copying and pasting 🙅🏾‍♀️.
 
-```js
+### Exercise 1: Create the Foundation
+
+Create `src/object-basics.js`:
+
+```javascript
 // Course data structure - just plain objects and arrays
+const course = {
+  id: "CS277",
+  title: "Web Development Fundamentals",
+  instructor: "Prof. Johnson",
+  credits: 3,
+  students: [
+    {
+      id: "s001",
+      name: "Maria Rodriguez",
+      email: "mrodriguez@swic.edu",
+      grades: [85, 92, 78, 88],
+    },
+    {
+      id: "s002",
+      name: "John Smith",
+      email: "jsmith@swic.edu",
+      grades: [90, 87, 95, 92],
+    },
+    {
+      id: "s003",
+      name: "Sarah Chen",
+      email: "schen@swic.edu",
+      grades: [78, 85, 82, 90],
+    },
+  ],
+};
+
+// Test basic object access
+console.info("Course:", course.title);
+console.info("Instructor:", course.instructor);
+console.info("Number of students:", course.students.length);
+
+// Access nested object data
+console.info("First student:", course.students[0].name);
+console.info("First student's grades:", course.students[0].grades);
+```
+
+**Test your code**: `node src/object-basics.js`
+
+**Commit your progress**:
+
+```bash
+git add src/object-basics.js
+git commit -m "Add object basics practice with course data structure"
+```
+
+### Exercise 2: Working with Functions and Data
+
+Create `src/course-functions.js`:
+
+```javascript
+// Import or recreate the course data (for this exercise, we'll recreate)
 const course = {
   id: "CS277",
   title: "Web Development Fundamentals",
@@ -238,6 +320,8 @@ const getStudentAverage = (students, studentId) => {
   const student = students.find((s) => s.id === studentId);
   if (!student || student.grades.length === 0) return 0;
 
+  // Calculate total using reduce() method
+  // reduce() takes each grade and adds it to a running sum, starting at 0
   const total = student.grades.reduce((sum, grade) => sum + grade, 0);
   return Math.round(total / student.grades.length);
 };
@@ -255,56 +339,78 @@ const getHighPerformers = (students, threshold = 85) => {
 // This is common in React for optional props and function parameters.
 
 // Examples:
-getHighPerformers(course.students); // uses default 85
-getHighPerformers(course.students, 90); // uses 90
-getHighPerformers(course.students, 70); // uses 70
-```
+console.info("=== Testing Course Functions ===");
 
-### Step 2: Working with the Data
-
-```js
-// Get Maria's average grade using our function
-console.log(getStudentAverage(course.students, "s001")); // 86
+// Get Maria's average grade
+const mariaAverage = getStudentAverage(course.students, "s001");
+console.info("Maria's average:", mariaAverage);
 
 // Get all high performers (>= 85 average)
 const topStudents = getHighPerformers(course.students, 85);
-console.log(topStudents.map((s) => s.name)); // ["Maria Rodriguez", "John Smith"]
+console.info(
+  "High performers:",
+  topStudents.map((s) => s.name),
+);
 
-// Add a new student (creating new array - React style!)
-const newStudent = {
-  id: "s004",
-  name: "David Wilson",
-  email: "dwilson@swic.edu",
-  grades: [95, 89, 93, 91],
-};
-const updatedCourse = {
-  ...course,
-  students: [...course.students, newStudent],
-};
-
-// Update a student's grades (immutable way)
-const updateStudentGrades = (students, studentId, newGrade) => {
-  return students.map((student) =>
-    student.id === studentId
-      ? { ...student, grades: [...student.grades, newGrade] }
-      : student,
-  );
-};
-
-const courseWithUpdatedGrades = {
-  ...course,
-  students: updateStudentGrades(course.students, "s001", 94),
-};
+// Test with different threshold
+const excellentStudents = getHighPerformers(course.students, 90);
+console.info(
+  "Excellent students (90+):",
+  excellentStudents.map((s) => s.name),
+);
 ```
 
-### Step 3: Essential Array Operations for React
+**Test your code**: `node src/course-functions.js`
 
-Now let's practice the three most important array methods you'll use constantly in React:
+**Commit your progress**:
 
-```js
+```bash
+git add src/course-functions.js
+git commit -m "Add course management functions with student calculations"
+```
+
+### Exercise 3: Essential Array Operations for React
+
+Create `src/array-methods.js`:
+
+```javascript
+// Sample data for array method practice
+const course = {
+  students: [
+    {
+      id: "s001",
+      name: "Maria Rodriguez",
+      email: "mrodriguez@swic.edu",
+      grades: [85, 92, 78, 88],
+    },
+    {
+      id: "s002",
+      name: "John Smith",
+      email: "jsmith@swic.edu",
+      grades: [90, 87, 95, 92],
+    },
+    {
+      id: "s003",
+      name: "Sarah Chen",
+      email: "schen@swic.edu",
+      grades: [78, 85, 82, 90],
+    },
+  ],
+};
+
+// Helper function from previous exercise
+const getStudentAverage = (students, studentId) => {
+  const student = students.find((s) => s.id === studentId);
+  if (!student || student.grades.length === 0) return 0;
+  const total = student.grades.reduce((sum, grade) => sum + grade, 0);
+  return Math.round(total / student.grades.length);
+};
+
+console.info("=== Essential Array Methods for React ===");
+
 // 1. MAP - Transform each element (like rendering a list in React)
 const studentNames = course.students.map((student) => student.name);
-console.log("All student names:", studentNames);
+console.info("All student names:", studentNames);
 // ["Maria Rodriguez", "John Smith", "Sarah Chen"]
 
 // 2. FILTER - Select elements based on a condition
@@ -315,7 +421,7 @@ const topPerformers = course.students.filter((student) => {
   const avg = getStudentAverage(course.students, student.id);
   return avg >= 90; // This is the predicate - true/false determines inclusion
 });
-console.log(
+console.info(
   "Top performers:",
   topPerformers.map((s) => s.name),
 );
@@ -325,78 +431,111 @@ const firstHighAchiever = course.students.find((student) => {
   const avg = getStudentAverage(course.students, student.id);
   return avg >= 85; // Predicate function again!
 });
-console.log("First high achiever:", firstHighAchiever.name);
+console.info("First high achiever:", firstHighAchiever.name);
+
+// 4. REDUCE - Combine all elements into a single value
+const totalGrades = course.students.reduce((total, student) => {
+  return total + student.grades.length;
+}, 0);
+console.info("Total number of grades recorded:", totalGrades);
 
 // Bonus: Check if something is an array (useful for defensive programming)
 if (Array.isArray(course.students)) {
-  console.log(`We have ${course.students.length} students`);
+  console.info(`We have ${course.students.length} students`);
 }
+
+// Practice chaining methods (very common in React)
+const highPerformerEmails = course.students
+  .filter((student) => getStudentAverage(course.students, student.id) >= 85)
+  .map((student) => student.email);
+
+console.info("High performer emails:", highPerformerEmails);
+```
+
+**Test your code**: `node src/array-methods.js`
+
+**Commit your progress**:
+
+```bash
+git add src/array-methods.js
+git commit -m "Practice essential array methods for React development"
 ```
 
 ---
 
 ## Advanced Concepts & Modern JavaScript Features
 
-### Object Destructuring
+### Exercise 4: Destructuring and Spread Operators
 
-Destructuring allows you to extract properties from objects into variables:
+Create `src/modern-features.js`:
 
-```js
+```javascript
+console.info("=== Modern JavaScript Features ===");
+
+// Sample student object for destructuring practice
 const student = {
   name: "Maria Rodriguez",
   age: 19,
   major: "Computer Science",
   gpa: 3.8,
+  address: {
+    street: "123 College Ave",
+    city: "Belleville",
+    state: "Illinois",
+  },
 };
+
+// OBJECT DESTRUCTURING
+console.info("\n--- Object Destructuring ---");
 
 // Old way
 const name = student.name;
 const age = student.age;
 
 // Destructuring way
-const { name, age, major } = student;
-console.log(name, age, major); // "Maria Rodriguez" 19 "Computer Science"
+const { name: studentName, age: studentAge, major } = student;
+console.info("Student info:", studentName, studentAge, major);
 
-// Rename variables
-const { name: studentName, gpa: gradePointAverage } = student;
-console.log(studentName, gradePointAverage); // "Maria Rodriguez" 3.8
+// Rename variables during destructuring
+const { name: fullName, gpa: gradePointAverage } = student;
+console.info("GPA info:", fullName, gradePointAverage);
 
 // Default values
-const { name, graduationYear = 2025 } = student;
-console.log(graduationYear); // 2025 (default since it doesn't exist)
-```
+const { graduationYear = 2025 } = student;
+console.info("Expected graduation:", graduationYear);
 
-### Array Destructuring
+// Nested destructuring
+const {
+  address: { city, state },
+} = student;
+console.info("Location:", city, state);
 
-```js
+// ARRAY DESTRUCTURING
+console.info("\n--- Array Destructuring ---");
+
 const grades = [85, 92, 78, 88, 94];
 
 // Extract first few grades
 const [first, second, third] = grades;
-console.log(first, second, third); // 85 92 78
+console.info("First three grades:", first, second, third);
 
 // Skip elements
 const [firstGrade, , thirdGrade] = grades;
-console.log(firstGrade, thirdGrade); // 85 78
+console.info("First and third:", firstGrade, thirdGrade);
 
 // Rest operator
 const [highest, ...remainingGrades] = grades.sort((a, b) => b - a);
-console.log(highest); // 94
-console.log(remainingGrades); // [92, 88, 85, 78]
-```
+console.info("Highest grade:", highest);
+console.info("Remaining grades:", remainingGrades);
 
-### Spread Operator
+// SPREAD OPERATOR
+console.info("\n--- Spread Operator ---");
 
-The spread operator (`...`) is incredibly useful for copying and combining arrays and objects. Mainly, for React, we need to use it to avoid mutating data in place. Spread (similar to `map` and `filter`) creates a shallow copy of the original data structure.
-
-What's a shallow copy? Well, it means that if our data structure is complex, with nested objects, just using `...` alone will not prevent data mutations. In that situation, we can use [`structuredClone`](https://developer.mozilla.org/en-US/docs/Web/API/Window/structuredClone). But that's something that we can deal with another time.
-
-```js
 // Array spreading
 const originalGrades = [85, 92, 78];
 const newGrades = [88, 94];
 const allGrades = [...originalGrades, ...newGrades];
-console.log(allGrades); // [85, 92, 78, 88, 94]
+console.info("All grades combined:", allGrades);
 
 // Object spreading (copying and extending)
 const basicStudent = {
@@ -411,16 +550,108 @@ const detailedStudent = {
   age: 21, // This overrides the age from basicStudent
 };
 
-console.log(detailedStudent);
-// { name: "John Doe", age: 21, major: "Engineering", gpa: 3.5 }
+console.info("Detailed student:", detailedStudent);
+
+// Practical example: Adding a new student (React pattern)
+const existingStudents = [
+  { id: 1, name: "Maria", gpa: 3.8 },
+  { id: 2, name: "John", gpa: 3.2 },
+];
+
+const newStudent = { id: 3, name: "Sarah", gpa: 3.9 };
+const updatedStudents = [...existingStudents, newStudent];
+
+console.info("Updated student list:", updatedStudents);
 ```
 
-### Object Methods Deep Dive
+**Test your code**: `node src/modern-features.js`
 
-JavaScript provides powerful methods for working with objects:
+**Commit your progress**:
 
-```js
-const student = {
+```bash
+git add src/modern-features.js
+git commit -m "Practice destructuring and spread operators for modern JS"
+```
+
+### Exercise 5: React State Management Patterns
+
+Create `src/state-patterns.js`:
+
+```javascript
+console.info("=== React State Management Patterns ===");
+
+// Initial state (like React useState)
+const initialCourse = {
+  id: "CS277",
+  title: "Web Development Fundamentals",
+  students: [
+    { id: 1, name: "Maria", gpa: 3.8 },
+    { id: 2, name: "John", gpa: 3.2 },
+  ],
+};
+
+console.info("Initial course:", initialCourse);
+
+// IMMUTABLE UPDATES (React way)
+console.info("\n--- Adding Students (Immutable) ---");
+
+// ❌ Bad: Mutates original (breaks React!)
+const badAddStudent = (course, newStudent) => {
+  course.students.push(newStudent); // BAD: mutates original
+  return course;
+};
+
+// ✅ Good: Creates new objects (React approved!)
+const addStudent = (course, newStudent) => {
+  return {
+    ...course,
+    students: [...course.students, newStudent],
+  };
+};
+
+const newStudent = { id: 3, name: "Sarah", gpa: 3.9 };
+const updatedCourse = addStudent(initialCourse, newStudent);
+
+console.info("Original course students:", initialCourse.students.length);
+console.info("Updated course students:", updatedCourse.students.length);
+console.info("Objects are different:", initialCourse !== updatedCourse);
+
+// UPDATING STUDENT DATA
+console.info("\n--- Updating Student GPA ---");
+
+const updateStudentGPA = (course, studentId, newGPA) => {
+  return {
+    ...course,
+    students: course.students.map((student) =>
+      student.id === studentId ? { ...student, gpa: newGPA } : student,
+    ),
+  };
+};
+
+const courseWithUpdatedGPA = updateStudentGPA(updatedCourse, 2, 3.7);
+console.info(
+  "John's updated GPA:",
+  courseWithUpdatedGPA.students.find((s) => s.id === 2).gpa,
+);
+
+// FILTERING STUDENTS
+console.info("\n--- Filtering High Performers ---");
+
+const getHighPerformers = (course, threshold = 3.5) => {
+  return {
+    ...course,
+    students: course.students.filter((student) => student.gpa >= threshold),
+    title: `${course.title} - High Performers`,
+  };
+};
+
+const highPerformersCourse = getHighPerformers(courseWithUpdatedGPA, 3.5);
+console.info("High performers course:", highPerformersCourse);
+
+// OBJECT METHODS DEEP DIVE
+console.info("\n--- Object Analysis Methods ---");
+
+const sampleStudent = {
   firstName: "Maria",
   lastName: "Rodriguez",
   age: 19,
@@ -428,95 +659,65 @@ const student = {
 };
 
 // Get all keys
-const keys = Object.keys(student);
-console.log(keys); // ["firstName", "lastName", "age", "major"]
+const keys = Object.keys(sampleStudent);
+console.info("Student property keys:", keys);
 
 // Get all values
-const values = Object.values(student);
-console.log(values); // ["Maria", "Rodriguez", 19, "Computer Science"]
+const values = Object.values(sampleStudent);
+console.info("Student property values:", values);
 
-// Get key-value pairs. More complex. Less common.
-const entries = Object.entries(student);
-console.log(entries);
-// [["firstName", "Maria"], ["lastName", "Rodriguez"], ["age", 19], ["major", "Computer Science"]]
+// Get key-value pairs
+const entries = Object.entries(sampleStudent);
+console.info("Student entries:", entries);
 
 // Iterate over object properties
-for (const [key, value] of Object.entries(student)) {
-  console.log(`${key}: ${value}`);
-}
+console.info("Student information:");
+Object.entries(sampleStudent).forEach(([key, value]) => {
+  console.info(`  ${key}: ${value}`);
+});
+```
+
+**Test your code**: `node src/state-patterns.js`
+
+**Commit your progress**:
+
+```bash
+git add src/state-patterns.js
+git commit -m "Practice React state management patterns with immutable updates"
 ```
 
 ---
 
 ## React Connection: Why This Matters
 
-Understanding objects and arrays is crucial for React development. Here's how these concepts directly apply:
+Understanding objects and arrays is crucial for React development. Here's a quick preview of how these concepts directly apply:
 
-### Component Props (Objects)
+**Component Props** - React components receive data as objects:
 
-```js
-// React component receives props as an object
+```javascript
+// This is React code - don't try to run this in Node.js!
 function StudentCard({ name, age, major, gpa }) {
-  // This is destructuring the props object!
+  // The props parameter is an object that gets destructured
   return (
     <div>
-      <h3>{name}</h3>
-      <p>Age: {age}</p>
-      <p>Major: {major}</p>
-      <p>GPA: {gpa}</p>
+      {name} - {major}
     </div>
   );
 }
-
-// Usage
-<StudentCard
-  name="Maria Rodriguez"
-  age={19}
-  major="Computer Science"
-  gpa={3.8}
-/>;
 ```
 
-### State Management (Objects and Arrays)
+**State Management** - React state often contains arrays and objects that you manipulate using the immutable patterns you just practiced.
 
-```js
-// React state often contains objects and arrays
-const [students, setStudents] = useState([
-  { id: 1, name: "Maria", gpa: 3.8 },
-  { id: 2, name: "John", gpa: 3.2 },
-]);
+**Array Rendering** - The `map()` method you practiced is essential for displaying lists in React:
 
-// Adding a student (using spread operator). NO MUTATION!
-const addStudent = (newStudent) => {
-  setStudents([...students, newStudent]);
-};
-
-// Updating a student (using map). NO MUTATION!
-const updateStudentGPA = (id, newGPA) => {
-  setStudents(
-    students.map((student) =>
-      student.id === id ? { ...student, gpa: newGPA } : student,
-    ),
-  );
-};
-```
-
-### Array Rendering (map method)
-
-```js
-// Rendering arrays in React
-function StudentList({ students }) {
-  return (
-    <ul>
-      {students.map((student) => (
-        <li key={student.id}>
-          {student.name} - GPA: {student.gpa}
-        </li>
-      ))}
-    </ul>
-  );
+```javascript
+// React uses map() constantly for rendering lists
+{
+  students.map((student) => <div key={student.id}>{student.name}</div>);
 }
 ```
+
+**The patterns you just learned** - creating new objects with spread operators, filtering arrays, and avoiding mutations - are exactly how React state management works.
 
 ---
 
@@ -638,11 +839,37 @@ const getStudentAverage = (student) => {
 5. **Immutable patterns** are crucial for React development
 6. Understanding **reference vs value** prevents many common bugs
 
-### Advanced Practice Challenge
+### Git Workflow Summary
 
-Put your object and array skills to work! Create a comprehensive grade book system that can track students, assignments, and calculate grades across multiple courses:
+Check your commit history:
 
-```js
+```bash
+git log --oneline
+```
+
+You should see commits for:
+
+- Object basics practice
+- Course management functions
+- Array methods for React
+- Modern JavaScript features
+- React state patterns
+
+Push your final work:
+
+```bash
+git push origin main
+```
+
+### HW: Advanced Grade Book Challenge
+
+**Using your GitHub Classroom assignment repo**, complete this comprehensive challenge:
+
+#### Challenge: Complete Grade Book System
+
+Create `src/gradebook-challenge.js` with this starter code:
+
+```javascript
 const gradeBook = {
   courses: [
     {
@@ -669,79 +896,94 @@ const gradeBook = {
     },
   ],
 
-  // Calculate student's percentage in a course
+  // TODO: Calculate student's percentage in a course
   getStudentPercentage(courseId, studentId) {
     // Your implementation here
+    // Should return percentage (0-100) based on assignments
   },
 
-  // Get class average for a course
+  // TODO: Get class average for a course
   getClassAverage(courseId) {
     // Your implementation here
+    // Should return average percentage for all students
   },
 
-  // Add new assignment to all students
+  // TODO: Add new assignment to all students (immutably!)
   addAssignment(courseId, assignmentName, maxPoints) {
     // Your implementation here
+    // Should return new gradebook object with assignment added
   },
 };
+
+// Test your implementations
+console.info("=== Grade Book Testing ===");
+
+// Test student percentage
+const mariaPercentage = gradeBook.getStudentPercentage("CS277", 1);
+console.info("Maria's percentage:", mariaPercentage);
+
+// Test class average
+const classAverage = gradeBook.getClassAverage("CS277");
+console.info("Class average:", classAverage);
+
+// Test adding assignment
+const updatedGradeBook = gradeBook.addAssignment("CS277", "Homework 1", 50);
+console.info("Updated gradebook:", updatedGradeBook);
 ```
 
-### 💡 Console Tips for Your Homework
+#### Requirements
 
-Since we're still working in the browser's JavaScript console, here are some tips to make your life easier:
+1. **Implementation Requirements**:
+   - Use `map`, `filter`, and/or `find` appropriately
+   - Ensure all operations are immutable (no mutations!)
+   - Include defensive programming (check for valid data)
+   - Test your functions with console.info statements
 
-**Multi-line Code:**
+2. **Video Walkthrough** (3-5 minutes):
+   - Record yourself running: `node src/gradebook-challenge.js`
+   - Explain how you implemented each method
+   - Why you chose certain array methods
+   - How you ensured immutability
+   - Walk through your test cases
 
-- Use `Shift + Enter` to create new lines without executing
-- This lets you write proper functions and objects across multiple lines
+3. **Final Git Workflow**:
+   ```bash
+   git add src/gradebook-challenge.js
+   git commit -m "Complete advanced gradebook challenge with immutable operations"
+   git push origin main
+   ```
 
-**Reset Your Environment:**
+#### Submission Requirements
 
-- Open a **new blank tab** to get a fresh console environment
-- This clears all your previous variables and functions
-- Use `Ctrl/Cmd + Shift + T` to quickly open a new tab
+- **Repository link**: Your GitHub Classroom repository with all exercises completed
+- **Video walkthrough**: Demonstrating your gradebook implementation
+- **Git history**: Clean commits showing your progression through the lesson
+- **Learning reflection**: Create a markdown document addressing the reflection questions below
 
-**Useful Console Features:**
+### Learning Reflection Document
 
-- `console.clear()` - Clear the console output
-- Use `console.log()` liberally to debug your functions
-- `console.table(arrayOfObjects)` - Shows arrays of objects in a nice table format
-- Arrow keys ↑/↓ to navigate through previous commands
+Create a markdown document (GitHub Gist or similar) addressing these questions:
 
-**Copy/Paste Your Code:**
+1. **Skill Assessment**: How comfortable do you feel with objects and arrays now compared to when you started this lesson? What specific concepts clicked for you?
 
-- Write your functions in a text editor first, then paste into console
-- This makes it easier to edit and prevents losing work
+2. **React Readiness**: Based on the React preview section, what aspects of React development are you most/least confident about?
 
-### HW: Implementation & Video Walkthrough
+3. **Array Methods Mastery**: Which array method (`map`, `filter`, `find`, `reduce`) do you feel most confident using? Which needs more practice?
 
-Implement the three missing methods in the grade book system above:
+4. **Immutability Understanding**: Explain in your own words why we avoid mutating arrays and objects in React. What would happen if we did mutate them?
 
-1. **`getStudentPercentage(courseId, studentId)`** - Calculate a student's percentage based on their assignments
-2. **`getClassAverage(courseId)`** - Calculate the class average percentage for a course
-3. **`addAssignment(courseId, assignmentName, maxPoints)`** - Add a new assignment to all students (immutably!)
+5. **Git Workflow**: How did the commit-as-you-go workflow feel? Did it help or hinder your learning process?
 
-**Requirements:**
+6. **Problem Areas**: What part of this lesson was most challenging? What would you like more practice with?
 
-- Use `map`, `filter`, and/or `find` appropriately
-- Ensure all operations are immutable (no mutations!)
-- Include defensive programming (check for valid data)
-- Test your functions with console.log statements
+**Alternative Option**: Instead of a written reflection, record a 3-4 minute "selfie style" video walking through your completed repository, explaining what you learned and how confident you feel moving toward React development.
 
-**Video Walkthrough Required:**
-Record a 3-5 minute video explaining:
-
-- How you implemented each method
-- Why you chose certain array methods
-- How you ensured immutability
-- What challenges you encountered and how you solved them
-- Walk through your test cases. This just means showing the input and output for each case.
-
-**Challenge Questions to Address in Your Video:**
+### Challenge Questions to Address in Your Video
 
 1. Why did you choose specific array methods for each implementation?
 2. How did you handle edge cases (empty arrays, missing data)?
 3. What would break if you used mutating methods instead?
+4. How do these patterns prepare you for React development?
 
 ### Looking Ahead
 
@@ -752,8 +994,8 @@ These object and array concepts are the foundation for everything we'll do in Re
 - **Event handlers** frequently manipulate arrays and objects
 - **API responses** are typically arrays of objects
 
-Next up: We'll put all these JavaScript fundamentals together in a hands-on vanilla JavaScript project where you'll see exactly why we need frameworks like React for complex applications!
+Next up: We'll put all these JavaScript fundamentals together in a hands-on vanilla JavaScript project with ES modules (import/export) where you'll see exactly why we need frameworks like React for complex applications!
 
 ---
 
-_Ready to master these concepts? Open your browser's developer console and start experimenting with the code examples. The best way to learn is by doing!_
+_Ready to master these concepts? Your GitHub Classroom template is set up and ready for you to start coding. Remember: every professional developer started by mastering these fundamentals!_
