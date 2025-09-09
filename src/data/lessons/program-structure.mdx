@@ -276,12 +276,6 @@ console.log("Years until 30:", yearsTo30);
 
 **Important note about the pre-work readings**: You'll notice the JavaScript.info article starts examples with `let`. This was written when `const` wasn't as widely adopted. In 2025, modern development practices have evolved!
 
-| Keyword | When to Use                         | Can Change Value? | Example                   | 2025 Status                     |
-| ------- | ----------------------------------- | ----------------- | ------------------------- | ------------------------------- |
-| `const` | **DEFAULT CHOICE** - Most variables | ❌ No             | `const name = "Alex";`    | ✅ **Modern standard**          |
-| `let`   | Only when value will change         | ✅ Yes            | `let age = 25; age = 26;` | ✅ When needed                  |
-| `var`   | Never                               | ✅ Yes            | `var count = 0;`          | ❌ **It's 2025. Don't use it!** |
-
 **Modern best practice**: Use `const` by default, `let` only when you need to reassign the variable, never `var`.
 
 **Why `const` by default?**
