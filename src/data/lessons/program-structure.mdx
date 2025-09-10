@@ -276,12 +276,6 @@ console.log("Years until 30:", yearsTo30);
 
 **Important note about the pre-work readings**: You'll notice the JavaScript.info article starts examples with `let`. This was written when `const` wasn't as widely adopted. In 2025, modern development practices have evolved!
 
-| Keyword | When to Use                         | Can Change Value? | Example                   | 2025 Status                     |
-| ------- | ----------------------------------- | ----------------- | ------------------------- | ------------------------------- |
-| `const` | **DEFAULT CHOICE** - Most variables | ❌ No             | `const name = "Alex";`    | ✅ **Modern standard**          |
-| `let`   | Only when value will change         | ✅ Yes            | `let age = 25; age = 26;` | ✅ When needed                  |
-| `var`   | Never                               | ✅ Yes            | `var count = 0;`          | ❌ **It's 2025. Don't use it!** |
-
 **Modern best practice**: Use `const` by default, `let` only when you need to reassign the variable, never `var`.
 
 **Why `const` by default?**
@@ -297,8 +291,8 @@ console.log("Years until 30:", yearsTo30);
 // Good examples
 const PI = 3.14159; // Never changes
 const userName = "alex2024"; // Won't change in this program
-let score = 0; // Will change as game progresses
-let currentLevel = 1; // Will increase over time
+const score = 0; // Will change as game progresses
+const currentLevel = 1; // Will increase over time
 
 // This would cause an error:
 // PI = 3.14;  // Can't change const variables!
@@ -309,26 +303,24 @@ let currentLevel = 1; // Will increase over time
 **Traditional string combination**:
 
 ```javascript
-let name = "Sarah";
-let age = 28;
-let message = "Hi, I'm " + name + " and I'm " + age + " years old.";
+const name = "Sarah";
+const age = 28;
+const message = "Hi, I'm " + name + " and I'm " + age + " years old.";
 ```
 
 **Modern template literals** (easier!):
 
 ```javascript
-let name = "Sarah";
-let age = 28;
-let message = `Hi, I'm ${name} and I'm ${age} years old.`;
+const name = "Sarah";
+const age = 28;
+const message = `Hi, I'm ${name} and I'm ${age} years old.`;
 ```
-
-Template literals use backticks (`) and `${}` for variables.
 
 ### Numbers and Math Operations
 
 ```javascript
-let a = 10;
-let b = 3;
+const a = 10;
+const b = 3;
 
 console.log("Addition:", a + b); // 13
 console.log("Subtraction:", a - b); // 7
