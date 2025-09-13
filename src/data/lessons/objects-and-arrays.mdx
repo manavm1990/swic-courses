@@ -55,7 +55,7 @@ By the end of this lesson, you'll be able to:
 
 **⚠️ Remember**: All your work for this lesson should be committed and pushed to your GitHub Classroom assignment repository. This is how your instructor will access and grade your submission.
 
-**⚠️:** The code snippets in this lesson are for Demonstrating concepts. This means that the code as is may not pass linting, which is more strict. It will be your job to ensure your version of the code passes linting.
+**⚠️:** The code snippets in this lesson are for demonstrating concepts. The code as shown may not pass linting, which is more strict. It will be your job to ensure your version of the code passes linting.
 
 ---
 
@@ -63,11 +63,11 @@ By the end of this lesson, you'll be able to:
 
 **Note**: The following sections contain code examples for understanding concepts. You're not required to code along until the "Hands-On Application" section, but feel free to experiment with any examples that help your understanding. When you see React code later, don't try to run it in Node.js.
 
-Objects in JavaScript are collections of key-value pairs. Think of them as digital filing cabinets where each piece of information has a label (key) and content (value).
+Objects in JavaScript are collections of key-value pairs. Think of them as **digital filing cabinets** where each piece of information has a label (key) and content (value).
 
 ### Object Basics
 
-```js
+```javascript
 // Object literal syntax - the most common way
 const student = {
   firstName: "Maria",
@@ -78,120 +78,111 @@ const student = {
   isEnrolled: true,
 };
 
-// Accessing properties
-console.log(student.firstName); // "Maria"
-console.log(student["lastName"]); // "Rodriguez"
+// Accessing properties - two ways
+console.log(student.firstName); // "Maria" (dot notation - preferred)
+console.log(student["lastName"]); // "Rodriguez" (bracket notation - flexible)
 ```
 
 ### Why Two Ways to Access Properties?
 
-**Dot notation** (`student.firstName`) is cleaner and more common, but **bracket notation** (`student["firstName"]`) is more flexible:
+**Dot notation** (`student.firstName`) is cleaner and more common, but **bracket notation** (`student["firstName"]`) is more powerful:
 
-```js
+```javascript
 const student = {
   firstName: "Maria",
-  // ❌ BAD: Property names with spaces (avoid this!)
-  "favorite course": "Web Development",
-
-  // ✅ GOOD: Use camelCase instead
-  favoriteCourse: "Web Development",
+  favoriteCourse: "Web Development", // ✅ GOOD: Use camelCase
 };
 
-// These won't work with dot notation:
-// console.log(student.favorite course); // Syntax error
-console.log(student["favorite course"]); // "Web Development" (works but ugly)
+// Dot notation for normal properties
+console.log(student.favoriteCourse); // "Web Development"
 
-// Much better - use proper camelCase naming:
-console.log(student.favoriteCourse); // "Web Development" (clean and readable)
-
-// Dynamic property access (this is where bracket notation shines)
+// Bracket notation for dynamic access
 const propertyName = "firstName";
 console.log(student[propertyName]); // "Maria"
+
+// Bracket notation for computed properties
+const field = "Course";
+console.log(student[`favorite${field}`]); // "Web Development"
 ```
 
-### Objects Can Hold Any Type of Data
+### Objects as Containers for Complex Data
 
-```js
+Think of objects like **labeled storage containers** - each container (property) holds exactly what its label says:
+
+```javascript
 const student = {
-  // Primitive values
+  // Simple values
   name: "Maria Rodriguez",
   age: 19,
 
-  // Arrays
+  // Arrays inside objects
   courses: ["Math 101", "CS 277", "English 102"],
 
-  // Other objects (nested objects)
+  // Objects inside objects (nested)
   address: {
     street: "123 College Ave",
     city: "Belleville",
     state: "Illinois",
   },
 
-  // Method to get full address
-  // We don't do this in modern React. No need for `this` references.
+  // Functions inside objects (methods)
   getFullAddress() {
     return `${this.address.street}, ${this.address.city}, ${this.address.state}`;
   },
 };
+
+// Accessing nested data
+console.log(student.address.city); // "Belleville"
+console.log(student.courses[0]); // "Math 101"
 ```
 
 ### Key Terms
 
-- **Property**: A key-value pair in an object
-- **Method**: A function that belongs to an object. Not really used in React with functional style.
+- **Property**: A key-value pair in an object (`name: "Maria"`)
+- **Method**: A function stored as an object property
 - **Object literal**: Creating objects using `{}` syntax
-- **Dot notation**: Accessing properties with `.` (e.g., `obj.property`)
-- **Bracket notation**: Accessing properties with `[]` (e.g., `obj["property"]`)
+- **Dot notation**: Accessing properties with `.` (preferred when possible)
+- **Bracket notation**: Accessing properties with `[]` (required for dynamic access)
+- **Nested object**: An object stored as a property of another object
 
 ---
 
 ## Core Concept Overview: Arrays
 
-Arrays are ordered lists of values. Each value has a numerical index starting from 0. So, like object literals, we use a 🔑 to access a value, but object literals use named strings and arrays are auto indexed numerically.
+Arrays are **ordered lists** of values. Think of them as **numbered storage boxes** where each box has a position number (index) starting from 0.
 
 ### Array Basics
 
-```js
-// Array literal syntax
+```javascript
+// Array literal syntax - the most common way
 const courses = ["Math 101", "CS 277", "English 102"];
 
-// Mixed data types (can be done, but not common or usually necessary).
-const mixedData = [
-  "JavaScript",
-  42,
-  true,
-  { name: "Object" },
-  ["nested", "array"],
-];
+// Accessing elements by position (index)
+console.log(courses[0]); // "Math 101" (first element)
+console.log(courses[1]); // "CS 277" (second element)
+console.log(courses.length); // 3 (total number of elements)
 
-// Accessing elements
-console.log(courses[0]); // "Math 101"
-console.log(courses[1]); // "CS 277"
-console.log(courses.length); // 3
-
-// Getting the last element
-console.log(courses[courses.length - 1]); // "English 102"
+// Getting the last element (two ways)
+console.log(courses[courses.length - 1]); // "English 102" (traditional)
 console.log(courses.at(-1)); // "English 102" (modern approach)
 ```
 
-`courses[courses.length - 1]` Depending on where you are in this review, this code snippet may be difficult to understand. Recall that an array has a property `length`, which returns the number of total elements in the array. Recall that the first element is at index 0, so the last element is at index `length - 1`.
-
-`.at` is a modern method for accessing elements in an array. It allows for negative indexing, meaning you can count back from the end of the array. For example, `courses.at(-1)` gives you the last element, just like `courses[courses.length - 1]`.
+**Why start counting at 0?** Computers count starting from 0, not 1. So the "first" element is at position 0, the "second" is at position 1, and so on.
 
 ### Essential Array Methods
 
-Arrays come with powerful built-in methods for manipulation:
+Arrays come with powerful built-in methods. Think of these as **tools for working with your list**:
 
 #### Adding and Removing Elements
 
-```js
+```javascript
 const fruits = ["apple", "banana"];
 
 // Add to end
 fruits.push("orange");
 console.log(fruits); // ["apple", "banana", "orange"]
 
-// Remove from end
+// Remove from end  
 const lastFruit = fruits.pop();
 console.log(lastFruit); // "orange"
 console.log(fruits); // ["apple", "banana"]
@@ -206,11 +197,11 @@ console.log(firstFruit); // "grape"
 console.log(fruits); // ["apple", "banana"]
 ```
 
-Note that the above methods are fine and dandy, but not really used in modern React where we want to avoid mutating an array in place.
+**Note for React**: The above methods modify the original array. In React, we prefer methods that create new arrays instead.
 
 #### Searching and Finding
 
-```js
+```javascript
 const numbers = [1, 5, 3, 8, 5, 9];
 
 // Check if element exists
@@ -218,11 +209,10 @@ console.log(numbers.includes(5)); // true
 console.log(numbers.includes(10)); // false
 
 // Find index of element
-// Rarely used
 console.log(numbers.indexOf(5)); // 1 (first occurrence)
 console.log(numbers.lastIndexOf(5)); // 4 (last occurrence)
 
-// Find element with condition
+// Find element with condition (this is powerful!)
 const students = [
   { name: "Maria", gpa: 3.8 },
   { name: "John", gpa: 3.2 },
@@ -233,9 +223,7 @@ const highAchiever = students.find((student) => student.gpa > 3.5);
 console.log(highAchiever); // { name: "Maria", gpa: 3.8 }
 ```
 
-`const highAchiever = students.find((student) => student.gpa > 3.5);` Now we're talking functional programming! What's happening here?
-
-Recall that a **callback function** is being used. The `find` method takes a function as an argument and applies it to each element in the array until it finds one that returns `true`. In this case, it's looking for a student with a GPA greater than 3.5.
+**Understanding the `find` example**: The `find` method takes a **callback function** as an argument. This function gets called for each element in the array until it finds one that returns `true`. It's like having an assistant check each student until they find one with a GPA over 3.5.
 
 ---
 
@@ -503,11 +491,11 @@ const student = {
 // OBJECT DESTRUCTURING
 console.info("\n--- Object Destructuring ---");
 
-// Old way
+// Old way (tedious)
 const name = student.name;
 const age = student.age;
 
-// Destructuring way
+// Destructuring way (elegant!)
 const { name: studentName, age: studentAge, major } = student;
 console.info("Student info:", studentName, studentAge, major);
 
@@ -515,11 +503,11 @@ console.info("Student info:", studentName, studentAge, major);
 const { name: fullName, gpa: gradePointAverage } = student;
 console.info("GPA info:", fullName, gradePointAverage);
 
-// Default values
+// Default values (in case property doesn't exist)
 const { graduationYear = 2025 } = student;
 console.info("Expected graduation:", graduationYear);
 
-// Nested destructuring
+// Nested destructuring (getting city and state from address)
 const {
   address: { city, state },
 } = student;
@@ -534,11 +522,11 @@ const grades = [85, 92, 78, 88, 94];
 const [first, second, third] = grades;
 console.info("First three grades:", first, second, third);
 
-// Skip elements
+// Skip elements (note the empty spaces)
 const [firstGrade, , thirdGrade] = grades;
 console.info("First and third:", firstGrade, thirdGrade);
 
-// Rest operator
+// Rest operator (collect remaining elements)
 const [highest, ...remainingGrades] = grades.sort((a, b) => b - a);
 console.info("Highest grade:", highest);
 console.info("Remaining grades:", remainingGrades);
@@ -546,13 +534,13 @@ console.info("Remaining grades:", remainingGrades);
 // SPREAD OPERATOR
 console.info("\n--- Spread Operator ---");
 
-// Array spreading
+// Array spreading (combining arrays)
 const originalGrades = [85, 92, 78];
 const newGrades = [88, 94];
 const allGrades = [...originalGrades, ...newGrades];
 console.info("All grades combined:", allGrades);
 
-// Object spreading (copying and extending)
+// Object spreading (copying and extending objects)
 const basicStudent = {
   name: "John Doe",
   age: 20,
@@ -742,7 +730,7 @@ function StudentCard({ name, age, major, gpa }) {
 
 1. **Mutating arrays directly in React**
 
-```js
+```javascript
 // ❌ Don't do this in React
 students.push(newStudent); // Mutates original array
 setStudents(students);
@@ -753,7 +741,7 @@ setStudents([...students, newStudent]); // Creates new array
 
 2. **Forgetting array methods return new arrays**
 
-```js
+```javascript
 const numbers = [1, 2, 3];
 
 // ❌ map() returns a new array, doesn't modify original
@@ -767,7 +755,7 @@ console.log(doubled); // [2, 4, 6]
 
 3. **Confusing reference vs value**
 
-```js
+```javascript
 // Objects are passed by reference
 const student1 = { name: "Maria", age: 19 };
 const student2 = student1; // Same reference!
@@ -782,7 +770,7 @@ const student3 = { ...student1 }; // New object with same properties
 
 1. **Use descriptive property names**
 
-```js
+```javascript
 // ❌ Unclear
 const u = { n: "Maria", a: 19 };
 
@@ -792,7 +780,7 @@ const user = { name: "Maria", age: 19 };
 
 2. **Prefer immutable operations**
 
-```js
+```javascript
 // ❌ Mutating (changing original)
 const addGrade = (student, newGrade) => {
   student.grades.push(newGrade);
@@ -808,7 +796,7 @@ const addGrade = (student, newGrade) => ({
 
 3. **Use array methods instead of loops**
 
-```js
+```javascript
 // ❌ Manual loop (note: let is appropriate here for loop variable)
 const highGrades = [];
 for (let i = 0; i < grades.length; i++) {
@@ -823,7 +811,7 @@ const highGrades = grades.filter((grade) => grade >= 90);
 
 4. **Validate data structure**
 
-```js
+```javascript
 const getStudentAverage = (student) => {
   // Defensive programming
   if (
