@@ -4,12 +4,6 @@ Review of JavaScript variables (var, let, const), primitive types, operators, an
 
 ## Introduction
 
-### Why This Review Matters
-
-You've written JavaScript before. You know `const x = 5` creates a variable. But after months away, it's the subtle details that slip - the difference between `null` and `undefined`, why `[] == false` is true, or why modifying an object affects all variables pointing to it.
-
-This lesson refreshes the fundamentals that trip up even experienced developers. We'll use browser DevTools experiments to rediscover JavaScript's quirks before you encounter them in frameworks like React.
-
 ### What We'll Cover
 
 - Modern variable declarations and why `const` is your default
@@ -96,7 +90,7 @@ console.log(Array.isArray(user)); // false
 10 - 5; // 5  - subtraction
 10 * 5; // 50 - multiplication
 10 / 5; // 2  - division
-10 % 3; // 1  - remainder (super useful for cycling)
+10 % 3; // 1  - remainder (super useful for checking for odd/even)
 10 ** 2; // 100 - exponentiation (power)
 
 let score = 10;
@@ -186,7 +180,7 @@ This is why state management in frameworks can be tricky. Let's simulate how Rea
 
 ```javascript
 // Step 1: Create a simple "component state" simulator
-let componentState = { count: 0, user: { name: "Alex" } };
+const componentState = { count: 0, user: { name: "Alex" } };
 
 // Step 2: Wrong way to update state (mutates original)
 function updateStateWrong(newData) {
@@ -310,7 +304,7 @@ Modern JavaScript adds operators specifically for handling `null` and `undefined
 
 ```javascript
 // Nullish coalescing (??) - only null/undefined trigger default
-let username = null;
+code username = null;
 console.log(username ?? "Anonymous"); // "Anonymous"
 
 username = "";
@@ -447,17 +441,6 @@ const name = user?.name ?? "Guest";
 5. **Provide defaults with ??** - `value ?? defaultValue` for null/undefined
 
 ## Wrap-Up & Assessment
-
-### Quick Check
-
-Can you answer these without looking back?
-
-1. What's the difference between `null` and `undefined`?
-2. Why does `typeof null` return "object"?
-3. Name all six falsy values
-4. Why can you modify a `const` array?
-5. What's the difference between `??` and `||`?
-6. Why does `"5" + 3` give "53" but `"5" - 3` gives 2?
 
 ### Exercise 3: Debug the Props - React Prep
 
