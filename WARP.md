@@ -111,26 +111,63 @@ The platform is designed as a static site that can be deployed to any static hos
 
 ### Coding Standards
 
-**CRITICAL**: All JavaScript code examples and content MUST follow these standards:
+**CRITICAL**: All JavaScript code examples and content MUST follow these standards (based on course linting rules):
 
-- **Use `const` instead of `let`**: All variable declarations should use `const` unless reassignment is absolutely necessary
-- **Promote immutability**: Encourage immutable patterns and functional programming concepts
-- **Modern JavaScript**: Use ES6+ features and modern syntax throughout all examples
-- **Consistency**: Maintain consistent coding patterns across all lesson content
+**Variable Declarations & Modern JavaScript**:
+- **Always use `const` instead of `let`**: Use `const` for all variable declarations unless reassignment is absolutely necessary
+- **No `var` declarations**: Use modern `const`/`let` syntax only
+- **Prefer arrow functions**: Use `() => {}` syntax for cleaner, modern code
+- **Use template literals**: Use backticks for string interpolation instead of concatenation
+- **Strict equality**: Always use `===` instead of `==`
 
-**Example of preferred variable declaration**:
+**Function Design (Keep Examples Simple & Educational)**:
+- **Single responsibility**: Each function should do one clear thing
+- **Keep functions short**: Aim for functions under 15 lines (excluding comments)
+- **Limit parameters**: Maximum 3-4 parameters per function
+- **Use descriptive names**: Function and variable names should be self-explanatory
+- **Early returns**: Avoid `else` after `return` statements
+
+**Code Clarity & Maintainability**:
+- **No magic numbers**: Use named constants instead of unexplained numbers (except 0 and 1)
+- **Meaningful variable names**: Minimum 3 characters (except loop counters: i, j, k)
+- **camelCase naming**: Consistent naming convention throughout
+- **Avoid nested complexity**: Keep nesting levels shallow for readability
+- **No nested ternary operators**: Use clear if/else for complex conditions
+
+**Immutability & Best Practices**:
+- **No parameter mutation**: Don't modify function parameters
+- **Prefer immutable operations**: Use array methods like `map`, `filter` instead of loops when possible
+- **One variable per declaration**: Avoid `let a, b, c;` style declarations
+- **Consistent returns**: Functions should always return a value or never return
+
+**Example of preferred coding style**:
 ```javascript
-// ✅ GOOD - Use const
-const userName = 'John';
-const userAge = 25;
-const users = ['Alice', 'Bob', 'Charlie'];
+// ✅ GOOD - Modern, clean, educational code
+const MAX_ATTEMPTS = 3;
 
-// ❌ AVOID - Don't use let unless reassignment is needed
-// let userName = 'John';
-// let userAge = 25;
+const validateUser = (userName) => {
+  if (!userName) {
+    return { isValid: false, message: 'Name is required' };
+  }
+  
+  if (userName.length < 2) {
+    return { isValid: false, message: 'Name too short' };
+  }
+  
+  return { isValid: true, message: 'Valid user' };
+};
+
+const users = ['Alice', 'Bob', 'Charlie'];
+const validUsers = users.filter(user => validateUser(user).isValid);
+
+// ❌ AVOID - Old patterns, unclear code
+// var userName = 'John'; // Don't use var
+// let userAge = 25; // Use const unless reassignment needed
+// function validateUser(u) { ... } // Poor parameter name
+// if (userName == '') { ... } // Use strict equality ===
 ```
 
-**When to use `let`**: Only use `let` when variable reassignment is explicitly required, such as in loops or conditional updates that cannot be refactored to use `const`.
+**When to use `let`**: Only use `let` when variable reassignment is explicitly required (loop counters, conditionally updated values that cannot be refactored to use `const`).
 
 ### Lesson Timing
 - **Target duration**: Aim for ~2 hours total per lesson (including pre-work reading)

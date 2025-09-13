@@ -74,12 +74,34 @@ Follow the streamlined template structure:
 - Start simple and gradually increase complexity
 - Test all code before inclusion
 
-**JavaScript Coding Standards** (CRITICAL):
+**JavaScript Coding Standards** (CRITICAL - Based on Course Linting Rules):
 
+**Variable Declarations & Modern JavaScript**:
 - **Always use `const` instead of `let`**: Use `const` for all variable declarations unless reassignment is absolutely necessary
-- **Promote immutability**: Encourage functional programming patterns and immutable data structures
-- **Modern JavaScript**: Use ES6+ features consistently throughout all examples
-- **Exception**: Only use `let` when variable reassignment is explicitly required (e.g., loop counters)
+- **Prefer arrow functions**: Use `() => {}` syntax for cleaner, modern code
+- **Use template literals**: Use backticks for string interpolation instead of concatenation
+- **Strict equality**: Always use `===` instead of `==`
+
+**Function Design (Keep Examples Simple & Educational)**:
+- **Single responsibility**: Each function should do one clear thing
+- **Keep functions short**: Aim for functions under 15 lines (excluding comments)
+- **Limit parameters**: Maximum 3-4 parameters per function
+- **Use descriptive names**: Function and variable names should be self-explanatory
+- **Early returns**: Avoid `else` after `return` statements
+
+**Code Clarity & Maintainability**:
+- **Meaningful variable names**: Minimum 3 characters (except loop counters: i, j, k)
+- **camelCase naming**: Consistent naming convention throughout
+- **Avoid nested complexity**: Keep nesting levels shallow for readability
+- **No nested ternary operators**: Use clear if/else for complex conditions
+
+**Immutability & Best Practices**:
+- **No parameter mutation**: Don't modify function parameters
+- **Prefer immutable operations**: Use array methods like `map`, `filter` instead of loops when possible
+- **One variable per declaration**: Avoid `let a, b, c;` style declarations
+- **Consistent returns**: Functions should always return a value or never return
+
+**Examples should demonstrate these standards while remaining educational and approachable.**
 
 **Technical Accuracy**:
 
