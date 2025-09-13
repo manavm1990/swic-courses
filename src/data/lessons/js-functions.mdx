@@ -1,0 +1,432 @@
+# JavaScript Functions
+
+## Pre-Work
+
+1. Read [Functions](https://eloquentjavascript.net/03_functions.html) through "The call stack" section
+2. Read [Function Basics](https://javascript.info/function-basics) and work through the examples in your Developer Console
+
+## Introduction
+
+### From Copy-Paste Hell to Code Superpowers
+
+**Real-world scenario**: You're helping a friend move, and you need to carry boxes from the house to the truck. Instead of giving detailed instructions each time ("Walk to the box, bend your knees, lift with your back straight, walk to the truck, place the box down"), you just say "Carry that box to the truck." Your friend knows the process and can repeat it for any box.
+
+Functions work the same way. Instead of writing the same code over and over, you create a **reusable instruction set** that you can call whenever needed.
+
+### What You'll Learn Today
+
+- How to create reusable blocks of code (like creating your own mini-programs)
+- How to pass information into functions and get results back
+- Mental models for thinking about functions as tools or black boxes
+- Why functions make your code cleaner, more organized, and easier to debug
+
+## Core Concept Overview
+
+### Functions as Black Boxes
+
+**Mental model**: Think of a function as a **black box machine** in a factory. You don't need to know what's happening inside - you put raw materials in one end, the machine does its work, and a finished product comes out the other end.
+
+```javascript
+// The "black box" that converts temperatures
+const convertToFahrenheit = (celsius) => {
+  const fahrenheit = (celsius * 9/5) + 32;
+  return fahrenheit;
+};
+
+// Using the black box - you don't need to remember the formula
+const roomTemp = convertToFahrenheit(22);
+console.log("Room temperature:", roomTemp, "°F"); // 71.6°F
+```
+
+**Mental model**: The **input** (celsius) goes into the black box, the **process** happens inside, and the **output** (fahrenheit) comes out.
+
+### Functions as Kitchen Recipes
+
+Another powerful way to think about functions is as **recipes in a cookbook**:
+
+```javascript
+const makeCoffe = (coffeeBeans, sugarAmount) => {
+  console.log("Grinding", coffeeBeans, "beans...");
+  console.log("Brewing coffee...");
+  console.log("Adding", sugarAmount, "spoons of sugar");
+  
+  const coffee = "Fresh coffee with " + sugarAmount + " sugar";
+  return coffee;
+};
+
+// Using the recipe
+const morningCoffee = makeCoffe("Colombian", 2);
+console.log("Ready:", morningCoffee);
+```
+
+**Mental model**: The **parameters** (coffeeBeans, sugarAmount) are like the ingredient list, the **function body** is the cooking instructions, and the **return value** is the finished dish.
+
+### The Restaurant Analogy: Parameters and Return Values
+
+**Mental model**: A function is like **ordering at a restaurant**:
+
+- **Parameters** = What you tell the waiter ("I'll have the burger, medium-rare, with fries")
+- **Function body** = What happens in the kitchen (you don't see this)
+- **Return value** = The meal that arrives at your table
+
+```javascript
+const orderBurger = (cookingLevel, sideOrder, drinkChoice) => {
+  console.log("Kitchen: Making burger", cookingLevel);
+  console.log("Kitchen: Preparing", sideOrder);
+  console.log("Kitchen: Getting", drinkChoice);
+  
+  const meal = {
+    burger: cookingLevel + " burger",
+    side: sideOrder,
+    drink: drinkChoice,
+    status: "Ready!"
+  };
+  
+  return meal;
+};
+
+// Placing an order
+const myLunch = orderBurger("medium-rare", "sweet potato fries", "iced tea");
+console.log("Order received:", myLunch);
+```
+
+### Key Terms
+
+- **Function Declaration**: Creating a new function (like writing a new recipe)
+- **Parameters**: The inputs a function expects (the ingredients list)
+- **Arguments**: The actual values you pass when calling the function (the specific ingredients you use)
+- **Return value**: What the function gives back (the finished product)
+- **Function call**: Actually using the function (following the recipe)
+
+## Hands-On Application
+
+### Exercise 1: The Personal Greeting Machine
+
+**Analogy**: You're creating a personalized greeting system that adapts to different times of day.
+
+```javascript
+const createGreeting = (name, timeOfDay) => {
+  if (timeOfDay === "morning") {
+    return "Good morning, " + name + "! Hope you have a great day!";
+  } else if (timeOfDay === "afternoon") {
+    return "Good afternoon, " + name + "! How's your day going?";
+  } else if (timeOfDay === "evening") {
+    return "Good evening, " + name + "! How was your day?";
+  } else {
+    return "Hello, " + name + "! Nice to see you!";
+  }
+};
+
+// Test the greeting machine
+console.log(createGreeting("Sarah", "morning"));
+console.log(createGreeting("Mike", "evening"));
+```
+
+**Your turn**: Add a parameter for mood ("happy", "tired", "excited") and modify the greetings accordingly.
+
+### Exercise 2: The Simple Calculator Functions
+
+**Analogy**: You're creating specialized calculators that each do one job really well.
+
+```javascript
+const addNumbers = (num1, num2) => {
+  const result = num1 + num2;
+  console.log(num1 + " + " + num2 + " = " + result);
+  return result;
+};
+
+const multiplyNumbers = (num1, num2) => {
+  const result = num1 * num2;
+  console.log(num1 + " × " + num2 + " = " + result);
+  return result;
+};
+
+// Using your calculators
+const sum = addNumbers(15, 27);
+const product = multiplyNumbers(8, 6);
+
+// You can use the results in other calculations
+const finalAnswer = addNumbers(sum, product);
+```
+
+**Your turn**: Create `subtractNumbers` and `divideNumbers` functions following the same pattern.
+
+### Exercise 3: The Decision Helper
+
+**Analogy**: You're creating a function that helps people make decisions by giving personalized advice.
+
+```javascript
+const giveAdvice = (situation, energyLevel) => {
+  console.log("Analyzing situation:", situation);
+  console.log("Energy level:", energyLevel);
+  
+  if (situation === "study" && energyLevel === "high") {
+    return "Perfect time to tackle that challenging material!";
+  } else if (situation === "study" && energyLevel === "low") {
+    return "Maybe try some light review or take a break first.";
+  } else if (situation === "exercise" && energyLevel === "high") {
+    return "Great! Go for that intense workout!";
+  } else if (situation === "exercise" && energyLevel === "low") {
+    return "A gentle walk or light stretching might be perfect.";
+  } else {
+    return "Take a moment to assess what you really need right now.";
+  }
+};
+
+// Getting personalized advice
+const advice1 = giveAdvice("study", "high");
+const advice2 = giveAdvice("exercise", "low");
+
+console.log("Advice 1:", advice1);
+console.log("Advice 2:", advice2);
+```
+
+### Exercise 4: Functions Calling Functions
+
+**Analogy**: Like having one kitchen assistant who specializes in prep work and another who specializes in cooking - they work together.
+
+```javascript
+const validateAge = (age) => {
+  if (age >= 18) {
+    return "adult";
+  } else {
+    return "minor";
+  }
+};
+
+const createWelcomeMessage = (name, age) => {
+  const ageCategory = validateAge(age); // One function calling another!
+  
+  if (ageCategory === "adult") {
+    return "Welcome, " + name + "! You have full access.";
+  } else {
+    return "Hi " + name + "! You have limited access until you turn 18.";
+  }
+};
+
+// Test the combined functions
+console.log(createWelcomeMessage("Alex", 22));
+console.log(createWelcomeMessage("Sam", 16));
+```
+
+## Advanced Concepts & Comparisons
+
+### Arrow Functions vs Regular Functions
+
+**Mental model**: Think of regular functions as **formal business letters** and arrow functions as **casual text messages**. They both deliver the message, but arrow functions are more concise for simple cases.
+
+```javascript
+// Regular function (the "business letter")
+function calculateTip(billAmount, tipPercent) {
+  const tip = billAmount * (tipPercent / 100);
+  return tip;
+}
+
+// Arrow function (the "text message")
+const calculateTip = (billAmount, tipPercent) => {
+  const tip = billAmount * (tipPercent / 100);
+  return tip;
+};
+
+// Even shorter for simple functions
+const quickTip = (bill) => bill * 0.2; // 20% tip
+```
+
+**When to use which**: For now, stick with arrow functions - they're more common in modern JavaScript and what you'll see in React.
+
+### Scope: Function Privacy
+
+**Mental model**: Think of function scope like **rooms in a house**. Variables created inside a function are like items in a private bedroom - they can't be accessed from the living room.
+
+```javascript
+const cookDinner = () => {
+  const secretIngredient = "love"; // Only available inside this function
+  const dish = "Pasta with " + secretIngredient;
+  return dish;
+};
+
+const result = cookDinner();
+console.log(result); // "Pasta with love"
+
+// This would cause an error - secretIngredient doesn't exist outside the function
+// console.log(secretIngredient); // ❌ Error!
+```
+
+### Function Parameters vs Global Variables
+
+**Best practice**: Functions should receive what they need through parameters rather than reaching outside themselves.
+
+```javascript
+// ❌ Not ideal - function depends on external variable
+const taxRate = 0.08;
+const calculateTotal = (price) => {
+  return price + (price * taxRate);
+};
+
+// ✅ Better - function is self-contained
+const calculateTotal = (price, taxRate) => {
+  return price + (price * taxRate);
+};
+
+// Now it's flexible and predictable
+const total1 = calculateTotal(100, 0.08); // 8% tax
+const total2 = calculateTotal(100, 0.05); // 5% tax
+```
+
+## Troubleshooting & Best Practices
+
+### Common Function Mistakes
+
+**The "Forgetting to Return" Problem**:
+
+```javascript
+// ❌ This function doesn't give anything back
+const addNumbers = (a, b) => {
+  const result = a + b;
+  console.log(result); // This just prints, doesn't return
+};
+
+const sum = addNumbers(5, 3); // sum is undefined!
+
+// ✅ Fixed version
+const addNumbers = (a, b) => {
+  const result = a + b;
+  console.log(result); // Optional: show the work
+  return result; // This gives the value back
+};
+```
+
+**The "Too Many Responsibilities" Problem**:
+
+```javascript
+// ❌ This function does too much
+const processOrder = (customerName, items, paymentMethod, deliveryAddress) => {
+  // Calculates total
+  // Processes payment
+  // Updates inventory
+  // Sends confirmation email
+  // Schedules delivery
+  // This function is doing 5 different jobs!
+};
+
+// ✅ Better approach - smaller, focused functions
+const calculateTotal = (items) => { /* just calculates */ };
+const processPayment = (total, method) => { /* just handles payment */ };
+const updateInventory = (items) => { /* just updates stock */ };
+```
+
+**Mental rule**: Each function should do **one thing really well**, like having specialized tools instead of one giant multi-tool.
+
+### Naming Functions Clearly
+
+**Best practice**: Function names should be **verbs** that clearly describe what the function does.
+
+```javascript
+// ❌ Unclear names
+const calc = (x, y) => x + y;
+const thing = (data) => { /* does something */ };
+
+// ✅ Clear, descriptive names
+const addTwoNumbers = (x, y) => x + y;
+const validateUserEmail = (email) => { /* validation logic */ };
+const convertCelsiusToFahrenheit = (celsius) => (celsius * 9/5) + 32;
+```
+
+## Wrap-Up & Assessment
+
+### The Big Picture: Why Functions Matter
+
+Functions are the **building blocks of organized code**. Every major application breaks complex problems into smaller, manageable functions. Think of them as:
+
+- **Lego blocks**: Reusable pieces you can combine in different ways
+- **Kitchen tools**: Each one specialized for a specific job
+- **Team members**: Each one responsible for their own area of expertise
+
+### Quick Mental Model Check
+
+**Test your understanding**:
+
+1. **Black box analogy**: If you have `const result = convertMilesToKilometers(5)`, what are the input, process, and output?
+   - Input: 5 (miles), Process: conversion calculation, Output: result in kilometers
+
+2. **Restaurant analogy**: In the function call `orderPizza("large", "pepperoni")`, what are the arguments?
+   - Arguments: "large" and "pepperoni" (what you're telling the "waiter")
+
+### HW: Function Workshop
+
+**NOTE**: Complete ALL interactive exercises from this lesson, including every "Your turn" prompt and hands-on exercise throughout the content above.
+
+**Part 1: Personal Helper Functions**
+
+Create three functions that could be useful in daily life:
+
+```javascript
+// 1. A function that tells you how many hours until bedtime
+const hoursUntilBedtime = (currentHour, bedtimeHour) => {
+  // Your code here
+  // Should handle cases where bedtime is the next day
+};
+
+// 2. A function that gives study advice based on hours available
+const getStudyAdvice = (hoursAvailable) => {
+  // Your code here
+  // Less than 1 hour: "Quick review session"
+  // 1-2 hours: "Focus on practice problems"
+  // More than 2 hours: "Deep learning time!"
+};
+
+// 3. A function that calculates how much to tip
+const calculateTipAmount = (billTotal, serviceQuality) => {
+  // Your code here
+  // "poor" = 10%, "average" = 15%, "excellent" = 20%
+};
+
+// Test all your functions with different inputs
+```
+
+**Part 2: Function Composition Challenge**
+
+Create a "meal planning" system using multiple functions that work together:
+
+```javascript
+const checkIfHealthy = (food) => {
+  // Return true if food is "salad", "fruit", "vegetables"
+  // Return false for "pizza", "burger", "candy"
+};
+
+const calculateMealCost = (food, quantity) => {
+  // Simple prices: healthy foods cost $5, unhealthy cost $8
+};
+
+const planMeal = (food, quantity, budget) => {
+  // Use the other two functions to create a meal plan
+  // Should return advice about the meal choice
+};
+
+// Example usage:
+// planMeal("salad", 2, 15) should return advice about the meal
+```
+
+**Part 3: Learning Reflection Video**
+
+Record a 3-4 minute video explaining:
+- One function from your homework (walk through it line by line)
+- Which mental model helped you most (black box, recipe, restaurant)
+- One "aha moment" you had about functions
+
+**Submission Requirements**:
+
+- Screenshots of all functions running successfully with test outputs
+- **Code walkthrough video** (3-4 minutes): Show your functions working and explain your logic
+- **Brief written reflection** (in a GitHub Gist or similar): What was most challenging about functions? What clicked for you?
+
+### Key Takeaways
+
+1. **Functions** are reusable blocks of code that make programs modular
+2. **Parameters** let functions work with different inputs
+3. **Return values** let functions give results back to the rest of your program
+4. **Good function names** describe what the function does (use verbs)
+5. **One responsibility per function** keeps code organized and maintainable
+6. **Functions calling functions** let you build complex behavior from simple parts
+
+Next lesson: We'll learn about objects and arrays - the data structures that let you organize and work with collections of information!

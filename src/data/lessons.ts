@@ -177,6 +177,20 @@ const lessons = [
           "Learn how programs make decisions with conditionals and handle repetitive tasks with loops - the building blocks of intelligent programs.",
         video: null,
       },
+      {
+        id: "js-functions",
+        title: "JavaScript Functions",
+        description:
+          "Learn to create reusable blocks of code with functions - the building blocks of organized programming and modular applications.",
+        video: null,
+      },
+      {
+        id: "js-objects-and-arrays-basics",
+        title: "Objects and Arrays: Data Organization",
+        description:
+          "Master JavaScript's fundamental data structures for organizing information - objects for related properties and arrays for collections.",
+        video: null,
+      },
     ],
   },
   {

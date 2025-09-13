@@ -1,0 +1,499 @@
+# JavaScript Objects and Arrays: Data Organization
+
+## Pre-Work
+
+1. Read [Objects](https://javascript.info/object) through "Object references and copying" section
+2. Read [Arrays](https://javascript.info/array) and work through the examples in your Developer Console
+3. Optional: Read about [Data Structures](https://eloquentjavascript.net/04_data.html) (first few sections)
+
+## Introduction
+
+### From Single Variables to Data Collections
+
+**Real-world scenario**: You're organizing a music festival. Instead of having separate sticky notes for each piece of information (artist name, stage time, ticket price, venue capacity), you want organized folders where related information stays together. You also need a master list of all the artists performing.
+
+This is exactly what objects and arrays do in JavaScript - they organize related data and manage collections efficiently.
+
+### What You'll Learn Today
+
+- How to group related data using objects (like creating a digital filing cabinet)
+- How to store and work with lists using arrays (like creating organized collections)
+- Mental models for choosing between objects and arrays
+- Essential methods for manipulating both data structures
+
+## Core Concept Overview
+
+### Objects: Digital Filing Cabinets
+
+**Mental model**: Think of an object as a **filing cabinet with labeled folders**. Each folder (property) has a label (key) and contains specific information (value).
+
+```javascript
+// A person represented as an object
+const student = {
+  firstName: "Sarah",
+  lastName: "Johnson",
+  age: 20,
+  major: "Computer Science",
+  isEnrolled: true
+};
+
+// Accessing information from the "filing cabinet"
+console.log(student.firstName); // "Sarah"
+console.log(student.major); // "Computer Science"
+```
+
+**Mental model**: The **dot notation** (`student.firstName`) is like opening a specific drawer in the filing cabinet to get what you need.
+
+### Objects: Personal ID Cards
+
+Another way to think about objects is as **digital ID cards** that contain all the relevant information about one thing:
+
+```javascript
+// A book's "ID card"
+const favoriteBook = {
+  title: "The Pragmatic Programmer",
+  author: "David Thomas",
+  pages: 352,
+  isAvailable: true,
+  genre: "Technology",
+  publishedYear: 1999
+};
+
+// Reading the "ID card"
+console.log(`${favoriteBook.title} by ${favoriteBook.author}`);
+console.log(`Published in ${favoriteBook.publishedYear}, ${favoriteBook.pages} pages`);
+```
+
+### Arrays: Organized Lists
+
+**Mental model**: Think of an array as a **numbered list** or **playlist** where order matters and you can access items by their position.
+
+```javascript
+// A playlist of favorite songs
+const favoritesSongs = [
+  "Bohemian Rhapsody",
+  "Hotel California",
+  "Stairway to Heaven",
+  "Sweet Caroline",
+  "Don't Stop Believin'"
+];
+
+// Accessing songs by their position (starting from 0)
+console.log(favoritesSongs[0]); // "Bohemian Rhapsody" (first song)
+console.log(favoritesSongs[2]); // "Stairway to Heaven" (third song)
+console.log(favoritesSongs.length); // 5 (how many songs total)
+```
+
+**Mental model**: Array **indices** (like `[0]`, `[1]`, `[2]`) are like **seat numbers** in a theater - they tell you exactly where to find what you're looking for.
+
+### Arrays: Egg Cartons
+
+Another useful way to think about arrays is like **egg cartons**:
+
+```javascript
+// Grocery list like an egg carton with numbered slots
+const groceries = ["milk", "bread", "eggs", "apples", "chicken"];
+
+// Each slot has a number (starting from 0)
+console.log("Slot 0:", groceries[0]); // "milk"
+console.log("Slot 1:", groceries[1]); // "bread"
+console.log("Last slot:", groceries[groceries.length - 1]); // "chicken"
+```
+
+### Key Terms
+
+- **Object**: A collection of key-value pairs (like a digital filing cabinet)
+- **Property**: A key-value pair in an object (like a labeled folder)
+- **Key**: The label/name of a property (like the folder label)
+- **Value**: The data stored in a property (like the folder contents)
+- **Array**: An ordered list of items (like a numbered list)
+- **Index**: The position number of an item in an array (starting from 0)
+- **Element**: An individual item in an array
+
+## Hands-On Application
+
+### Exercise 1: Creating Student Profiles
+
+**Analogy**: You're building a student directory system for your college.
+
+```javascript
+// Create student profile objects
+const student1 = {
+  name: "Alex Rodriguez",
+  id: "S12345",
+  year: "sophomore",
+  gpa: 3.7,
+  major: "Web Development",
+  isOnDeansList: true
+};
+
+const student2 = {
+  name: "Jordan Kim",
+  id: "S67890", 
+  year: "freshman",
+  gpa: 3.9,
+  major: "Cybersecurity",
+  isOnDeansList: true
+};
+
+// Using the student information
+console.log(`${student1.name} is a ${student1.year} studying ${student1.major}`);
+
+if (student1.isOnDeansList) {
+  console.log(`Congratulations ${student1.name} on making the Dean's List!`);
+}
+```
+
+**Your turn**: Create your own student profile object with different properties. Add a property for `favoriteSubject` and display it.
+
+### Exercise 2: Managing Course Lists
+
+**Analogy**: You're organizing your class schedule as arrays of information.
+
+```javascript
+// Different types of course lists
+const fallCourses = ["JavaScript Fundamentals", "Database Design", "Web Design"];
+const springCourses = ["React Development", "Node.js", "Project Management"];
+const allCourses = ["Intro to Programming", "HTML/CSS", "JavaScript", "React"];
+
+// Working with the lists
+console.log("Taking", fallCourses.length, "courses this fall");
+console.log("First course:", fallCourses[0]);
+console.log("Last course:", fallCourses[fallCourses.length - 1]);
+
+// Adding a new course
+fallCourses.push("Computer Ethics");
+console.log("Updated fall courses:", fallCourses);
+```
+
+### Exercise 3: Combining Objects and Arrays
+
+**Analogy**: You're creating a complete course catalog where each course has detailed information.
+
+```javascript
+// Array of course objects - combining both data structures
+const courseCatalog = [
+  {
+    code: "WEB101",
+    title: "Introduction to Web Development", 
+    credits: 3,
+    instructor: "Dr. Smith",
+    isAvailable: true
+  },
+  {
+    code: "JS201", 
+    title: "JavaScript Fundamentals",
+    credits: 4,
+    instructor: "Prof. Johnson",
+    isAvailable: true
+  },
+  {
+    code: "DB301",
+    title: "Database Design",
+    credits: 3, 
+    instructor: "Dr. Davis",
+    isAvailable: false
+  }
+];
+
+// Working with the catalog
+console.log("Total courses available:", courseCatalog.length);
+
+// Finding information about a specific course
+const firstCourse = courseCatalog[0];
+console.log(`${firstCourse.code}: ${firstCourse.title}`);
+console.log(`Taught by ${firstCourse.instructor} (${firstCourse.credits} credits)`);
+
+// Checking availability
+if (firstCourse.isAvailable) {
+  console.log("Course is open for enrollment");
+} else {
+  console.log("Course is currently full");
+}
+```
+
+### Exercise 4: Practical Data Manipulation
+
+**Analogy**: You're updating and organizing your music library.
+
+```javascript
+// Managing a playlist (array methods in action)
+const myPlaylist = ["Song A", "Song B", "Song C"];
+
+// Add songs to the end
+myPlaylist.push("Song D");
+myPlaylist.push("Song E");
+
+// Remove the first song
+const removedSong = myPlaylist.shift();
+console.log("Removed:", removedSong);
+console.log("Current playlist:", myPlaylist);
+
+// Add a song to the beginning
+myPlaylist.unshift("New Favorite Song");
+console.log("Updated playlist:", myPlaylist);
+
+// Find a song's position
+const position = myPlaylist.indexOf("Song C");
+console.log("Song C is at position:", position);
+```
+
+## Advanced Concepts & Comparisons
+
+### When to Use Objects vs Arrays
+
+**Mental framework**: Ask yourself: "Am I describing **one thing with multiple properties** or managing **a collection of similar items**?"
+
+```javascript
+// ✅ Object - describing ONE person with multiple properties
+const person = {
+  name: "Maria",
+  age: 25,
+  job: "Developer",
+  city: "Chicago"
+};
+
+// ✅ Array - a collection of similar items (people's names)
+const teamMembers = ["Maria", "John", "Sarah", "Mike"];
+
+// ✅ Array of Objects - a collection where each item has detailed properties
+const team = [
+  { name: "Maria", age: 25, role: "Frontend" },
+  { name: "John", age: 28, role: "Backend" },
+  { name: "Sarah", age: 26, role: "Designer" }
+];
+```
+
+### Accessing Nested Data
+
+**Mental model**: Think of nested objects/arrays like **Russian nesting dolls** - you open one to find another inside.
+
+```javascript
+// A student with nested information
+const student = {
+  name: "Taylor Wilson",
+  contact: {
+    email: "taylor@email.com",
+    phone: "555-0123"
+  },
+  courses: ["Math", "Science", "History"],
+  grades: {
+    math: 95,
+    science: 87,
+    history: 92
+  }
+};
+
+// Accessing nested information
+console.log(student.name); // "Taylor Wilson"
+console.log(student.contact.email); // "taylor@email.com"
+console.log(student.courses[0]); // "Math"
+console.log(student.grades.math); // 95
+```
+
+### Object Property Access: Dot vs Bracket Notation
+
+**Mental model**: Dot notation (`.`) is like **using a key you already know**. Bracket notation (`[]`) is like **looking up which key to use**.
+
+```javascript
+const car = {
+  make: "Honda",
+  model: "Civic",
+  year: 2020,
+  "fuel-type": "gasoline" // Property name with hyphen needs brackets
+};
+
+// Dot notation - when you know the exact property name
+console.log(car.make); // "Honda"
+console.log(car.model); // "Civic"
+
+// Bracket notation - useful for dynamic property names or special characters
+console.log(car["fuel-type"]); // "gasoline" - hyphen requires brackets
+console.log(car["make"]); // "Honda" - also works
+
+// Dynamic property access
+const propertyName = "year";
+console.log(car[propertyName]); // 2020
+```
+
+## Troubleshooting & Best Practices
+
+### Common Array Mistakes
+
+**The "Off by One" Error**:
+
+```javascript
+const fruits = ["apple", "banana", "orange"];
+
+// ❌ Trying to access the "3rd" item (arrays start at 0!)
+console.log(fruits[3]); // undefined - there's no position 3
+
+// ✅ Correct way to get the last item
+console.log(fruits[fruits.length - 1]); // "orange"
+console.log(fruits[2]); // "orange" - position 2 is the 3rd item
+```
+
+**The "Modifying Original Array" Surprise**:
+
+```javascript
+const originalList = ["A", "B", "C"];
+
+// ❌ This modifies the original array
+originalList.push("D");
+console.log(originalList); // ["A", "B", "C", "D"] - original changed!
+
+// ✅ If you want to keep the original unchanged, make a copy first
+const originalList = ["A", "B", "C"]; 
+const newList = [...originalList]; // Creates a copy
+newList.push("D");
+console.log(originalList); // ["A", "B", "C"] - unchanged
+console.log(newList); // ["A", "B", "C", "D"] - only the copy changed
+```
+
+### Common Object Mistakes
+
+**The "Property Name" Confusion**:
+
+```javascript
+const user = {
+  name: "Alex",
+  age: 22
+};
+
+// ❌ Common mistakes
+console.log(user.Name); // undefined - capital N doesn't exist
+console.log(user."name"); // Syntax error - quotes not allowed with dot notation
+
+// ✅ Correct approaches
+console.log(user.name); // "Alex"
+console.log(user["name"]); // "Alex"
+```
+
+### Organizing Data Effectively
+
+**Best practice**: Group related information together and keep similar items in arrays.
+
+```javascript
+// ❌ Disorganized - related information scattered
+const userName = "Jessica";
+const userAge = 24;
+const userEmail = "jessica@email.com";
+const course1 = "Math";
+const course2 = "Science";
+const course3 = "History";
+
+// ✅ Organized - related information grouped
+const user = {
+  name: "Jessica",
+  age: 24,
+  email: "jessica@email.com",
+  courses: ["Math", "Science", "History"]
+};
+```
+
+## Wrap-Up & Assessment
+
+### The Big Picture: Why Data Organization Matters
+
+Objects and arrays are the **foundation of all data management** in programming. Every app you use - from social media to online shopping - organizes information using these same basic concepts:
+
+- **Social media profiles**: Objects with properties (name, bio, followers)
+- **Friend lists**: Arrays of user objects
+- **Shopping carts**: Arrays of product objects
+- **User preferences**: Objects with various settings
+
+### Quick Mental Model Check
+
+**Test your understanding**:
+
+1. **Filing cabinet analogy**: If `student.major` returns "Computer Science", what's the key and what's the value?
+   - Key: "major", Value: "Computer Science"
+
+2. **Playlist analogy**: In the array `songs = ["A", "B", "C"]`, what would `songs[1]` return?
+   - "B" (arrays start counting at 0, so position 1 is the second item)
+
+3. **When to use which**: You need to store information about a single book (title, author, pages). Object or array?
+   - Object - you're describing one thing with multiple properties
+
+### HW: Personal Data Organizer
+
+**NOTE**: Complete ALL interactive exercises from this lesson, including every "Your turn" prompt and hands-on exercise throughout the content above.
+
+**Part 1: Create Your Digital Profile**
+
+```javascript
+// Create an object representing yourself with at least 6 properties
+const myProfile = {
+  // Include: name, age, school, major, hobbies (as an array), isStudent
+  // Add any other interesting properties about yourself
+};
+
+// Test accessing different properties
+console.log("Basic info:", myProfile.name, "is", myProfile.age, "years old");
+console.log("Education:", myProfile.school, "-", myProfile.major);
+console.log("Hobbies:", myProfile.hobbies);
+```
+
+**Part 2: Favorite Things Collection**
+
+```javascript
+// Create arrays for different categories of your favorites
+const favoriteMovies = [/* add at least 4 movies */];
+const favoriteFoods = [/* add at least 5 foods */];
+const favoriteColors = [/* add at least 3 colors */];
+
+// Practice array methods
+// Add a new movie to your list
+// Remove the first food from your list
+// Find the position of a specific color
+// Display the total number of items across all arrays
+```
+
+**Part 3: Course Management System**
+
+Create a simple system to manage your courses:
+
+```javascript
+// Array of course objects
+const myCourses = [
+  {
+    code: "WEB101",
+    name: "Web Development Fundamentals",
+    instructor: "Professor Smith",
+    credits: 3,
+    currentGrade: 95,
+    isCompleted: false
+  }
+  // Add at least 2 more courses
+];
+
+// Write functions to:
+// 1. Find a course by code
+// 2. Calculate your total credits
+// 3. List all incomplete courses
+// 4. Find your highest grade
+```
+
+**Part 4: Learning Reflection**
+
+Write a brief reflection (in a GitHub Gist or similar) answering:
+1. Which mental model helped you most (filing cabinet, playlist, etc.)?
+2. What was the most confusing part about objects vs arrays?
+3. How do you decide when to use an object vs an array?
+
+**Submission Requirements**:
+
+- Screenshots of all your code running successfully
+- **Demo video** (3-4 minutes): Walk through your personal profile object and show the course management system working
+- **Reflection document link**: Your written responses to the learning questions
+
+### Key Takeaways
+
+1. **Objects** organize related properties about one thing (like a digital filing cabinet)
+2. **Arrays** manage ordered collections of similar items (like numbered lists)
+3. **Dot notation** (`object.property`) is the most common way to access object properties
+4. **Array indices** start at 0 and go up to `array.length - 1`
+5. **Combining objects and arrays** creates powerful data structures for real applications
+6. **Data organization** should group related information together for clarity
+
+Next lesson: We'll dive deeper into these concepts in our review module, focusing on how they prepare you for React development!
