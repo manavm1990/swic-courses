@@ -1,5 +1,6 @@
 import { Figure } from "@/components/figure";
 import { VideoYT } from "@/components/video-yt";
+import { ExternalLinkIcon } from "@/icons/external-link-icon";
 import { transformerColorizedBrackets } from "@shikijs/colorized-brackets";
 import type { MDXComponents } from "mdx/types";
 import Image from "next/image";
@@ -75,6 +76,28 @@ async function CodeBlock({ code, lang }: { code: string; lang: string }) {
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
+    a: ({ href, children, ...props }) => {
+      // Check if it's an external link
+      const isExternal = href && (href.startsWith('http') || href.startsWith('https'));
+      
+      if (isExternal) {
+        return (
+          <a 
+            href={href} 
+            {...props}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1"
+          >
+            {children}
+            <ExternalLinkIcon className="w-4 h-4 shrink-0" />
+          </a>
+        );
+      }
+      
+      // Internal links keep default styling
+      return <a href={href} {...props}>{children}</a>;
+    },
     h1: ({ children }) => {
       const id = generateId(getTextContent(children));
       return (
