@@ -809,7 +809,7 @@ const addGrade = (student, newGrade) => ({
 3. **Use array methods instead of loops**
 
 ```js
-// ❌ Manual loop
+// ❌ Manual loop (note: let is appropriate here for loop variable)
 const highGrades = [];
 for (let i = 0; i < grades.length; i++) {
   if (grades[i] >= 90) {

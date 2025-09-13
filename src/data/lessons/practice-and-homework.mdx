@@ -169,7 +169,7 @@ const favoriteNumber = 7; // Your favorite number
 const city = "Your City";
 
 // Calculate your age
-let age = currentYear - birthYear;
+const age = currentYear - birthYear;
 
 // Create formatted outputs
 console.log("=== Personal Information ===");
@@ -179,9 +179,9 @@ console.log("Hometown:", city);
 console.log("Favorite Number:", favoriteNumber);
 
 // Fun calculations
-let ageInMonths = age * 12;
-let ageInDays = age * 365; // Approximate
-let favNumberSquared = favoriteNumber * favoriteNumber;
+const ageInMonths = age * 12;
+const ageInDays = age * 365; // Approximate
+const favNumberSquared = favoriteNumber * favoriteNumber;
 
 console.log("\n=== Fun Facts ===");
 console.log("Age in months:", ageInMonths);
@@ -198,8 +198,8 @@ Create `calculator.js`:
 // Simple Calculator
 // Practice with numbers and operations
 
-let num1 = 15;
-let num2 = 4;
+const num1 = 15;
+const num2 = 4;
 
 console.log("=== Calculator Results ===");
 console.log("First number:", num1);
@@ -214,8 +214,8 @@ console.log("Division:", num1 / num2);
 console.log("Remainder:", num1 % num2);
 
 // Advanced calculations
-let average = (num1 + num2) / 2;
-let difference = Math.abs(num1 - num2); // Absolute difference
+const average = (num1 + num2) / 2;
+const difference = Math.abs(num1 - num2); // Absolute difference
 
 console.log("\n=== Advanced Results ===");
 console.log("Average:", average);
@@ -251,9 +251,9 @@ console.log("Sentence 2 length:", sentence2.length);
 console.log("Combined length:", sentence1.length + sentence2.length);
 
 // String combinations
-let combinedSentence = sentence1 + " and " + sentence2;
-let modifiedSentence = sentence1.replace("powerful", word1);
-let personalStatement = "I am becoming an " + word1 + " " + word2;
+const combinedSentence = sentence1 + " and " + sentence2;
+const modifiedSentence = sentence1.replace("powerful", word1);
+const personalStatement = "I am becoming an " + word1 + " " + word2;
 
 console.log("\n=== Text Combinations ===");
 console.log("Combined:", combinedSentence);
@@ -344,18 +344,18 @@ git commit -m "Add text processing and string manipulation"
 
 ```javascript
 // SyntaxError: Missing quotes
-let name = John;  // ❌ Error teaches importance of string syntax
-let name = "John"; // ✅ Correct
+const name = John;  // ❌ Error teaches importance of string syntax
+const name = "John"; // ✅ Correct
 
 // ReferenceError: Variable not defined  
 console.log(firstName); // ❌ Error teaches variable scope
-let firstName = "Jane";
+const firstName = "Jane";
 console.log(firstName); // ✅ Correct - declare before use
 
 // TypeError: Cannot read property
-let person;
-console.log(person.name); // ❌ Error teaches checking for undefined
-let person = { name: "Alex" };
+const person = undefined; // ❌ Error teaches checking for undefined
+console.log(person.name); // This will cause an error
+const person = { name: "Alex" }; // ✅ Correct
 console.log(person.name); // ✅ Correct
 ```
 

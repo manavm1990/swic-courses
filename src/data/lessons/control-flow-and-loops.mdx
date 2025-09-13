@@ -68,7 +68,7 @@ if (accountBalance >= 500) {
 #### The while Loop: "Keep doing this until..."
 
 ```javascript
-let coffeeCups = 0;
+let coffeeCups = 0; // Using let because this variable needs to be reassigned
 
 // Like telling someone: "Keep making coffee until we have 3 cups"
 while (coffeeCups < 3) {
@@ -220,14 +220,14 @@ items.map((item) => console.log("Item " + item));
 
 ```javascript
 // ❌ The "driving forever" problem
-let count = 0;
+let count = 0; // Using let because this needs to be reassigned
 while (count < 5) {
   console.log(count);
   // Forgot to change count - this goes forever!
 }
 
 // ✅ The fix - make sure the condition can become false
-let count = 0;
+let count = 0; // Using let because this needs to be reassigned
 while (count < 5) {
   console.log(count);
   count++; // This ensures we eventually reach 5
