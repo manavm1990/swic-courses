@@ -109,6 +109,29 @@ The platform is designed as a static site that can be deployed to any static hos
 - Building core programming concepts through JavaScript
 - Industry best practices and modern development tools
 
+### Coding Standards
+
+**CRITICAL**: All JavaScript code examples and content MUST follow these standards:
+
+- **Use `const` instead of `let`**: All variable declarations should use `const` unless reassignment is absolutely necessary
+- **Promote immutability**: Encourage immutable patterns and functional programming concepts
+- **Modern JavaScript**: Use ES6+ features and modern syntax throughout all examples
+- **Consistency**: Maintain consistent coding patterns across all lesson content
+
+**Example of preferred variable declaration**:
+```javascript
+// ✅ GOOD - Use const
+const userName = 'John';
+const userAge = 25;
+const users = ['Alice', 'Bob', 'Charlie'];
+
+// ❌ AVOID - Don't use let unless reassignment is needed
+// let userName = 'John';
+// let userAge = 25;
+```
+
+**When to use `let`**: Only use `let` when variable reassignment is explicitly required, such as in loops or conditional updates that cannot be refactored to use `const`.
+
 ### Lesson Timing
 - **Target duration**: Aim for ~2 hours total per lesson (including pre-work reading)
 - Design lessons appropriate for community college students who are new to programming

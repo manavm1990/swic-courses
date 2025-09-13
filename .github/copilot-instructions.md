@@ -8,6 +8,29 @@ The course continues on into React and NextJS.
 
 **Lesson Timing**: Design lessons to take approximately 2 hours total (including any pre-work reading). Consider the pace appropriate for community college students new to programming.
 
+## JavaScript Coding Standards
+
+**CRITICAL**: All JavaScript code examples and generated content MUST follow these standards:
+
+- **Always use `const` instead of `let`**: Use `const` for all variable declarations unless reassignment is absolutely necessary
+- **Promote immutability**: Encourage functional programming patterns and immutable data structures
+- **Modern JavaScript**: Use ES6+ features consistently throughout all examples
+- **Educational clarity**: Code examples should demonstrate best practices that students should adopt
+
+**Examples**:
+```javascript
+// ✅ CORRECT - Use const
+const message = 'Hello, World!';
+const numbers = [1, 2, 3, 4, 5];
+const user = { name: 'Alice', age: 30 };
+
+// ❌ INCORRECT - Avoid let unless reassignment is needed
+// let message = 'Hello, World!';
+// let numbers = [1, 2, 3, 4, 5];
+```
+
+**Exception**: Only use `let` when variable reassignment is explicitly required and cannot be refactored to use `const`.
+
 ## Lesson Template
 
 ```md

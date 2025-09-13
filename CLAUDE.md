@@ -74,6 +74,13 @@ Follow the streamlined template structure:
 - Start simple and gradually increase complexity
 - Test all code before inclusion
 
+**JavaScript Coding Standards** (CRITICAL):
+
+- **Always use `const` instead of `let`**: Use `const` for all variable declarations unless reassignment is absolutely necessary
+- **Promote immutability**: Encourage functional programming patterns and immutable data structures
+- **Modern JavaScript**: Use ES6+ features consistently throughout all examples
+- **Exception**: Only use `let` when variable reassignment is explicitly required (e.g., loop counters)
+
 **Technical Accuracy**:
 
 - Use modern JavaScript standards (ES2024/ES2025 features where appropriate)
