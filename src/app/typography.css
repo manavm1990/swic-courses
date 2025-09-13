@@ -141,14 +141,14 @@
     line-height: var(--text-sm--line-height);
     font-weight: var(--font-weight-medium);
     color: var(--color-gray-950);
+    background-color: var(--color-gray-100);
+    padding: --spacing(0.5) --spacing(1);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
 
     @variant dark {
       color: var(--color-white);
-    }
-
-    &::before,
-    &::after {
-      content: "`";
+      background-color: var(--color-gray-800);
     }
   }
 
