@@ -1,0 +1,135 @@
+# JavaScript Modules (ESM & CommonJS)
+
+## Introduction
+
+- **Icebreaker:** Have you ever tried to organize a big project or group assignment? How did you keep everyone’s work from getting mixed up?
+- **Real-world scenario:** Imagine building a house—each room is built separately, then connected together. JavaScript modules let you build your code in “rooms” (files) and connect them as needed.
+- **Lesson objectives:**
+  - Understand what modules are and why they matter
+  - Learn the basics of ES Modules (ESM)
+  - Recognize CommonJS for legacy code
+  - Know when and how to use `"type": "module"`
+
+## Core Concept Overview
+
+### What is a Module?
+
+A **module** is just a file that contains code. Modules help you:
+
+- Organize code into logical pieces
+- Reuse code across projects
+- Avoid naming conflicts
+
+### ES Modules (ESM)
+
+- **Standard for modern JavaScript (in browsers and Node.js)**
+- Use `import` and `export` keywords to share code between files
+
+#### Named Exports
+
+You can export multiple things from a file by name:
+
+```js
+// math.js
+export const add = (a, b) => a + b;
+export const subtract = (a, b) => a - b;
+```
+
+Import them by name (curly braces):
+
+##### Named Imports & Object Destructuring: What’s the Connection?
+
+The syntax for importing named exports is just like object destructuring:
+
+```js
+// Object destructuring
+const { add, subtract } = mathUtils;
+
+// Module import (very similar!)
+import { add, subtract } from "./math.js";
+```
+
+In both cases, you’re “pulling out” specific properties by name.
+
+```js
+import { add, subtract } from "./math.js";
+console.log(add(2, 3)); // 5
+```
+
+#### Default Exports
+
+Each file can have one default export:
+
+```js
+// greet.js
+const greet = (name) => `Hello, ${name}!`;
+export default greet;
+```
+
+Import default exports without curly braces (you can name it whatever you want):
+
+```js
+import greet from "./greet.js";
+console.log(greet("Sam")); // Hello, Sam!
+```
+
+#### Renaming Exports on Import
+
+You can rename things as you import them:
+
+```js
+import { add as sum } from "./math.js";
+console.log(sum(2, 3)); // 5
+```
+
+#### Node.js Notes
+
+- You must set `"type": "module"` in your `package.json` to use ESM syntax.
+- File extensions (`.js`, `.mjs`) matter!
+  - If your project uses `"type": "module"`, you can use `.js` for ESM files.
+  - Sometimes, especially in older Node.js or when mixing module types, you’ll see `.mjs` for ESM files. Just know `.mjs` means "this is a module"—but for most new projects, `.js` is enough.
+
+### CommonJS (Legacy)
+
+- Used in older Node.js codebases
+- Uses `require` and `module.exports`
+
+```js
+// math.js
+module.exports = {
+  add: (a, b) => a + b,
+};
+
+// main.js
+const { add } = require("./math.js");
+console.log(add(2, 3)); // 5
+```
+
+- **You’ll see this in legacy projects, but prefer ESM for new code.**
+
+### When to Use `"type": "module"`
+
+- Add `"type": "module"` to your `package.json` to enable ESM in Node.js projects.
+- Without it, Node.js treats files as CommonJS by default.
+
+```json
+{
+  "type": "module"
+}
+```
+
+## Assessment: Personal Reflection
+
+Take a few minutes to reflect on what you’ve learned about JavaScript modules. In your own words, answer the following:
+
+- Why do you think modules are important for larger projects?
+- What’s the difference between a named export and a default export?
+- When might you want to rename an import?
+
+Write a short paragraph (3–5 sentences) with your thoughts. There are no wrong answers—focus on your understanding and any questions you still have!
+
+---
+
+**Key takeaway:**  
+Use ESM (`import`/`export`) for all new JavaScript projects.  
+Know how to recognize and read CommonJS for older code.
