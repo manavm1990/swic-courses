@@ -219,6 +219,13 @@ const lessons = [
           "Master JavaScript objects and arrays - essential data structures for React development.",
         video: null,
       },
+      {
+        id: "paradigms",
+        title: "Programming Paradigms",
+        description:
+          "An overview of different programming paradigms (e.g., imperative, functional, object-oriented) and their significance in JavaScript.",
+        video: null,
+      },
     ],
   },
 ] as const satisfies Module[];
