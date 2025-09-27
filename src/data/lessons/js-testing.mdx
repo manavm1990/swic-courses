@@ -1,3 +1,5 @@
+import { CodeBlock, CopyableCode } from "@/components/code-block";
+
 # JavaScript Testing
 
 ## Pre-Work
@@ -227,44 +229,46 @@ console.info(`Class average: ${getClassAverage(CIS277)}%`);
 ```
 
 **Automated testing makes multiple scenarios easy to test**:
+
 ```javascript
 describe("getClassAverage function", () => {
   it("should calculate average for typical class", () => {
     const testClass = {
       students: [
         { assignments: [{ maxPoints: 100, pointsEarned: 85 }] },
-        { assignments: [{ maxPoints: 100, pointsEarned: 92 }] }
-      ]
+        { assignments: [{ maxPoints: 100, pointsEarned: 92 }] },
+      ],
     };
     const result = getClassAverage(testClass);
     expect(result).toBe(88.5); // (85 + 92) / 2
   });
-  
+
   it("should work with perfect scores", () => {
     const perfectClass = {
       students: [
         { assignments: [{ maxPoints: 100, pointsEarned: 100 }] },
-        { assignments: [{ maxPoints: 100, pointsEarned: 100 }] }
-      ]
+        { assignments: [{ maxPoints: 100, pointsEarned: 100 }] },
+      ],
     };
     const result = getClassAverage(perfectClass);
     expect(result).toBe(100);
   });
-  
+
   it("should work with multiple assignments per student", () => {
     const multiAssignmentClass = {
-      students: [{
-        assignments: [
-          { maxPoints: 50, pointsEarned: 45 },  // 90%
-          { maxPoints: 50, pointsEarned: 40 }   // 80%
-        ]
-      }]
+      students: [
+        {
+          assignments: [
+            { maxPoints: 50, pointsEarned: 45 }, // 90%
+            { maxPoints: 50, pointsEarned: 40 }, // 80%
+          ],
+        },
+      ],
     };
     const result = getClassAverage(multiAssignmentClass);
     expect(result).toBe(85); // (45+40)/(50+50) * 100
   });
 });
-```
 ```
 
 ### Exercise 3: Testing Immutability
@@ -611,9 +615,8 @@ test("myFunction handles typical input correctly", () => {
 
 **Part 1: Set up your first test file**
 
-```javascript
-// Create a new file: utils.test.js
-import {
+<CopyableCode>
+{`import {
   getStudentPercentage,
   getClassAverage,
   addAssignmentToCourse,
@@ -623,9 +626,10 @@ import DATA from "./data.js";
 const CIS277 = DATA[0];
 
 describe("Student Management Functions", () => {
-  // Your tests go here
-});
-```
+// Your tests go here
+});`}
+
+</CopyableCode>
 
 **Part 2: Convert your console.info statements**
 Convert these manual tests:
@@ -650,11 +654,13 @@ test("calculates Maria's percentage correctly", () => {
 
 **Part 3: Test different scenarios**
 Remember the **Single Responsibility Principle**: your calculation functions should focus on calculating, not validating input. Write tests for the valid scenarios your functions should handle:
+
 - Test with different numbers of students (1 student, 3 students, 10 students)
-- Test with different assignment values (perfect scores, partial scores, zero scores)  
+- Test with different assignment values (perfect scores, partial scores, zero scores)
 - Test with different numbers of assignments per student
 
 **Note**: Don't test for empty arrays or invalid data - that's the job of other functions (validation functions, UI components, etc.)!
+
 - What if assignment points are negative?
 
 **Part 4: Fix the Buggy Functions**
@@ -663,24 +669,25 @@ Remember the **Single Responsibility Principle**: your calculation functions sho
 
 Some sloppy developer used too much "vibe-coded" AI with terrible prompts and left us with buggy code! 🤦‍♂️ Your job: write tests for these functions, discover what's wrong, and fix them.
 
-```javascript
-// Add these suspicious functions to utils.js
+<CopyableCode>
+{`// Add these suspicious functions to utils.js
 const calculateDiscount = (price, discountPercent) => {
   return price - discountPercent;
 };
 
 const formatGrade = (percentage) => {
-  if (percentage > 90) return "A";
-  if (percentage > 80) return "B";
-  if (percentage > 70) return "C";
-  if (percentage > 60) return "D";
-  return "F";
+if (percentage > 90) return "A";
+if (percentage > 80) return "B";
+if (percentage > 70) return "C";
+if (percentage > 60) return "D";
+return "F";
 };
 
 const isValidScore = (points, maxPoints) => {
-  return points >= 0 && points < maxPoints;
-};
-```
+return points >= 0 && points < maxPoints;
+};`}
+
+</CopyableCode>
 
 Write thorough tests for each function. When your tests fail, figure out why and fix the functions!
 
@@ -690,49 +697,51 @@ Write thorough tests for each function. When your tests fail, figure out why and
 
 The same lazy developer also left empty function stubs with tests already written. Implement the functions to make the tests pass!
 
-```javascript
-// Add these empty functions to utils.js
+<CopyableCode>
+{`// Add these empty functions to utils.js
 const generateStudentId = (firstName, lastName) => {
   // TODO: Make the test pass!
 };
 
 const calculateLetterGrade = (percentage) => {
-  // TODO: Make the test pass!
+// TODO: Make the test pass!
 };
 
 const findTopStudent = (course) => {
-  // TODO: Make the test pass!
-};
-```
+// TODO: Make the test pass!
+};`}
+
+</CopyableCode>
 
 And add these tests to your test file:
 
-```javascript
-it("should generate student ID correctly", () => {
+<CopyableCode>
+{`it("should generate student ID correctly", () => {
   const id = generateStudentId("John", "Smith");
-  expect(id).toMatch(/^jsmith\d{3}$/); // Pattern: jsmith + 3 digits
+  expect(id).toMatch(/^jsmith\\d{3}$/); // Pattern: jsmith + 3 digits
 });
 
 it("should calculate letter grades correctly", () => {
-  expect(calculateLetterGrade(95)).toBe("A");
-  expect(calculateLetterGrade(85)).toBe("B");
-  expect(calculateLetterGrade(75)).toBe("C");
-  expect(calculateLetterGrade(65)).toBe("D");
-  expect(calculateLetterGrade(55)).toBe("F");
+expect(calculateLetterGrade(95)).toBe("A");
+expect(calculateLetterGrade(85)).toBe("B");
+expect(calculateLetterGrade(75)).toBe("C");
+expect(calculateLetterGrade(65)).toBe("D");
+expect(calculateLetterGrade(55)).toBe("F");
 });
 
 it("should find student with highest percentage", () => {
-  const testCourse = {
-    students: [
-      { name: "Alice", assignments: [{ maxPoints: 100, pointsEarned: 85 }] },
-      { name: "Bob", assignments: [{ maxPoints: 100, pointsEarned: 95 }] },
-      { name: "Charlie", assignments: [{ maxPoints: 100, pointsEarned: 75 }] }
-    ]
-  };
-  const topStudent = findTopStudent(testCourse);
-  expect(topStudent.name).toBe("Bob");
-});
-```
+const testCourse = {
+students: [
+{ name: "Alice", assignments: [{ maxPoints: 100, pointsEarned: 85 }] },
+{ name: "Bob", assignments: [{ maxPoints: 100, pointsEarned: 95 }] },
+{ name: "Charlie", assignments: [{ maxPoints: 100, pointsEarned: 75 }] }
+]
+};
+const topStudent = findTopStudent(testCourse);
+expect(topStudent.name).toBe("Bob");
+});`}
+
+</CopyableCode>
 
 **Part 6: Test the immutability**
 Write a comprehensive test that verifies `addAssignmentToCourse` doesn't modify the original data while correctly creating new data.
@@ -741,6 +750,7 @@ Write a comprehensive test that verifies `addAssignmentToCourse` doesn't modify 
 
 **📹 SCREENCAST REQUIREMENT**
 Record a 3-5 minute screencast video showing:
+
 1. Running your tests and demonstrating they all pass
 2. Explaining what bugs you found and how you fixed them
 3. Walking through your test-driven implementation process for the missing functions
