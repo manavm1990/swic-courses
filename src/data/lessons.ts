@@ -1,3 +1,5 @@
+import type { Video } from "@/types/video.types";
+
 export type Module = {
   id: string;
   title: string;
@@ -9,10 +11,7 @@ export type Lesson = {
   id: string;
   title: string;
   description: string;
-  video: {
-    thumbnail: string;
-    url: string;
-  } | null;
+  video: Video | null;
 };
 
 export function getModules() {
@@ -255,6 +254,7 @@ const lessons = [
         description:
           "Learn professional testing practices - from console.info debugging to automated testing with Vitest for catching bugs before users do.",
         video: {
+          duration: 424,
           thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/vitest.png",
           url: "https://d8n3.c1.e2-8.dev/swic/videos/vitest.mp4",
         },

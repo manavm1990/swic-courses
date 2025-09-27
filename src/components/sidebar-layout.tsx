@@ -2,6 +2,7 @@
 
 import { IconButton } from "@/components/icon-button";
 import { SidebarIcon } from "@/icons/sidebar-icon";
+import type { Video } from "@/types/video.types";
 import {
   CloseButton,
   Dialog,
@@ -24,11 +25,7 @@ type ReadonlyModule = Readonly<{
       id: string;
       title: string;
       description: string;
-      video: Readonly<{
-        thumbnail: string;
-        duration: number;
-        url: string;
-      }> | null;
+      video: Video;
     }>
   >;
 }>;
