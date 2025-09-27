@@ -88,6 +88,41 @@ This project uses:
 - `tsconfig.json`: Strict TypeScript configuration with path aliases
 - `.prettierrc`: Code formatting rules with import organization
 
+### Copyable Code Blocks
+
+The platform provides two types of code blocks for different educational purposes:
+
+#### Regular Code Blocks (Read-Only)
+Use standard markdown code blocks for examples, demos, and explanatory code that students should read and understand but not copy:
+
+```javascript
+// Example code for understanding concepts
+const example = "This is for learning, not copying";
+```
+
+#### Copyable Code Blocks (Starter Code)
+Use the `CopyableCode` component for starter code, templates, or code snippets that students need to paste into their projects:
+
+```jsx
+import { CopyableCode } from '@/components/code-block'
+
+<CopyableCode language="javascript">
+{`// Students can click to copy this starter code
+const starterFunction = () => {
+  // TODO: Implement this
+};
+
+const anotherFunction = (param) => {
+  return param * 2;
+};`}
+</CopyableCode>
+```
+
+**When to use each:**
+- **CopyableCode**: Function stubs, boilerplate code, configuration files, starter templates
+- **Regular blocks**: Examples, explanations, completed solutions, demo code
+- **Rule of thumb**: If students need to paste it, make it copyable. If they need to understand it, keep it read-only.
+
 ## Deployment Considerations
 
 The platform is designed as a static site that can be deployed to any static hosting provider:
