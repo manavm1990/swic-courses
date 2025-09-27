@@ -254,7 +254,10 @@ const lessons = [
         title: "JavaScript Testing Fundamentals",
         description:
           "Learn professional testing practices - from console.info debugging to automated testing with Vitest for catching bugs before users do.",
-        video: null,
+        video: {
+          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/vitest.png",
+          url: "https://d8n3.c1.e2-8.dev/swic/videos/vitest.mp4",
+        },
       },
     ],
   },
