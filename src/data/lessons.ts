@@ -243,4 +243,19 @@ const lessons = [
       },
     ],
   },
+  {
+    id: "js-testing",
+    title: "Testing & Code Quality",
+    description:
+      "Professional testing practices for catching bugs before users do - from manual console debugging to automated testing with modern tools.",
+    lessons: [
+      {
+        id: "js-testing",
+        title: "JavaScript Testing Fundamentals",
+        description:
+          "Learn professional testing practices - from console.info debugging to automated testing with Vitest for catching bugs before users do.",
+        video: null,
+      },
+    ],
+  },
 ] as const satisfies Module[];

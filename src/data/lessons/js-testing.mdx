@@ -1,0 +1,748 @@
+# JavaScript Testing
+
+## Pre-Work
+
+1. Read [What is Software Testing?](https://javascript.info/testing-mocha#what-is-testing) (stop at "Mocha" section)
+2. Review your recent projects where you used `console.info()` or `console.log()` to check if your code was working
+
+## Introduction
+
+### From Console Detective Work to Professional Testing
+
+**Real-world scenario**: Imagine you're a chef preparing for a restaurant opening. You could taste-test each dish once and hope it works during service, OR you could create a systematic way to test every recipe consistently, document what works, and catch problems before customers arrive.
+
+That's exactly what we've been doing with `console.info()` - we're "taste-testing" our code. But what happens when you have 50 functions? 500? How do you systematically verify that all your functions still work correctly after making changes?
+
+### Leading Questions: Think About This
+
+Consider the code you've been working with:
+
+```javascript
+// Your current testing approach
+console.info(`Maria's percentage: ${getStudentPercentage(CIS277, maria.id)}%`);
+console.info(`John's percentage: ${getStudentPercentage(CIS277, john.id)}%`);
+console.info(`Class average: ${getClassAverage(CIS277)}%`);
+```
+
+**Questions to ponder**:
+
+- What if you had 20 students to test? Would you write 20 `console.info()` lines?
+- What if someone changes the `getStudentPercentage` function? How would you quickly verify it still works correctly?
+- What if you're working on a team of 5 developers? How does everyone verify their changes don't break existing functionality?
+- How do you remember what the "correct" output should be for each test?
+- What if you need to test the same functions again tomorrow? Next week? Next month?
+
+### What You'll Learn Today
+
+- Why automated testing prevents 🐛s from reaching your users
+- How you've already been doing "Level 0" testing with ESLint
+- The evolution from manual `console.info()` to automated test suites
+- Writing your first real tests with Vitest
+- How tests serve as living documentation for your code
+
+## Core Concept Overview
+
+### The Purpose of Testing: Catching 🐛s
+
+**Mental model**: Testing is like having a **vigilant security guard** for your code. The guard checks every visitor (function call) and makes sure they behave properly before letting them into your application.
+
+The primary purpose of testing is simple: **catch bugs before your users do**.
+
+```javascript
+// Without tests: Users discover your bugs 😱
+const calculateDiscount = (price, discountPercent) => price - discountPercent; // Bug: should multiply!
+// User expects $20 off a $100 item (20% discount) but only gets $0.20 off
+
+// With tests: You discover bugs during development 😌
+const calculateDiscount = (price, discountPercent) => price - discountPercent;
+// Test fails: Expected 80, got 99.80
+// You fix it before shipping: price - (price * discountPercent / 100)
+```
+
+### Level 0 Testing: You're Already Testing!
+
+**Reassurance**: You've actually been doing testing all along! ESLint is a form of **Level 0 testing** - it catches bugs that come from bad coding habits:
+
+```javascript
+// ESLint catches these bugs before they happen:
+let userName = "John";
+if ((userName = "Jane")) {
+  // ❌ ESLint error: assignment instead of comparison
+  console.log("Hello Jane");
+}
+
+// ESLint prevents:
+var oldVariable; // ❌ Should use const/let
+function badFunction() {} // ❌ Should use arrow functions
+userName == "John"; // ❌ Should use strict equality ===
+```
+
+**Mental model**: Think of ESLint as **spell-check for code**. Just like spell-check catches typos before you send an email, ESLint catches coding mistakes before they become runtime bugs.
+
+### A Brief History: The Evolution of JavaScript Testing
+
+**The testing tool landscape evolved as JavaScript grew**:
+
+1. **Jasmine (2010)**: The pioneer - introduced the `describe/it/expect` pattern
+2. **Jest (2014)**: Facebook's solution - became the React ecosystem standard
+3. **Vitest (2021)**: The modern choice - lightning fast, works seamlessly with modern tools
+
+**Mental model**: Think of this evolution like **transportation progress**: horse and buggy → car → electric car. Each generation got faster and more efficient while keeping the core concept.
+
+```javascript
+// The pattern that survived across all tools:
+describe("Calculator functions", () => {
+  // Testing library provides "describe"
+  it("should add two numbers correctly", () => {
+    // "it" makes a sentence: "it should add..."
+    const result = add(2, 3);
+    expect(result).toBe(5); // "expect" is the assertion - what should be true
+  });
+});
+// This reads like English: "Describe Calculator functions: it should add two numbers correctly"
+```
+
+### From Manual to Automated Testing
+
+**Mental model**: Manual testing (your `console.info()` approach) is like **manually checking your car** before each trip. Automated testing is like having **dashboard warning lights** that constantly monitor everything.
+
+```javascript
+// Manual approach: You run this every time you want to check
+console.info("Testing addition...");
+console.info("2 + 3 =", add(2, 3)); // You have to remember this should be 5
+console.info("Testing subtraction...");
+console.info("5 - 2 =", subtract(5, 2)); // You have to remember this should be 3
+
+// Automated approach: Computer runs and verifies automatically
+it("should add numbers correctly", () => {
+  expect(add(2, 3)).toBe(5); // Computer knows this should be 5
+});
+
+it("should subtract numbers correctly", () => {
+  expect(subtract(5, 2)).toBe(3); // Computer knows this should be 3
+});
+// Note: You can also use "test()" instead of "it()" - they do the same thing!
+```
+
+### The AAA Pattern: How to Structure Tests
+
+**Mental model**: Think of writing a test like **conducting a science experiment**:
+
+1. **Arrange**: Set up your materials (create test data)
+2. **Act**: Perform the experiment (call the function you're testing)
+3. **Assert**: Check the results (verify what happened matches what you expected)
+
+```javascript
+it("should calculate student percentage correctly", () => {
+  // Arrange: Set up test data
+  const student = {
+    assignments: [
+      { maxPoints: 10, pointsEarned: 9 },
+      { maxPoints: 20, pointsEarned: 16 },
+    ],
+  };
+
+  // Act: Execute the function being tested
+  const percentage = calculateStudentPercentage(student);
+
+  // Assert: Verify the result
+  expect(percentage).toBe(83.33);
+});
+```
+
+This pattern keeps your tests organized and easy to understand!
+
+### Key Terms
+
+- **Test**: A piece of code that verifies another piece of code works correctly
+- **Test Suite**: A collection of related tests (like testing all calculator functions)
+- **Assertion**: A statement about what should be true (like "result should be 5")
+- **Test Runner**: The tool that executes your tests and reports results (Vitest)
+- **Mock**: A fake version of something for testing purposes
+- **`it()` vs `test()`**: Both do the same thing! `it()` reads more naturally ("it should add numbers"), while `test()` is more explicit. We'll prefer `it()` for readability.
+
+## Hands-On Application
+
+### Exercise 1: Converting Your Console Tests
+
+Let's take your existing manual testing approach and see how it translates to proper tests:
+
+**Your current manual approach**:
+
+```javascript
+// Manual testing - you have to run and visually verify
+const maria = CIS277.students.find(({ name }) => name === "Maria");
+console.info(`Maria's percentage: ${getStudentPercentage(CIS277, maria.id)}%`);
+// You have to remember: "This should probably be around 85% or so..."
+```
+
+**The automated testing equivalent**:
+
+```javascript
+// Automated testing - computer verifies automatically
+it("should calculate student percentage correctly", () => {
+  // Create controlled test data - don't depend on external data!
+  const testCourse = {
+    students: [
+      {
+        id: 1,
+        name: "Test Student",
+        assignments: [
+          { maxPoints: 10, pointsEarned: 9 }, // 90%
+          { maxPoints: 20, pointsEarned: 16 }, // 80%
+        ],
+      },
+    ],
+  };
+
+  const percentage = getStudentPercentage(testCourse, 1);
+
+  expect(percentage).toBe(83.33); // (25/30) * 100 - we know exactly what to expect!
+  expect(percentage).toBeGreaterThan(0);
+  expect(percentage).toBeLessThanOrEqual(100);
+});
+```
+
+**What changed?**:
+
+- Instead of `console.info()`, we use `expect()`
+- Instead of visually checking, the computer checks automatically
+- Instead of remembering what's "about right", we specify exactly what's correct
+- **Most importantly**: We create our own test data instead of depending on external data that could change
+
+**Why create test data?** In real applications, your data comes from databases or APIs (like `fetch()`). But tests should be **predictable and isolated** - they shouldn't break just because someone changes the database. We control our test data, so we control our test results.
+
+### Exercise 2: Testing Different Scenarios
+
+**Mental model**: Think of testing different scenarios as **quality control in manufacturing**. You test the same product with different inputs to make sure it works consistently.
+
+```javascript
+// Your current approach tests one scenario at a time
+console.info("Testing normal case...");
+console.info(`Class average: ${getClassAverage(CIS277)}%`);
+
+// But what about other valid scenarios?
+// What if the class has different grade distributions?
+// What if students have different numbers of assignments?
+```
+
+**Automated testing makes multiple scenarios easy to test**:
+```javascript
+describe("getClassAverage function", () => {
+  it("should calculate average for typical class", () => {
+    const testClass = {
+      students: [
+        { assignments: [{ maxPoints: 100, pointsEarned: 85 }] },
+        { assignments: [{ maxPoints: 100, pointsEarned: 92 }] }
+      ]
+    };
+    const result = getClassAverage(testClass);
+    expect(result).toBe(88.5); // (85 + 92) / 2
+  });
+  
+  it("should work with perfect scores", () => {
+    const perfectClass = {
+      students: [
+        { assignments: [{ maxPoints: 100, pointsEarned: 100 }] },
+        { assignments: [{ maxPoints: 100, pointsEarned: 100 }] }
+      ]
+    };
+    const result = getClassAverage(perfectClass);
+    expect(result).toBe(100);
+  });
+  
+  it("should work with multiple assignments per student", () => {
+    const multiAssignmentClass = {
+      students: [{
+        assignments: [
+          { maxPoints: 50, pointsEarned: 45 },  // 90%
+          { maxPoints: 50, pointsEarned: 40 }   // 80%
+        ]
+      }]
+    };
+    const result = getClassAverage(multiAssignmentClass);
+    expect(result).toBe(85); // (45+40)/(50+50) * 100
+  });
+});
+```
+```
+
+### Exercise 3: Testing Immutability
+
+Remember your immutability test from the manual approach:
+
+```javascript
+// Manual approach - lots of console.info statements
+console.info("Adding assignment: Shows original vs new data (immutability)");
+const newCourse = addAssignmentToCourse({
+  course: CIS277,
+  assignmentName: "Final Exam",
+  maxPoints: 100,
+});
+
+console.info("Original assignments for Maria:", maria.assignments);
+const newMaria = newCourse.students.find((s) => s.name === "Maria");
+console.info("New assignments for Maria:", newMaria.assignments);
+// You have to manually verify that original wasn't changed
+```
+
+**Automated testing approach**:
+
+```javascript
+test("addAssignmentToCourse preserves immutability", () => {
+  const originalCourse = CIS277;
+  const originalStudentCount = originalCourse.students.length;
+  const originalFirstStudent = originalCourse.students[0];
+  const originalAssignmentCount = originalFirstStudent.assignments.length;
+
+  // Add the assignment
+  const newCourse = addAssignmentToCourse({
+    course: originalCourse,
+    assignmentName: "Final Exam",
+    maxPoints: 100,
+  });
+
+  // Verify immutability - original data unchanged
+  expect(originalCourse.students.length).toBe(originalStudentCount);
+  expect(originalCourse.students[0].assignments.length).toBe(
+    originalAssignmentCount,
+  );
+
+  // Verify new data has the changes
+  expect(newCourse.students[0].assignments.length).toBe(
+    originalAssignmentCount + 1,
+  );
+  expect(newCourse.students[0].assignments).toContainEqual({
+    name: "Final Exam",
+    maxPoints: 100,
+    pointsEarned: null,
+  });
+});
+```
+
+### Exercise 4: Writing Your First Test Suite
+
+**Mental model**: A test suite is like a **comprehensive health checkup** for your code. Just like a doctor runs multiple tests to get a complete picture of your health.
+
+```javascript
+// Your complete test suite for student management functions
+describe("Student Management Functions", () => {
+  const testCourse = {
+    name: "Test Course",
+    students: [
+      {
+        id: 1,
+        name: "Alice",
+        assignments: [
+          { name: "Quiz 1", maxPoints: 10, pointsEarned: 9 },
+          { name: "Quiz 2", maxPoints: 10, pointsEarned: 8 },
+        ],
+      },
+      {
+        id: 2,
+        name: "Bob",
+        assignments: [
+          { name: "Quiz 1", maxPoints: 10, pointsEarned: 7 },
+          { name: "Quiz 2", maxPoints: 10, pointsEarned: 9 },
+        ],
+      },
+    ],
+  };
+
+  describe("getStudentPercentage", () => {
+    test("calculates correct percentage for student with assignments", () => {
+      const percentage = getStudentPercentage(testCourse, 1); // Alice
+      expect(percentage).toBe(85); // 17/20 * 100
+    });
+
+    test("handles student with no assignments", () => {
+      const courseWithNoAssignments = {
+        ...testCourse,
+        students: [{ id: 3, name: "Charlie", assignments: [] }],
+      };
+      const percentage = getStudentPercentage(courseWithNoAssignments, 3);
+      expect(percentage).toBe(0);
+    });
+  });
+
+  describe("getClassAverage", () => {
+    test("calculates correct class average", () => {
+      const average = getClassAverage(testCourse);
+      expect(average).toBe(82.5); // (85 + 80) / 2
+    });
+  });
+});
+```
+
+## Advanced Concepts & Comparisons
+
+### Testing Philosophy: What to Test vs What Not to Test
+
+**Mental model**: Testing is like **home security**. You don't need to test every light switch, but you definitely want to test that the locks work and the alarm system functions.
+
+**The Single Responsibility Principle (SRP) in Testing**: Each function should have **one job** and do it well. Your tests should verify that the function does its **one job** correctly, not that it handles everything under the sun.
+
+- ✅ **A calculation function should be tested for**: calculating correctly with different valid inputs
+- ❌ **A calculation function should NOT be tested for**: validating user input, handling network errors, or displaying error messages
+
+**Mental model**: Think of functions like **specialists in a hospital**. The cardiologist focuses on hearts, not broken bones. Similarly, your `calculateAverage()` function should focus on math, not data validation.
+
+```javascript
+// ✅ DO test: Core business logic
+test("calculateGPA computes correct weighted average", () => {
+  const courses = [
+    { credits: 3, grade: 4.0 }, // A in 3-credit course
+    { credits: 4, grade: 3.0 }, // B in 4-credit course
+  ];
+  expect(calculateGPA(courses)).toBe(3.43); // (12 + 12) / 7
+});
+
+// ✅ DO test: Edge cases and error conditions
+test("calculateGPA handles empty course list", () => {
+  expect(calculateGPA([])).toBe(0);
+});
+
+// ❌ DON'T test: Language features or third-party libraries
+test("JavaScript addition works", () => {
+  expect(2 + 2).toBe(4); // Pointless - we trust JavaScript
+});
+```
+
+### Test Organization: Describe, It, and Expect
+
+**Mental model**: Test organization is like **organizing a filing cabinet**:
+
+- `describe()` = The filing cabinet drawer (major category)
+- `test()` or `it()` = Individual files (specific scenarios)
+- `expect()` = The content of each file (actual verification)
+
+```javascript
+describe("User Authentication", () => {
+  // The drawer
+  describe("Login functionality", () => {
+    // Sub-drawer
+    test("allows valid user to log in", () => {
+      // Individual file
+      const user = { email: "test@test.com", password: "secret123" };
+      const result = login(user);
+
+      expect(result.success).toBe(true); // File content
+      expect(result.token).toBeDefined();
+    });
+
+    test("rejects invalid password", () => {
+      // Another file
+      const user = { email: "test@test.com", password: "wrong" };
+      const result = login(user);
+
+      expect(result.success).toBe(false); // File content
+      expect(result.error).toBe("Invalid password");
+    });
+  });
+});
+```
+
+### Common Vitest Matchers (Assertion Methods)
+
+**Mental model**: Matchers are like **different types of measuring tools** - rulers for length, scales for weight, thermometers for temperature.
+
+```javascript
+// Exact equality (like a precise ruler)
+expect(add(2, 3)).toBe(5);
+
+// Object/array comparison (like comparing blueprints)
+expect(getUser(1)).toEqual({ id: 1, name: "John", active: true });
+
+// Truthiness (like a yes/no question)
+expect(isUserActive(1)).toBeTruthy();
+expect(getDeletedUser(999)).toBeFalsy();
+
+// Numeric comparisons (like setting limits)
+expect(getStudentGrade(1)).toBeGreaterThan(0);
+expect(getStudentGrade(1)).toBeLessThanOrEqual(100);
+
+// String patterns (like spell-checking specific words)
+expect(generateUsername("John Doe")).toContain("john");
+expect(validateEmail("test@email.com")).toMatch(
+  /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+);
+
+// Array/object content (like checking ingredients in a recipe)
+expect(getStudentClasses(1)).toContain("Math 101");
+expect(getStudentRecord(1)).toHaveProperty("gpa");
+```
+
+## Troubleshooting & Best Practices
+
+### Common Testing Mistakes
+
+**The "Testing Implementation Instead of Behavior" Problem**:
+
+```javascript
+// ❌ Bad: Testing how it works instead of what it does
+it("should use a for loop to calculate average", () => {
+  // This test cares about HOW the function works internally
+  const code = calculateAverage.toString();
+  expect(code).toContain("for");
+  // What if we change to use .reduce() instead? Test breaks!
+});
+
+// ✅ Good: Testing what the function accomplishes
+it("should return correct average", () => {
+  const result = calculateAverage([1, 2, 3]);
+  expect(result).toBe(2); // We care about the RESULT, not HOW it's calculated
+});
+```
+
+**The "Overly Complicated Test Setup" Problem**:
+
+```javascript
+// ❌ Bad: Too much setup makes test hard to understand
+test("student grade calculation", () => {
+  const mockDatabase = createMockDatabase();
+  const mockEmailService = createMockEmailService();
+  const mockNotificationSystem = createMockNotificationSystem();
+  const complexCourseStructure = createComplexCourseWithNestedData();
+  // ... 20 more lines of setup
+
+  const result = someSimpleCalculation(2, 3);
+  expect(result).toBe(5);
+});
+
+// ✅ Good: Simple, focused test
+test("adds two numbers correctly", () => {
+  const result = add(2, 3);
+  expect(result).toBe(5);
+});
+```
+
+### Best Practices for Test Writing
+
+**1. Test Names Should Tell a Story**:
+
+```javascript
+// ❌ Bad: Vague test names
+test("user test", () => {
+  /* ... */
+});
+test("login", () => {
+  /* ... */
+});
+
+// ✅ Good: Descriptive test names
+test("should allow user with valid credentials to log in", () => {
+  /* ... */
+});
+test("should reject login attempt with incorrect password", () => {
+  /* ... */
+});
+test("should lock account after 3 failed login attempts", () => {
+  /* ... */
+});
+```
+
+**2. One Assertion Per Test** (when possible):
+
+```javascript
+// ✅ Good: Each test checks one specific behavior
+test("should calculate correct percentage", () => {
+  expect(calculatePercentage(85, 100)).toBe(85);
+});
+
+test("should handle zero denominator gracefully", () => {
+  expect(calculatePercentage(85, 0)).toBe(0);
+});
+```
+
+## Wrap-Up & Assessment
+
+### The Big Picture: Why This Matters
+
+**Mental model**: Testing is like **having a personal assistant** who never forgets to check your work and catches mistakes you might miss when you're tired or distracted.
+
+Benefits you gain:
+
+- **Confidence**: Make changes without fear of breaking existing features
+- **Documentation**: Tests show how your functions should work
+- **Collaboration**: Team members can modify your code safely
+- **Debugging**: When something breaks, tests help pinpoint exactly what's wrong
+
+### From Console Detective to Testing Professional
+
+**Reflection on your journey**:
+
+- **Before**: `console.info()` statements scattered through your code, manual checking, hoping you remember what the right output should be
+- **Now**: Automated test suites that run instantly, catch bugs immediately, and serve as living documentation
+
+```javascript
+// Your evolution as a developer:
+
+// Phase 1: Hope and pray 🤞
+const result = myFunction(input);
+// Hope it works!
+
+// Phase 2: Console detective work 🕵️
+const result = myFunction(input);
+console.info("Result:", result); // Is this right? I think so...
+
+// Phase 3: Professional testing 🧪
+test("myFunction handles typical input correctly", () => {
+  const result = myFunction(input);
+  expect(result).toBe(expectedOutput); // Computer verifies automatically
+});
+```
+
+### Quick Mental Model Check
+
+**Test your understanding**:
+
+1. **Why is automated testing better than `console.info()`?**
+   - It runs automatically, remembers what's correct, and catches problems immediately
+
+2. **What's the main purpose of testing?**
+   - To catch 🐛s before users encounter them
+
+3. **How is ESLint related to testing?**
+   - It's "Level 0" testing that catches bugs from bad coding habits
+
+### HW: Convert Your Manual Tests
+
+**Your Mission**: Take the manual testing code from your recent projects and convert it to proper automated tests.
+
+**Part 1: Set up your first test file**
+
+```javascript
+// Create a new file: utils.test.js
+import {
+  getStudentPercentage,
+  getClassAverage,
+  addAssignmentToCourse,
+} from "./utils.js";
+import DATA from "./data.js";
+
+const CIS277 = DATA[0];
+
+describe("Student Management Functions", () => {
+  // Your tests go here
+});
+```
+
+**Part 2: Convert your console.info statements**
+Convert these manual tests:
+
+```javascript
+// Original manual approach:
+const maria = CIS277.students.find(({ name }) => name === "Maria");
+console.info(`Maria's percentage: ${getStudentPercentage(CIS277, maria.id)}%`);
+```
+
+Into proper automated tests:
+
+```javascript
+test("calculates Maria's percentage correctly", () => {
+  const maria = CIS277.students.find(({ name }) => name === "Maria");
+  const percentage = getStudentPercentage(CIS277, maria.id);
+
+  // Replace with actual expected value after running your manual test
+  expect(percentage).toBe(/* the actual number you saw */);
+});
+```
+
+**Part 3: Test different scenarios**
+Remember the **Single Responsibility Principle**: your calculation functions should focus on calculating, not validating input. Write tests for the valid scenarios your functions should handle:
+- Test with different numbers of students (1 student, 3 students, 10 students)
+- Test with different assignment values (perfect scores, partial scores, zero scores)  
+- Test with different numbers of assignments per student
+
+**Note**: Don't test for empty arrays or invalid data - that's the job of other functions (validation functions, UI components, etc.)!
+- What if assignment points are negative?
+
+**Part 4: Fix the Buggy Functions**
+
+🔄 **Make a Git commit** before starting this section.
+
+Some sloppy developer used too much "vibe-coded" AI with terrible prompts and left us with buggy code! 🤦‍♂️ Your job: write tests for these functions, discover what's wrong, and fix them.
+
+```javascript
+// Add these suspicious functions to utils.js
+const calculateDiscount = (price, discountPercent) => {
+  return price - discountPercent;
+};
+
+const formatGrade = (percentage) => {
+  if (percentage > 90) return "A";
+  if (percentage > 80) return "B";
+  if (percentage > 70) return "C";
+  if (percentage > 60) return "D";
+  return "F";
+};
+
+const isValidScore = (points, maxPoints) => {
+  return points >= 0 && points < maxPoints;
+};
+```
+
+Write thorough tests for each function. When your tests fail, figure out why and fix the functions!
+
+**Part 5: Complete the Missing Functions**
+
+🔄 **Make another Git commit** after Part 4.
+
+The same lazy developer also left empty function stubs with tests already written. Implement the functions to make the tests pass!
+
+```javascript
+// Add these empty functions to utils.js
+const generateStudentId = (firstName, lastName) => {
+  // TODO: Make the test pass!
+};
+
+const calculateLetterGrade = (percentage) => {
+  // TODO: Make the test pass!
+};
+
+const findTopStudent = (course) => {
+  // TODO: Make the test pass!
+};
+```
+
+And add these tests to your test file:
+
+```javascript
+it("should generate student ID correctly", () => {
+  const id = generateStudentId("John", "Smith");
+  expect(id).toMatch(/^jsmith\d{3}$/); // Pattern: jsmith + 3 digits
+});
+
+it("should calculate letter grades correctly", () => {
+  expect(calculateLetterGrade(95)).toBe("A");
+  expect(calculateLetterGrade(85)).toBe("B");
+  expect(calculateLetterGrade(75)).toBe("C");
+  expect(calculateLetterGrade(65)).toBe("D");
+  expect(calculateLetterGrade(55)).toBe("F");
+});
+
+it("should find student with highest percentage", () => {
+  const testCourse = {
+    students: [
+      { name: "Alice", assignments: [{ maxPoints: 100, pointsEarned: 85 }] },
+      { name: "Bob", assignments: [{ maxPoints: 100, pointsEarned: 95 }] },
+      { name: "Charlie", assignments: [{ maxPoints: 100, pointsEarned: 75 }] }
+    ]
+  };
+  const topStudent = findTopStudent(testCourse);
+  expect(topStudent.name).toBe("Bob");
+});
+```
+
+**Part 6: Test the immutability**
+Write a comprehensive test that verifies `addAssignmentToCourse` doesn't modify the original data while correctly creating new data.
+
+🔄 **Make a final Git commit** when everything is working!
+
+**📹 SCREENCAST REQUIREMENT**
+Record a 3-5 minute screencast video showing:
+1. Running your tests and demonstrating they all pass
+2. Explaining what bugs you found and how you fixed them
+3. Walking through your test-driven implementation process for the missing functions
+
+This demonstrates your understanding beyond just getting the code to work!
