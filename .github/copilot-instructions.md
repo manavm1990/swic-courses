@@ -10,58 +10,28 @@ The course continues on into React and NextJS.
 
 ## JavaScript Coding Standards
 
-**CRITICAL**: All JavaScript code examples and generated content MUST follow these standards (based on course linting rules):
-
 **Variable Declarations & Modern JavaScript**:
+
 - **Always use `const` instead of `let`**: Use `const` for all variable declarations unless reassignment is absolutely necessary
-- **Prefer arrow functions**: Use `() => {}` syntax for cleaner, modern code
 - **Use template literals**: Use backticks for string interpolation instead of concatenation
 - **Strict equality**: Always use `===` instead of `==`
 
 **Function Design (Educational Focus)**:
+
 - **Single responsibility**: Each function should do one clear thing
 - **Keep functions short**: Aim for functions under 15 lines (excluding comments)
-- **Limit parameters**: Maximum 3-4 parameters per function
 - **Use descriptive names**: Function and variable names should be self-explanatory
-- **Early returns**: Avoid `else` after `return` statements
 
 **Code Clarity & Maintainability**:
+
 - **Meaningful variable names**: Minimum 3 characters (except loop counters: i, j, k)
-- **camelCase naming**: Consistent naming convention throughout
 - **Avoid nested complexity**: Keep nesting levels shallow for readability
-- **No nested ternary operators**: Use clear if/else for complex conditions
 
 **Immutability & Best Practices**:
+
 - **No parameter mutation**: Don't modify function parameters
 - **Prefer immutable operations**: Use array methods like `map`, `filter` instead of loops when possible
-- **One variable per declaration**: Avoid `let a, b, c;` style declarations
 - **Consistent returns**: Functions should always return a value or never return
-
-**Examples**:
-```javascript
-// ✅ CORRECT - Modern, clean, educational code
-const PASSING_GRADE = 70;
-
-const calculateAverage = (grades) => {
-  if (!grades.length) {
-    return 0;
-  }
-  
-  const sum = grades.reduce((total, grade) => total + grade, 0);
-  return sum / grades.length;
-};
-
-const students = ['Alice', 'Bob', 'Charlie'];
-const message = `Found ${students.length} students`;
-
-// ❌ INCORRECT - Avoid these patterns
-// var message = 'Hello'; // Don't use var
-// let numbers = [1, 2, 3]; // Use const unless reassignment needed
-// function calc(g) { ... } // Poor parameter name
-// if (grade == 70) { ... } // Use strict equality ===
-```
-
-**Exception**: Only use `let` when variable reassignment is explicitly required and cannot be refactored to use `const`.
 
 ## Lesson Template
 

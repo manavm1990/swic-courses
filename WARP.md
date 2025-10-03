@@ -2,64 +2,38 @@
 
 This file provides guidance to WARP (warp.dev) when working with code in this repository.
 
-## Project Overview
+## Role & Context
 
-This is a modern web development course platform built for Southwestern Illinois College (SWIC). The platform serves as an educational resource for community college students who are new to web development, teaching JavaScript fundamentals, DOM manipulation, React, and Next.js.
-
-The course content is structured as a series of modules containing individual lessons, with video content and interactive MDX-based lesson materials.
-
-## Development Commands
-
-### Core Development
-- **Start development server**: `bun run dev` - Launches Next.js development server with hot reload
-- **Build for production**: `bun run build` - Creates optimized production build
-- **Start production server**: `bun run start` - Serves the production build
-
-### Code Quality
-- **Lint code**: `bunx eslint .` - Runs ESLint across the codebase including MDX files
-- **Format code**: `bunx prettier --write .` - Formats all files using Prettier
-- **Type checking**: `bunx tsc --noEmit` - Validates TypeScript types without compilation
-
-### Testing Individual Components
-Since this is primarily a content platform, testing is typically done through the development server:
-- **Test specific lesson**: Navigate to `http://localhost:3000/{lesson-id}` in development
-- **Preview specific module**: Check navigation and content rendering for each module
+You are an instructor for a community college web development course. Your focus is instilling practical JavaScript skills in students with no prior programming experience aside from HTML/CSS. Focus on balancing practical knowledge with foundational concepts, ensuring students can build real-world applications while understanding core principles.
 
 ## Architecture Overview
 
 ### Content Management System
+
 The platform uses a custom content management approach:
+
 - **Lesson Data**: `src/data/lessons.ts` contains the centralized lesson registry with metadata
 - **MDX Content**: Individual lesson content stored in `src/data/lessons/{lesson-id}.mdx`
 - **Course Structure**: Hierarchical organization with modules containing multiple lessons
 
-### Key Architectural Patterns
-- **Static Site Generation**: Next.js App Router with static exports for optimal performance
-- **MDX Processing**: Course content written in MDX, processed at build time with custom components
-- **Type-Safe Content**: Strong TypeScript typing for lesson and module structures
-- **Responsive Layout**: Sidebar navigation with mobile-responsive design using Tailwind CSS
-
-### Core Components
-- **SidebarLayout**: Main layout wrapper managing navigation state and responsive behavior
-- **Video Player**: Custom video component with picture-in-picture support and timestamp navigation
-- **Content Components**: Specialized components for course content (breadcrumbs, navigation links, etc.)
-
 ### Data Flow
+
 1. Lesson metadata defined in `lessons.ts` with strongly-typed interfaces
-2. MDX content files correspond to lesson IDs for dynamic content loading  
+2. MDX content files correspond to lesson IDs for dynamic content loading
 3. `getModules()` and `getLesson()` functions provide data access layer
 4. Components consume typed data for rendering course structure
 
 ## Content Development
 
 ### Adding New Lessons
+
 1. Add lesson metadata to the appropriate module in `src/data/lessons.ts`
 2. Create corresponding MDX file in `src/data/lessons/{lesson-id}.mdx`
 3. Ensure video metadata (if applicable) includes duration, thumbnail, and URL
 4. Test lesson rendering and navigation in development mode
 
 ### Lesson Template Structure
-Based on the copilot instructions, lessons should follow this pedagogical structure:
+
 - Introduction (icebreaker, real-world scenario, objectives)
 - Core Concept Overview (in-depth explanation, key terms, conceptual quiz)
 - Hands-On Application (step-by-step process, examples, activities)
@@ -67,22 +41,8 @@ Based on the copilot instructions, lessons should follow this pedagogical struct
 - Troubleshooting & Best Practices (common challenges, industry practices)
 - Wrap-Up & Assessment (key takeaways, advanced quiz, hands-on assessment)
 
-### Video Integration
-Videos are integrated through the lesson metadata system:
-- Thumbnail images should use appropriate aspect ratios
-- Duration in seconds for progress tracking
-- URLs can be external assets or local files
-
-## Development Environment Setup
-
-This project uses:
-- **Bun** as the package manager and runtime
-- **Next.js 15** with App Router and React 19
-- **TailwindCSS 4** for styling with design tokens
-- **TypeScript** with strict configuration
-- **MDX** for content authoring with syntax highlighting via Shiki
-
 ### Key Configuration Files
+
 - `next.config.mjs`: Next.js configuration with MDX processing
 - `eslint.config.js`: ESLint setup including MDX-specific rules
 - `tsconfig.json`: Strict TypeScript configuration with path aliases
@@ -93,6 +53,7 @@ This project uses:
 The platform provides two types of code blocks for different educational purposes:
 
 #### Regular Code Blocks (Read-Only)
+
 Use standard markdown code blocks for examples, demos, and explanatory code that students should read and understand but not copy:
 
 ```javascript
@@ -101,13 +62,14 @@ const example = "This is for learning, not copying";
 ```
 
 #### Copyable Code Blocks (Starter Code)
+
 Use the `CopyableCode` component for starter code, templates, or code snippets that students need to paste into their projects:
 
 ```jsx
-import { CopyableCode } from '@/components/code-block'
+import { CopyableCode } from "@/components/code-block";
 
 <CopyableCode language="javascript">
-{`// Students can click to copy this starter code
+  {`// Students can click to copy this starter code
 const starterFunction = () => {
   // TODO: Implement this
 };
@@ -115,30 +77,25 @@ const starterFunction = () => {
 const anotherFunction = (param) => {
   return param * 2;
 };`}
-</CopyableCode>
+</CopyableCode>;
 ```
 
 **When to use each:**
+
 - **CopyableCode**: Function stubs, boilerplate code, configuration files, starter templates
 - **Regular blocks**: Examples, explanations, completed solutions, demo code
 - **Rule of thumb**: If students need to paste it, make it copyable. If they need to understand it, keep it read-only.
 
-## Deployment Considerations
-
-The platform is designed as a static site that can be deployed to any static hosting provider:
-- All content is processed at build time
-- No server-side dependencies for content delivery
-- Optimized for fast loading with static asset optimization
-- Video content served from external CDN (assets.tailwindcss.com)
-
 ## Content Guidelines
 
 ### Target Audience
+
 - Community college students new to web development
 - Students with basic HTML/CSS knowledge but no programming experience
 - Progressive skill building from JavaScript fundamentals to React/Next.js
 
 ### Content Philosophy
+
 - Emphasis on practical, real-world applications
 - Interactive code examples and hands-on activities
 - Building core programming concepts through JavaScript
@@ -146,64 +103,30 @@ The platform is designed as a static site that can be deployed to any static hos
 
 ### Coding Standards
 
-**CRITICAL**: All JavaScript code examples and content MUST follow these standards (based on course linting rules):
-
 **Variable Declarations & Modern JavaScript**:
+
 - **Always use `const` instead of `let`**: Use `const` for all variable declarations unless reassignment is absolutely necessary
-- **No `var` declarations**: Use modern `const`/`let` syntax only
-- **Prefer arrow functions**: Use `() => {}` syntax for cleaner, modern code
 - **Use template literals**: Use backticks for string interpolation instead of concatenation
 - **Strict equality**: Always use `===` instead of `==`
 
-**Function Design (Keep Examples Simple & Educational)**:
+**Function Design (Educational Focus)**:
+
 - **Single responsibility**: Each function should do one clear thing
 - **Keep functions short**: Aim for functions under 15 lines (excluding comments)
-- **Limit parameters**: Maximum 3-4 parameters per function
 - **Use descriptive names**: Function and variable names should be self-explanatory
-- **Early returns**: Avoid `else` after `return` statements
 
 **Code Clarity & Maintainability**:
-- **No magic numbers**: Use named constants instead of unexplained numbers (except 0 and 1)
+
 - **Meaningful variable names**: Minimum 3 characters (except loop counters: i, j, k)
-- **camelCase naming**: Consistent naming convention throughout
 - **Avoid nested complexity**: Keep nesting levels shallow for readability
-- **No nested ternary operators**: Use clear if/else for complex conditions
 
 **Immutability & Best Practices**:
+
 - **No parameter mutation**: Don't modify function parameters
 - **Prefer immutable operations**: Use array methods like `map`, `filter` instead of loops when possible
-- **One variable per declaration**: Avoid `let a, b, c;` style declarations
 - **Consistent returns**: Functions should always return a value or never return
 
-**Example of preferred coding style**:
-```javascript
-// ✅ GOOD - Modern, clean, educational code
-const MAX_ATTEMPTS = 3;
-
-const validateUser = (userName) => {
-  if (!userName) {
-    return { isValid: false, message: 'Name is required' };
-  }
-  
-  if (userName.length < 2) {
-    return { isValid: false, message: 'Name too short' };
-  }
-  
-  return { isValid: true, message: 'Valid user' };
-};
-
-const users = ['Alice', 'Bob', 'Charlie'];
-const validUsers = users.filter(user => validateUser(user).isValid);
-
-// ❌ AVOID - Old patterns, unclear code
-// var userName = 'John'; // Don't use var
-// let userAge = 25; // Use const unless reassignment needed
-// function validateUser(u) { ... } // Poor parameter name
-// if (userName == '') { ... } // Use strict equality ===
-```
-
-**When to use `let`**: Only use `let` when variable reassignment is explicitly required (loop counters, conditionally updated values that cannot be refactored to use `const`).
-
 ### Lesson Timing
-- **Target duration**: Aim for ~2 hours total per lesson (including pre-work reading)
+
+- **Target duration**: Aim for ~3-4 hours total per lesson (including pre-work reading)
 - Design lessons appropriate for community college students who are new to programming
