@@ -195,7 +195,11 @@ const lessons = [
         title: "Callbacks and Array Methods",
         description:
           "Learn to process collections efficiently using callback functions with map, filter, and forEach - turning data transformation into simple, readable code.",
-        video: null,
+        video: {
+          duration: 2134,
+          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/objects.png",
+          url: "https://d8n3.c1.e2-8.dev/swic/videos/objects-arrays.mp4",
+        },
       },
     ],
   },

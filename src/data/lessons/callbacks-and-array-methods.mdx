@@ -1,9 +1,5 @@
 # Callbacks and Array Methods
 
-## Pre-Work
-
-1. Read [Array Methods](https://javascript.info/array-methods) - focus on `forEach`, `map`, and `filter` sections.
-
 ## Introduction
 
 ### From Manual Processing to Automated Workflows
@@ -27,7 +23,7 @@ Would you rather process each paper individually by hand, or have a smart assist
 
 ### Introduction to Callbacks
 
-A **callback function** is like giving someone a set of instructions to follow for each item in a collection. You define what should happen, and the array method applies those instructions to every element.
+A **callback function** is like giving someone a set of instructions (i.e. a reusable code block - a function!) to follow for each item in a collection. You define what should happen, and the array method applies those instructions to every element. It applies these instructions by **calling your function back** for each item.
 
 ## Core Concept Overview
 
@@ -38,10 +34,10 @@ A **callback function** is like giving someone a set of instructions to follow f
 ```javascript
 // Your instruction manual (callback function)
 const gradeExam = (studentExam) => {
-  console.log(`Grading ${studentExam.name}'s exam: ${studentExam.score}/100`);
+  // * Note: Functions should have explicit return values
+  return `Grading ${studentExam.name}'s exam: ${studentExam.score}/100`;
 };
 
-// The helper (forEach) follows your instructions for each item
 const exams = [
   { name: "Alex", score: 95 },
   { name: "Jordan", score: 87 },
@@ -49,7 +45,13 @@ const exams = [
 ];
 
 // "For each exam, follow the gradeExam instructions"
-exams.forEach(gradeExam);
+const gradeResults = exams.map(gradeExam);
+console.log(gradeResults);
+
+// Or if you just want to display (forEach for side effects only):
+exams.forEach((exam) => {
+  console.log(`Grading ${exam.name}'s exam: ${exam.score}/100`);
+});
 ```
 
 ### The Three Essential Array Methods
@@ -58,7 +60,7 @@ exams.forEach(gradeExam);
 
 1. **map**: The **transformer** - takes each item, transforms it, and creates a new collection (MOST IMPORTANT)
 2. **filter**: The **quality inspector** - examines each item and keeps only the ones that pass the test
-3. **forEach**: The **announcer** - looks at each item and does something (use only when you need side effects)
+3. **forEach**: The **announcer** - looks at each item and does something with it, but doesn't create a new collection. We won't use this as much as the other two.
 
 ### map: The Transformer
 
@@ -226,7 +228,7 @@ products.forEach((product) => {
 
 **Scenario**: You're building a social media dashboard and need to process post data.
 
-<CopyableCode language="javascript">
+<CopyableCode>
 {`const posts = [
   {
     id: 1,
@@ -678,10 +680,9 @@ Create a comprehensive student analytics system:
 
 **Submission Requirements**:
 
-- Working code for all three parts with console output screenshots
+- Working code for all three parts with console output screenshots. You will be assigned a GitHub Classroom repository to submit your code. **Commit early, commit often!**
 - **Demo video** (5-6 minutes): Walk through one complete example from each part
-- **Code explanation**: Comments explaining your callback function choices
-- **Reflection**: Which array method felt most natural? Which was most challenging?
+- **Reflection**: Which array method felt most natural? Which was most challenging? Additionally, discuss the 'self check' quiz questions and answers. The answers were provided, so reflect on your thought process and understanding. Explain why those answers are correct.
 
 ### Real-World Connection
 
