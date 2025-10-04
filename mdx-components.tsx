@@ -1,5 +1,6 @@
 import { Figure } from "@/components/figure";
 import { VideoYT } from "@/components/video-yt";
+import { CopyableCode } from "@/components/code-block";
 import { ExternalLinkIcon } from "@/icons/external-link-icon";
 import { transformerColorizedBrackets } from "@shikijs/colorized-brackets";
 import type { MDXComponents } from "mdx/types";
@@ -212,6 +213,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     },
     VideoYT: VideoYT,
     Figure: Figure,
+    CopyableCode: CopyableCode,
     ...components,
   };
 }

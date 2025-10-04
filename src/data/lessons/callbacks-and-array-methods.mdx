@@ -1,0 +1,695 @@
+# Callbacks and Array Methods
+
+## Pre-Work
+
+1. Read [Array Methods](https://javascript.info/array-methods) - focus on `forEach`, `map`, and `filter` sections.
+
+## Introduction
+
+### From Manual Processing to Automated Workflows
+
+**Icebreaker**: Imagine you're a teacher with a stack of 200 exam papers. You need to:
+
+- Grade each paper (add points)
+- Filter out the papers that scored above 90%
+- Write encouraging comments on each one
+
+Would you rather process each paper individually by hand, or have a smart assistant that can follow your instructions and process the entire stack automatically?
+
+**Real-world scenario**: Every day, apps process thousands of data items - user profiles, shopping cart items, social media posts. Instead of writing repetitive code for each item, developers use **callback functions** with **array methods** to process entire collections efficiently.
+
+### What You'll Learn Today
+
+- How callback functions work (your instructions to the "smart assistant")
+- Essential array methods: `forEach`, `map`, and `filter`
+- When to use each method for different data processing tasks
+- How to transform and filter real-world data collections
+
+### Introduction to Callbacks
+
+A **callback function** is like giving someone a set of instructions to follow for each item in a collection. You define what should happen, and the array method applies those instructions to every element.
+
+## Core Concept Overview
+
+### What is a Callback Function?
+
+**Mental model**: Think of a callback as **instructions you give to a helper**. You say "For each student in this class, do THIS" - and the callback is the "THIS" part.
+
+```javascript
+// Your instruction manual (callback function)
+const gradeExam = (studentExam) => {
+  console.log(`Grading ${studentExam.name}'s exam: ${studentExam.score}/100`);
+};
+
+// The helper (forEach) follows your instructions for each item
+const exams = [
+  { name: "Alex", score: 95 },
+  { name: "Jordan", score: 87 },
+  { name: "Taylor", score: 92 },
+];
+
+// "For each exam, follow the gradeExam instructions"
+exams.forEach(gradeExam);
+```
+
+### The Three Essential Array Methods
+
+**Mental model**: Think of these as three different types of **assembly line workers**:
+
+1. **map**: The **transformer** - takes each item, transforms it, and creates a new collection (MOST IMPORTANT)
+2. **filter**: The **quality inspector** - examines each item and keeps only the ones that pass the test
+3. **forEach**: The **announcer** - looks at each item and does something (use only when you need side effects)
+
+### map: The Transformer
+
+**Analogy**: Like a factory assembly line that takes raw materials and transforms them into finished products - you get a completely new collection.
+
+```javascript
+const grades = [85, 92, 78, 96, 88];
+
+// Transform each grade into a letter grade
+const letterGrades = grades.map((numericGrade) => {
+  if (numericGrade >= 90) return "A";
+  if (numericGrade >= 80) return "B";
+  if (numericGrade >= 70) return "C";
+  return "F";
+});
+
+console.log(grades); // [85, 92, 78, 96, 88] - original unchanged
+console.log(letterGrades); // ["B", "A", "C", "A", "B"] - new array created
+```
+
+**Key concept**: `map` **always returns a new array** of the same length, with each element transformed.
+
+### filter: The Quality Inspector
+
+**Analogy**: Like a bouncer at a club checking IDs - only items that meet the criteria get through to the new collection.
+
+```javascript
+const ages = [16, 21, 19, 25, 17, 22];
+
+// Only keep ages 21 and over
+const adultAges = ages.filter((age) => {
+  return age >= 21;
+});
+
+console.log(ages); // [16, 21, 19, 25, 17, 22] - original unchanged
+console.log(adultAges); // [21, 25, 22] - only items that passed the test
+```
+
+**Key concept**: `filter` returns a **new array containing only items that pass the test** (return true).
+
+### Key Terms
+
+- **Callback function**: A function passed to another function to be executed later
+- **forEach**: Array method that executes a callback for each element (no return value)
+- **map**: Array method that transforms each element and returns a new array
+- **filter**: Array method that tests each element and returns a new array with passing items
+- **Return value**: What a function gives back when it finishes
+- **Predicate**: A function that returns true or false (used with filter)
+
+### Conceptual Quiz
+
+Test your understanding of these core concepts:
+
+1. **What does a callback function represent?**
+   - a) A function that calls other functions
+   - b) Instructions for what to do with each array element
+   - c) A function that returns arrays
+   - d) A method for creating objects
+
+2. **Which method would you use to create a new array where each student's name is converted to uppercase?**
+   - a) forEach
+   - b) map
+   - c) filter
+   - d) push
+
+3. **Which method would you use to find all students with grades above 90?**
+   - a) forEach
+   - b) map
+   - c) filter
+   - d) indexOf
+
+4. **What happens to the original array when you use map?**
+   - a) It gets modified
+   - b) It gets deleted
+   - c) It stays unchanged
+   - d) It gets copied
+
+5. **If you have an array of 5 items and use map on it, how many items will the result have?**
+   - a) It depends on the callback function
+   - b) Always 5
+   - c) Could be less than 5
+   - d) Could be more than 5
+
+**Answers**: 1-b, 2-b, 3-c, 4-c, 5-b
+
+## Hands-On Application
+
+### Exercise 1: Student Grade Processing
+
+**Scenario**: You're building a grade management system and need to process student data efficiently.
+
+```javascript
+// Starting data - array of student objects
+const students = [
+  { name: "Alex Chen", grade: 95, subject: "Math" },
+  { name: "Jordan Smith", grade: 87, subject: "Science" },
+  { name: "Taylor Johnson", grade: 92, subject: "Math" },
+  { name: "Casey Davis", grade: 78, subject: "Science" },
+  { name: "Morgan Lee", grade: 96, subject: "Math" },
+];
+
+// 1. TRANSFORM: Create display names (map) - START HERE!
+const displayNames = students.map((student) => {
+  return `${student.name} (${student.grade}%)`;
+});
+console.log("Display names:", displayNames);
+
+// 2. FILTER: Find honor roll students (90% or above)
+const honorRoll = students.filter((student) => {
+  return student.grade >= 90;
+});
+console.log("Honor roll students:", honorRoll);
+
+// 3. DISPLAY: Show each student's info (forEach - use sparingly)
+console.log("=== Class Roster ===");
+students.forEach((student) => {
+  console.log(`${student.name}: ${student.grade}% in ${student.subject}`);
+});
+```
+
+**Your turn**: Add a property `isHonorRoll: true/false` to each student using map.
+
+### Exercise 2: E-commerce Product Processing
+
+**Scenario**: You're working on an online store and need to process product data.
+
+```javascript
+const products = [
+  { name: "Laptop", price: 899, category: "Electronics", inStock: true },
+  { name: "Coffee Mug", price: 15, category: "Kitchen", inStock: false },
+  { name: "Notebook", price: 8, category: "Office", inStock: true },
+  { name: "Headphones", price: 199, category: "Electronics", inStock: true },
+  { name: "Desk Lamp", price: 45, category: "Office", inStock: false },
+];
+
+// Create sale prices (map) - 20% off everything
+const saleProducts = products.map((product) => {
+  const salePrice = (product.price * 0.8).toFixed(2);
+  return {
+    ...product,
+    originalPrice: product.price,
+    price: parseFloat(salePrice),
+    onSale: true,
+  };
+});
+
+console.log("Sale products:", saleProducts);
+
+// Find available electronics (filter + filter chaining)
+const availableElectronics = products
+  .filter((product) => product.inStock)
+  .filter((product) => product.category === "Electronics");
+
+console.log("Available electronics:", availableElectronics);
+
+// Display all products (forEach)
+console.log("=== Product Catalog ===");
+products.forEach((product) => {
+  const availability = product.inStock ? "✅ In Stock" : "❌ Out of Stock";
+  console.log(`${product.name} - $${product.price} ${availability}`);
+});
+```
+
+### Exercise 3: Social Media Posts Processing
+
+**Scenario**: You're building a social media dashboard and need to process post data.
+
+<CopyableCode language="javascript">
+{`const posts = [
+  {
+    id: 1,
+    author: "techie_sam",
+    content: "Learning JavaScript arrays!",
+    likes: 45,
+    isPublic: true,
+  },
+  {
+    id: 2,
+    author: "code_newbie",
+    content: "My first function worked!",
+    likes: 23,
+    isPublic: true,
+  },
+  {
+    id: 3,
+    author: "web_dev_pro",
+    content: "Private thoughts",
+    likes: 5,
+    isPublic: false,
+  },
+  {
+    id: 4,
+    author: "student_alex",
+    content: "Callbacks are confusing but cool",
+    likes: 67,
+    isPublic: true,
+  },
+  {
+    id: 5,
+    author: "js_master",
+    content: "Map filter forEach = ❤️",
+    likes: 102,
+    isPublic: true,
+  },
+];
+
+// Create post summaries (map)
+const postSummaries = posts.map((post) => {
+return {
+id: post.id,
+author: post.author,
+preview: post.content.substring(0, 20) + "...",
+engagement: post.likes > 50 ? "High" : "Normal",
+};
+});
+
+// Find popular public posts (filter)
+const popularPosts = posts.filter((post) => {
+return post.isPublic && post.likes > 30;
+});
+
+// Display engagement stats (forEach)
+console.log("=== Engagement Report ===");
+posts.forEach((post) => {
+if (post.isPublic) {
+}
+});`}
+
+</CopyableCode>
+
+### Exercise 4: Chaining Methods Together
+
+**Mental model**: Think of method chaining like an **assembly line** where each station does one specific job.
+
+<CopyableCode language="javascript">
+{`const employees = [
+  {
+    name: "Sarah",
+    department: "Engineering",
+    salary: 95000,
+    yearsExperience: 5,
+  },
+  { name: "Mike", department: "Marketing", salary: 65000, yearsExperience: 3 },
+  {
+    name: "Lisa",
+    department: "Engineering",
+    salary: 85000,
+    yearsExperience: 2,
+  },
+  { name: "David", department: "Sales", salary: 70000, yearsExperience: 7 },
+  {
+    name: "Emma",
+    department: "Engineering",
+    salary: 110000,
+    yearsExperience: 8,
+  },
+];
+
+// Assembly line: Filter → Map → Display results
+const seniorEngineers = employees
+.filter((employee) => employee.department === "Engineering") // Station 1: Keep only engineers
+.filter((employee) => employee.yearsExperience >= 5) // Station 2: Keep only senior ones
+.map((employee) => ({
+// Station 3: Transform the data
+name: employee.name,
+salary: employee.salary,
+}));
+
+console.log("Senior Engineers:", seniorEngineers);`}
+
+</CopyableCode>
+
+## Advanced Concepts & Comparisons
+
+### Arrow Functions vs Regular Functions in Callbacks
+
+**Best practice**: Use arrow functions for simple callbacks - they're more concise and readable.
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+// Arrow function (preferred for simple callbacks)
+const doubled = numbers.map((num) => num * 2);
+
+// Regular function (longer but sometimes clearer for complex logic)
+const doubledVerbose = numbers.map(function (num) {
+  return num * 2;
+});
+
+// Both produce the same result: [2, 4, 6, 8, 10]
+```
+
+### Understanding Return Values
+
+**Mental model**: Think of return values like **what each worker hands to the next station** on an assembly line.
+
+```javascript
+const scores = [85, 92, 78, 96];
+
+// forEach returns undefined (nothing passed to next station)
+const result1 = scores.forEach((score) => console.log(score));
+console.log(result1); // undefined
+
+// map returns new array (passes transformed items to next station)
+const result2 = scores.map((score) => score + 5);
+console.log(result2); // [90, 97, 83, 101]
+
+// filter returns new array (passes qualifying items to next station)
+const result3 = scores.filter((score) => score >= 90);
+console.log(result3); // [92, 96]
+```
+
+### Common Patterns: Building Complex Transformations
+
+```javascript
+const courseData = [
+  { course: "Math 101", students: 25, avgGrade: 87 },
+  { course: "Science 201", students: 18, avgGrade: 92 },
+  { course: "History 101", students: 22, avgGrade: 78 },
+  { course: "Art 150", students: 15, avgGrade: 95 },
+];
+
+// Complex transformation: Find successful courses and format for display
+const successfulCourses = courseData
+  .filter((course) => course.avgGrade >= 85) // Quality control
+  .filter((course) => course.students >= 20) // Size requirement
+  .map((course) => ({
+    // Transform for display
+    title: course.course,
+    performance: course.avgGrade >= 90 ? "Excellent" : "Good",
+    enrollment: `${course.students} students`,
+    summary: `${course.course}: ${course.avgGrade}% avg (${course.students} students)`,
+  }));
+
+console.log("Successful courses:", successfulCourses);
+```
+
+## Troubleshooting & Best Practices
+
+### Common Mistakes with Callbacks
+
+**The "Forgetting Return" Mistake**:
+
+```javascript
+const numbers = [1, 2, 3, 4];
+
+// ❌ Forgot to return in map
+const bad = numbers.map((num) => {
+  num * 2; // Missing return!
+});
+console.log(bad); // [undefined, undefined, undefined, undefined]
+
+// ✅ Remember to return the transformed value
+const good = numbers.map((num) => {
+  return num * 2;
+});
+console.log(good); // [2, 4, 6, 8]
+
+// ✅ Or use implicit return with arrow functions
+const better = numbers.map((num) => num * 2);
+console.log(better); // [2, 4, 6, 8]
+```
+
+**The "Modifying Original Array" Mistake**:
+
+```javascript
+const students = [
+  { name: "Alex", grade: 85 },
+  { name: "Jordan", grade: 92 },
+];
+
+// ❌ This modifies the original objects
+const badBonusGrades = students.map((student) => {
+  student.grade += 5; // Modifying the original!
+  return student;
+});
+
+// ✅ Create new objects instead
+const goodBonusGrades = students.map((student) => {
+  return {
+    ...student,
+    grade: student.grade + 5,
+  };
+});
+
+console.log(students); // Original should be unchanged
+```
+
+### Choosing the Right Method
+
+**Decision tree**:
+
+1. **Just want to do something with each item?** → Use `forEach`
+2. **Want to transform each item into something else?** → Use `map`
+3. **Want to keep only items that meet certain criteria?** → Use `filter`
+
+```javascript
+const inventory = [
+  { item: "Laptop", price: 800, quantity: 5 },
+  { item: "Mouse", price: 25, quantity: 50 },
+  { item: "Keyboard", price: 75, quantity: 0 },
+];
+
+// DISPLAY (forEach) - just show information
+inventory.forEach((item) => {
+  console.log(`${item.item}: $${item.price} (${item.quantity} in stock)`);
+});
+
+// TRANSFORM (map) - calculate total values
+const itemValues = inventory.map((item) => ({
+  item: item.item,
+  totalValue: item.price * item.quantity,
+}));
+
+// SELECT (filter) - find items in stock
+const inStock = inventory.filter((item) => item.quantity > 0);
+```
+
+### Performance Considerations
+
+**Best practice**: Chain methods efficiently and avoid unnecessary operations.
+
+```javascript
+const largeDataSet = [
+  /* imagine thousands of items */
+];
+
+// ✅ Efficient: Filter first (reduces items to process)
+const result = largeDataSet
+  .filter((item) => item.isActive) // Reduce dataset first
+  .map((item) => expensiveTransform(item)); // Then transform fewer items
+
+// ❌ Less efficient: Map first (processes all items)
+const inefficient = largeDataSet
+  .map((item) => expensiveTransform(item)) // Transforms everything
+  .filter((item) => item.isActive); // Then throws most away
+```
+
+## Wrap-Up & Assessment
+
+### Key Takeaways
+
+1. **Callback functions** are instructions you give to array methods
+2. **forEach** is for doing something with each item (no return value needed)
+3. **map** transforms each item and always returns a new array of the same length
+4. **filter** tests each item and returns a new array with only passing items
+5. **Method chaining** lets you build complex data processing pipelines
+6. **Always return values** in map and filter callbacks
+
+### Advanced Conceptual Quiz
+
+Test your deeper understanding:
+
+1. **What will this code output?**
+
+   ```javascript
+   const nums = [1, 2, 3];
+   const result = nums.map((n) => n > 2);
+   console.log(result);
+   ```
+
+   - a) [3]
+   - b) [false, false, true]
+   - c) [1, 2, 3]
+   - d) true
+
+2. **What's wrong with this code?**
+
+   ```javascript
+   const prices = [10, 20, 30];
+   const doubled = prices.map((price) => {
+     price * 2;
+   });
+   ```
+
+   - a) Missing parentheses
+   - b) Missing return statement
+   - c) Wrong method choice
+   - d) Nothing is wrong
+
+**Answers**: 1-b, 2-b
+
+### HW: Data Processing Dashboard
+
+**Part 1: Student Performance Analytics**
+
+Create a comprehensive student analytics system:
+
+<CopyableCode language="javascript">
+{`const studentData = [
+  {
+    name: "Alice Johnson",
+    scores: [95, 87, 92, 88],
+    year: "junior",
+    major: "CS",
+  },
+  {
+    name: "Bob Smith",
+    scores: [78, 85, 79, 82],
+    year: "sophomore",
+    major: "Math",
+  },
+  {
+    name: "Carol Davis",
+    scores: [92, 96, 89, 94],
+    year: "senior",
+    major: "CS",
+  },
+  {
+    name: "David Wilson",
+    scores: [67, 73, 70, 75],
+    year: "freshman",
+    major: "Biology",
+  },
+  {
+    name: "Eva Brown",
+    scores: [88, 91, 85, 89],
+    year: "junior",
+    major: "Math",
+  },
+];
+
+// Implement these using callbacks and array methods:
+// 1. Calculate average score for each student (map)
+// 2. Find all students with averages above 85 (filter)
+// 3. Create honor roll display names (map + filter chain)
+// 4. Generate a report for each student (forEach)
+// 5. Find all CS majors who are juniors or seniors (filter + filter)`}
+
+</CopyableCode>
+
+**Part 2: E-commerce Order Processing**
+
+<CopyableCode language="javascript">
+{`const orders = [
+  {
+    id: 101,
+    customer: "John Doe",
+    items: ["laptop", "mouse"],
+    total: 850,
+    status: "pending",
+  },
+  {
+    id: 102,
+    customer: "Jane Smith",
+    items: ["keyboard", "monitor"],
+    total: 320,
+    status: "shipped",
+  },
+  {
+    id: 103,
+    customer: "Bob Johnson",
+    items: ["tablet"],
+    total: 299,
+    status: "delivered",
+  },
+  {
+    id: 104,
+    customer: "Alice Brown",
+    items: ["phone", "case", "charger"],
+    total: 680,
+    status: "pending",
+  },
+];
+
+// Build processing functions:
+// 1. Generate shipping labels for pending orders
+// 2. Calculate total revenue from delivered orders
+// 3. Find orders with 3+ items
+// 4. Create customer notifications for each order
+// 5. Generate a daily summary report`}
+
+</CopyableCode>
+
+**Part 3: Social Media Content Moderation**
+
+<CopyableCode language="javascript">
+{`const posts = [
+  {
+    id: 1,
+    user: "techie123",
+    content: "Love coding in JavaScript!",
+    likes: 45,
+    reports: 0,
+  },
+  {
+    id: 2,
+    user: "newbie",
+    content: "This is spam content",
+    likes: 2,
+    reports: 8,
+  },
+  {
+    id: 3,
+    user: "developer",
+    content: "Check out my new project",
+    likes: 67,
+    reports: 0,
+  },
+  {
+    id: 4,
+    user: "student",
+    content: "Learning callbacks today",
+    likes: 23,
+    reports: 1,
+  },
+];
+
+// Content moderation system:
+// 1. Flag posts with high report ratios (reports > likes/10)
+// 2. Find trending posts (likes > 50, reports < 2)
+// 3. Generate moderation queue (flagged posts)
+// 4. Create engagement statistics
+// 5. Send notifications to high-engagement users`}
+
+</CopyableCode>
+
+**Submission Requirements**:
+
+- Working code for all three parts with console output screenshots
+- **Demo video** (5-6 minutes): Walk through one complete example from each part
+- **Code explanation**: Comments explaining your callback function choices
+- **Reflection**: Which array method felt most natural? Which was most challenging?
+
+### Real-World Connection
+
+The patterns you've learned today are used everywhere in modern web development:
+
+- **React**: Rendering lists of components with map
+- **APIs**: Processing server responses with filter and map
+- **Forms**: Validating user input with filter
+- **Analytics**: Processing user behavior data with all three methods
+
+Next up: We'll review all JavaScript fundamentals and see how these concepts prepare you for React development!
