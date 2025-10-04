@@ -1,0 +1,511 @@
+# JavaScript Testing Basics
+
+## Pre-Work
+
+Make sure that you acquire the GitHub Classroom template repo and initialize it on your local machine. You will be following along with the exercises and the homeworks in that repo. **Commit early, commit often!**
+
+The video above shows how to set up Vitest in your project. The template repo **may** already have this done, but watch the video and understand the steps so you can do it on your own in the future.
+
+## Introduction
+
+### From Console Detective Work to Professional Testing
+
+**Real-world scenario**: Imagine you're learning to bake cookies. At first, you might taste the dough and think "this seems about right." But as you bake more varieties, you'd want a consistent way to test each recipe—measuring ingredients, checking oven temperature, timing everything perfectly.
+
+That's exactly what we've been doing with `console.log()` - we're "taste-testing" our code. But what happens when you have 10 functions? 50? How do you systematically verify that all your functions still work correctly after making changes?
+
+### Leading Questions: Think About This
+
+Consider the simple functions you've been writing:
+
+```javascript
+// Your current testing approach
+const add = (a, b) => a + b;
+const multiply = (a, b) => a * b;
+const greet = (name) => `Hello, ${name}!`;
+
+// Testing with console.log
+console.log("Testing add:", add(2, 3)); // Should be 5
+console.log("Testing multiply:", multiply(4, 5)); // Should be 20
+console.log("Testing greet:", greet("Alice")); // Should be "Hello, Alice!"
+```
+
+**Questions to ponder**:
+
+- What if you had 20 functions to test? Would you write 20 `console.log()` lines?
+- What if you change the `add` function? How would you quickly verify it still works correctly?
+- How do you remember what the "correct" output should be for each test?
+- What if you need to test the same functions again tomorrow? Next week?
+
+### What You'll Learn Today
+
+- Why automated testing prevents 🐛s from reaching your users
+- How you've already been doing basic testing with `console.log()`
+- The evolution from manual testing to automated test suites
+- Writing your first real tests with Vitest
+- How tests help you write better code
+
+## Core Concept Overview
+
+### The Purpose of Testing: Catching 🐛s
+
+**Mental model**: Testing is like having a **careful friend** who double-checks your math homework. They catch mistakes you might miss when you're tired or distracted.
+
+The primary purpose of testing is simple: **catch bugs before others use your code**.
+
+```javascript
+// Without tests: Others discover your bugs 😱
+const calculateTip = (bill, tipPercent) => bill + tipPercent; // Bug: should multiply!
+// Someone expects 20% tip on $50 ($10) but gets $50.20
+
+// With tests: You discover bugs during development 😌
+const calculateTip = (bill, tipPercent) => bill + tipPercent;
+// Test fails: Expected 60, got 70
+// You fix it: bill + (bill * tipPercent / 100)
+```
+
+### You're Already Testing!
+
+**Good news**: You've been testing all along! Every time you use `console.log()` to check your function output, you're doing manual testing.
+
+```javascript
+// You've been doing this (manual testing):
+const double = (num) => num * 2;
+console.log("Double of 5:", double(5)); // You check: "Is this 10? Yes!"
+console.log("Double of 0:", double(0)); // You check: "Is this 0? Yes!"
+
+// Now we'll automate this checking
+```
+
+**Mental model**: Think of manual testing like **manually grading an exam by hand**. Automated testing is like **computer-graded exams (like the SAT)** - faster, more consistent, handles hundreds of tests instantly, and never makes grading errors.
+
+### From Manual to Automated Testing
+
+```javascript
+// Manual approach: You run and visually verify
+console.log("Testing addition...");
+console.log("2 + 3 =", add(2, 3)); // You remember this should be 5
+console.log("Testing multiplication...");
+console.log("4 * 5 =", multiply(4, 5)); // You remember this should be 20
+
+// Automated approach: Computer runs and verifies automatically
+test("should add numbers correctly", () => {
+  expect(add(2, 3)).toBe(5); // Computer knows this should be 5
+});
+
+test("should multiply numbers correctly", () => {
+  expect(multiply(4, 5)).toBe(20); // Computer knows this should be 20
+});
+```
+
+### The Test Pattern: Arrange, Act, Assert
+
+**Mental model**: Think of writing a test like **following a recipe**:
+
+1. **Arrange**: Gather your ingredients (prepare test data)
+2. **Act**: Mix and bake (call the function you're testing)
+3. **Assert**: Taste and verify (check the result is what you expected)
+
+```javascript
+test("should calculate area of rectangle", () => {
+  // Arrange: Set up test data
+  const length = 5;
+  const width = 3;
+
+  // Act: Call the function
+  const area = calculateArea(length, width);
+
+  // Assert: Check the result
+  expect(area).toBe(15);
+});
+```
+
+This pattern keeps your tests organized and easy to understand!
+
+### Key Terms (Simple Definitions)
+
+- **Test**: Code that checks if other code works correctly
+- **Test Suite**: A group of related tests (like testing all math functions)
+- **Assertion**: A statement about what should be true (`expect(result).toBe(5)`)
+- **Test Runner**: The tool that runs your tests (Vitest)
+- **`test()` vs `it()`**: Both do the same thing! We'll use `test()` for clarity.
+
+## Hands-On Application
+
+### Exercise 1: Your First Real Test
+
+Let's convert your console testing to automated testing:
+
+**Your current approach**:
+
+```javascript
+// Manual testing - you check by eye
+const square = (num) => num * num;
+console.log("Square of 4:", square(4)); // You verify: "Is this 16?"
+```
+
+**Automated testing**:
+
+```javascript
+// Automated testing - computer verifies
+test("should calculate square correctly", () => {
+  const result = square(4);
+  expect(result).toBe(16); // Computer checks automatically
+});
+```
+
+**What changed?**
+
+- Instead of `console.log()`, we use `expect()`
+- Instead of you checking visually, the computer checks automatically
+- Instead of remembering what's correct, we specify exactly what's right
+
+### Exercise 2: Testing Multiple Scenarios
+
+**Your current approach** tests one thing at a time:
+
+```javascript
+console.log("Testing greet function...");
+console.log(greet("Alice")); // Check manually
+console.log(greet("Bob")); // Check manually again
+```
+
+**Automated testing** makes multiple scenarios easy:
+
+```javascript
+describe("greet function", () => {
+  test("should greet Alice correctly", () => {
+    const result = greet("Alice");
+    expect(result).toBe("Hello, Alice!");
+  });
+
+  test("should greet Bob correctly", () => {
+    const result = greet("Bob");
+    expect(result).toBe("Hello, Bob!");
+  });
+
+  test("should handle empty names", () => {
+    const result = greet("");
+    expect(result).toBe("Hello, !");
+  });
+});
+```
+
+### Exercise 3: Testing Functions You've Actually Written
+
+Let's test some basic functions beginners typically write:
+
+```javascript
+// Basic functions you might have written
+const isEven = (num) => num % 2 === 0;
+const getFirstName = (fullName) => fullName.split(" ")[0];
+const convertToUpperCase = (text) => text.toUpperCase();
+
+// Tests for these functions
+describe("Basic Utility Functions", () => {
+  test("should identify even numbers", () => {
+    expect(isEven(4)).toBe(true);
+    expect(isEven(3)).toBe(false);
+    expect(isEven(0)).toBe(true);
+  });
+
+  test("should extract first name", () => {
+    expect(getFirstName("John Doe")).toBe("John");
+    expect(getFirstName("Mary Jane Watson")).toBe("Mary");
+  });
+
+  test("should convert to uppercase", () => {
+    expect(convertToUpperCase("hello")).toBe("HELLO");
+    expect(convertToUpperCase("World")).toBe("WORLD");
+  });
+});
+```
+
+### Exercise 4: Your First Test Suite
+
+**Mental model**: A test suite is like a **folder of related homework assignments**. All math problems go in the math folder, all English assignments in the English folder.
+
+```javascript
+// Your complete test suite for basic math functions
+describe("Math Utility Functions", () => {
+  test("should add two positive numbers", () => {
+    expect(add(2, 3)).toBe(5);
+    expect(add(10, 15)).toBe(25);
+  });
+
+  test("should add negative numbers", () => {
+    expect(add(-2, -3)).toBe(-5);
+    expect(add(-5, 5)).toBe(0);
+  });
+
+  test("should subtract correctly", () => {
+    expect(subtract(10, 3)).toBe(7);
+    expect(subtract(5, 5)).toBe(0);
+  });
+
+  test("should multiply correctly", () => {
+    expect(multiply(3, 4)).toBe(12);
+    expect(multiply(-2, 3)).toBe(-6);
+  });
+
+  test("should divide correctly", () => {
+    expect(divide(10, 2)).toBe(5);
+    expect(divide(15, 3)).toBe(5);
+  });
+});
+```
+
+## Common Test Patterns
+
+### Testing Different Types of Values
+
+```javascript
+// Testing numbers
+expect(add(2, 3)).toBe(5);
+
+// Testing strings
+expect(greet("Alice")).toBe("Hello, Alice!");
+
+// Testing booleans
+expect(isEven(4)).toBe(true);
+expect(isEven(3)).toBe(false);
+
+// Testing arrays (use toEqual for objects/arrays)
+expect(getNumbers()).toEqual([1, 2, 3, 4]);
+
+// Testing if something exists
+expect(userName).toBeDefined();
+expect(deletedUser).toBeNull();
+```
+
+### Common Matchers (Ways to Check Results)
+
+```javascript
+// Exact equality
+expect(result).toBe(5);
+
+// Object/array comparison
+expect(person).toEqual({ name: "John", age: 25 });
+
+// Truthiness
+expect(isLoggedIn).toBeTruthy();
+expect(hasErrors).toBeFalsy();
+
+// Numbers
+expect(score).toBeGreaterThan(0);
+expect(percentage).toBeLessThanOrEqual(100);
+
+// Strings
+expect(message).toContain("success");
+expect(email).toMatch(/@/); // Contains @ symbol
+```
+
+## Best Practices for Beginners
+
+### 1. Start Simple
+
+```javascript
+// ✅ Good: Start with simple, clear tests
+test("should add 2 and 3 to get 5", () => {
+  expect(add(2, 3)).toBe(5);
+});
+
+// ❌ Avoid: Complex tests when learning
+test("should handle all edge cases and error conditions", () => {
+  // Too much for beginners!
+});
+```
+
+### 2. Use Descriptive Test Names
+
+```javascript
+// ✅ Good: Clear, descriptive names
+test("should return true for even numbers", () => {
+  expect(isEven(4)).toBe(true);
+});
+
+test("should return false for odd numbers", () => {
+  expect(isEven(3)).toBe(false);
+});
+
+// ❌ Bad: Vague names
+test("number test", () => {
+  expect(isEven(4)).toBe(true);
+});
+```
+
+### 3. Test One Thing at a Time
+
+```javascript
+// ✅ Good: One assertion per test (usually)
+test("should add positive numbers", () => {
+  expect(add(2, 3)).toBe(5);
+});
+
+test("should add negative numbers", () => {
+  expect(add(-1, -2)).toBe(-3);
+});
+
+// ✅ Also OK: Multiple related assertions
+test("should handle different even numbers", () => {
+  expect(isEven(2)).toBe(true);
+  expect(isEven(4)).toBe(true);
+  expect(isEven(100)).toBe(true);
+});
+```
+
+## Wrap-Up & Next Steps
+
+### Why This Matters for Beginners
+
+**Mental model**: Testing is like **having a study buddy** who helps you check your work and catch mistakes before the big test.
+
+Benefits you gain:
+
+- **Confidence**: Know your functions work correctly
+- **Learning**: Writing tests helps you understand your code better
+- **Debugging**: When something breaks, tests help you find what's wrong
+- **Professional habits**: Start building skills used in real development jobs
+
+### Your Evolution as a Developer
+
+```javascript
+// Where you started: Hope and cross fingers 🤞
+const result = myFunction(5);
+// Hope it works!
+
+// Where you are now: Manual checking 🕵️
+const result = myFunction(5);
+console.log("Result:", result); // Is this right? I think so...
+
+// Where you're going: Professional testing 🧪
+test("myFunction should handle input correctly", () => {
+  const result = myFunction(5);
+  expect(result).toBe(25); // Computer verifies automatically
+});
+```
+
+## Homework: Your First Test Suite
+
+### Part 1: Set Up Your Test Environment
+
+Watch the provided Vitest setup video. The video shows the basic setup and demonstrates testing a simple `sum` function - perfect for getting started!
+
+### Part 2: Test Basic Functions
+
+Create a `math-utils.js` file with these simple functions:
+
+<CopyableCode>
+  {`// math-utils.js
+export const add = (a, b) => a + b;
+export const subtract = (a, b) => a - b;
+export const multiply = (a, b) => a * b;
+export const divide = (a, b) => b !== 0 ? a / b : "Cannot divide by zero";
+export const isEven = (num) => num % 2 === 0;`}
+</CopyableCode>
+
+Create a `math-utils.test.js` file:
+
+<CopyableCode>
+{`// math-utils.test.js
+import { add, subtract, multiply, divide, isEven } from './math-utils.js';
+
+describe('Math Utility Functions', () => {
+test('should add two numbers correctly', () => {
+expect(add(2, 3)).toBe(5);
+expect(add(0, 0)).toBe(0);
+expect(add(-1, 1)).toBe(0);
+});
+
+test('should subtract correctly', () => {
+expect(subtract(5, 3)).toBe(2);
+expect(subtract(10, 10)).toBe(0);
+});
+
+test('should multiply correctly', () => {
+expect(multiply(3, 4)).toBe(12);
+expect(multiply(5, 0)).toBe(0);
+});
+
+test('should divide correctly', () => {
+expect(divide(10, 2)).toBe(5);
+expect(divide(15, 3)).toBe(5);
+});
+
+test('should handle division by zero', () => {
+expect(divide(5, 0)).toBe("Cannot divide by zero");
+});
+
+test('should identify even numbers', () => {
+expect(isEven(4)).toBe(true);
+expect(isEven(2)).toBe(true);
+expect(isEven(0)).toBe(true);
+});
+
+test('should identify odd numbers', () => {
+expect(isEven(3)).toBe(false);
+expect(isEven(1)).toBe(false);
+expect(isEven(-1)).toBe(false);
+});
+});`}
+
+</CopyableCode>
+
+### Part 3: Test String Functions
+
+Create a `string-utils.js` file with these functions:
+
+<CopyableCode>
+  {`// string-utils.js
+export const greet = (name) => \`Hello, \${name}!\`;
+export const shout = (text) => text.toUpperCase() + "!";
+export const getInitials = (fullName) => {
+  const names = fullName.split(' ');
+  return names.map(name => name[0]).join('.');
+};`}
+</CopyableCode>
+
+Then create a `string-utils.test.js` file and write tests for these functions. Think about:
+
+- What should happen with normal inputs?
+- What about edge cases like empty strings?
+- What about names with one word vs. multiple words?
+- What about names with one word vs. multiple words?
+
+### Part 4: Find and Fix Bugs
+
+Add these buggy functions to your existing `math-utils.js` file (at the bottom):
+
+<CopyableCode>
+  {`// Add these to the bottom of math-utils.js - they have bugs!
+export const calculatePercentage = (part, whole) => part / whole;
+export const isAdult = (age) => age > 18;
+export const formatCurrency = (amount) => "$" + amount;`}
+</CopyableCode>
+
+**Your mission**:
+
+1. Add tests for these functions to your `math-utils.test.js` file
+2. Write tests for what these functions SHOULD do
+3. Run the tests and see which ones fail
+4. Fix the functions in `math-utils.js` to make the tests pass
+5. Fix the functions to make the tests pass
+
+**Hints**:
+
+- `calculatePercentage(25, 100)` should return `25` (as a percentage), not `0.25`
+- `isAdult(18)` - is someone exactly 18 years old an adult?
+- `formatCurrency(19.99)` should return `"$19.99"`, but what does it actually return?
+
+### Part 5: Practice Run
+
+Run all your tests with `npm test` and make sure they all pass. You should see green checkmarks for passing tests!
+
+**🎯 Success criteria**:
+
+- All tests pass (green checkmarks)
+- You understand what each test is checking
+- You can explain the difference between manual and automated testing
+- You've found and fixed at least one bug using tests
+
+This is your foundation for professional testing! 🧪

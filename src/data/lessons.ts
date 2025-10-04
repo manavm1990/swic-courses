@@ -260,10 +260,21 @@ const lessons = [
       "Professional testing practices for catching bugs before users do - from manual console debugging to automated testing with modern tools.",
     lessons: [
       {
-        id: "js-testing",
-        title: "JavaScript Testing Fundamentals",
+        id: "js-testing-basics",
+        title: "JavaScript Testing Basics",
         description:
-          "Learn professional testing practices - from console.info debugging to automated testing with Vitest for catching bugs before users do.",
+          "Learn the fundamentals of testing - from console.log debugging to automated testing with Vitest. Perfect introduction for beginners.",
+        video: {
+          duration: 424,
+          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/vitest.png",
+          url: "https://d8n3.c1.e2-8.dev/swic/videos/vitest.mp4",
+        },
+      },
+      {
+        id: "js-testing",
+        title: "JavaScript Testing Advanced",
+        description:
+          "Advanced testing practices including complex data structures, immutability testing, and test-driven development workflow. (CIS 277 level)",
         video: {
           duration: 424,
           thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/vitest.png",
