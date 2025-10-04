@@ -1,6 +1,10 @@
 # Project Overview
 
+## '177' Learners
+
 This project is a modern web development course for a community college. The audience is primarily students who are new to web development. They have been exposed to HTML and CSS but have never done any real programming.
+
+## '277' Learners
 
 This course builds core client-side programming skills using JavaScript. Students will learn to manipulate the DOM, handle events, use control structures, and work with strings, objects, cookies, and browser storage. Emphasis is placed on writing interactive, efficient code and exploring advanced functions.
 
