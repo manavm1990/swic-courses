@@ -41,13 +41,6 @@ The platform uses a custom content management approach:
 - Troubleshooting & Best Practices (common challenges, industry practices)
 - Wrap-Up & Assessment (key takeaways, advanced quiz, hands-on assessment)
 
-### Key Configuration Files
-
-- `next.config.mjs`: Next.js configuration with MDX processing
-- `eslint.config.js`: ESLint setup including MDX-specific rules
-- `tsconfig.json`: Strict TypeScript configuration with path aliases
-- `.prettierrc`: Code formatting rules with import organization
-
 ### Copyable Code Blocks
 
 The platform provides two types of code blocks for different educational purposes:
