@@ -1,0 +1,109 @@
+# Semantic HTML: Why It Matters
+
+## Pre-Work
+
+Before you begin, make sure you have acquired the provided template repository for this lesson. Initialize it on your local machine so you can follow along with the exercises and complete the hands-on activities. **Commit early, commit often!**
+
+## Introduction
+
+- **Icebreaker:** Have you ever used a heading tag just to make text bigger? Or stacked a bunch of `<br>` tags to add space?
+- **Real-world scenario:** Imagine a visually impaired user navigating your site with a screen reader. Semantic HTML makes their experience possible—and better for everyone.
+- **Lesson objectives:**
+  - Understand what semantic HTML is and why it matters
+  - Identify common mistakes and how to avoid them
+  - Practice writing clean, accessible HTML
+- **Introduction to the concept:**
+  - Semantic HTML uses tags that describe their meaning and role in the document (e.g., `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>`).
+  - This helps browsers, search engines, and assistive technologies understand your content.
+
+## Core Concept Overview
+
+- **Key terms:** semantic, accessibility, landmark elements, structure
+- **Analogy:** Think of semantic HTML as labeling rooms in a house—"kitchen," "bedroom," "bathroom"—so everyone knows what each space is for.
+- **Common mistakes:**
+  - Using headings for size, not structure (multiple `<h1>`, skipping levels)
+  - Using `<br>` for spacing
+  - Overusing `<div>` and `<span>` instead of semantic tags
+  - Not using `<label>` for form fields
+  - Missing `alt` on images
+  - Using `<table>` for layout
+  - Not using lists for list content
+- **Conceptual quiz:**
+  1. What is semantic HTML?
+  2. Why is it important for accessibility?
+  3. Which tag would you use for navigation links?
+  4. What’s wrong with using `<br>` for spacing?
+  5. Why should you avoid multiple `<h1>` tags?
+
+## Hands-On Application
+
+- **Step-by-step:**
+  1. Refactor a block of HTML to use semantic tags
+  2. Add missing `alt` attributes and labels
+  3. Replace `<br>`-based spacing with CSS
+- **Example:**
+  ```html
+  <!-- Bad -->
+  <div>
+    <h1>About Us</h1>
+    <br /><br />
+    <div>We are awesome!</div>
+  </div>
+  <!-- Good -->
+  <main>
+    <header><h1>About Us</h1></header>
+    <section><p>We are awesome!</p></section>
+  </main>
+  ```
+- **Enhancement exercise:**
+  - Take a page you’ve built before and make it as semantic as possible.
+
+## Advanced Concepts & Comparisons
+
+- **Deeper dive:**
+  - Landmark elements: `<main>`, `<nav>`, `<header>`, `<footer>`, `<aside>`
+  - When to use `<section>` vs `<article>`
+- **Comparison:**
+  - Semantic vs non-semantic tags
+- **Pros and cons:**
+  - Semantic: accessible, SEO-friendly, maintainable
+  - Non-semantic: quick, but confusing and inaccessible
+- **Mini project:**
+  - Build a simple blog layout using only semantic tags
+- **Retrospective:**
+  - How did semantic tags improve your code?
+
+## Troubleshooting & Best Practices
+
+- **Common challenges:**
+  - Unsure which tag to use? Check [MDN’s HTML element reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Element)
+  - Don’t use headings for size—use CSS!
+  - Always use one `<h1>` per page
+- **Best practices:**
+  - Use semantic tags for structure
+  - Use CSS for presentation
+  - Test with a screen reader or accessibility tool
+- **Enhancement:**
+  - Try using ARIA roles only if you can’t use a semantic tag
+
+## Wrap-Up & Assessment
+
+- **Key takeaways:**
+  - Semantic HTML is about meaning, not just appearance
+  - It’s essential for accessibility and maintainability
+
+- **Advanced quiz:**
+  1. What’s the difference between `<section>` and `<article>`?
+  2. Why is `<nav>` important?
+  3. How does semantic HTML help SEO?
+  4. What’s wrong with using `<table>` for layout?
+  5. How do you make a form accessible?
+  6. What’s the role of `<main>`?
+  7. Why avoid multiple `<h1>` tags?
+  8. When should you use `<aside>`?
+  9. What’s the best way to add space between elements?
+  10. How do you label a button for screen readers?
+
+- **Hands-on assessment / Homework:**
+  - Create any web page you like (a personal homepage, a favorite recipe, a blog post, etc.) using only semantic HTML. **Do not add any styles yet!** Focus on using the correct tags for structure and meaning.
+  - You’ll add styles and layout in the upcoming Tailwind lesson.

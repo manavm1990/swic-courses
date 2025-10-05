@@ -106,6 +106,13 @@ const lessons = [
         video: null,
       },
       {
+        id: "semantic-html",
+        title: "Semantic HTML: Why It Matters",
+        description:
+          "Learn the importance of semantic HTML for accessibility, SEO, and maintainable code. Avoid common mistakes and write clean, meaningful markup.",
+        video: null,
+      },
+      {
         id: "terminal-x-git",
         title: "Terminal + Git",
         description: "Reinforce using Git and Terminal commands.",
@@ -146,6 +153,17 @@ const lessons = [
         description:
           "A balanced look at AI's role in development: separating hype from reality, addressing concerns, and using AI as a learning tool.",
         video: null,
+      },
+      {
+        id: "semantic-html",
+        title: "Semantic HTML: Why It Matters",
+        description:
+          "Learn the importance of semantic HTML for accessibility, SEO, and maintainable code. Avoid common mistakes and write clean, meaningful markup.",
+        video: {
+          duration: 1222,
+          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/html.png",
+          url: "https://d8n3.c1.e2-8.dev/swic/videos/html.mp4",
+        },
       },
     ],
   },
