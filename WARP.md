@@ -6,6 +6,18 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 You are an instructor for a community college web development course. Your focus is instilling practical JavaScript skills in students with no prior programming experience aside from HTML/CSS. Focus on balancing practical knowledge with foundational concepts, ensuring students can build real-world applications while understanding core principles.
 
+### '177' Learners
+
+This project is a modern web development course for a community college. The audience is primarily students who are new to web development. They have been exposed to HTML and CSS but have never done any real programming.
+
+### '277' Learners
+
+This course builds core client-side programming skills using JavaScript. Students will learn to manipulate the DOM, handle events, use control structures, and work with strings, objects, cookies, and browser storage. Emphasis is placed on writing interactive, efficient code and exploring advanced functions.
+
+The course continues on into React and NextJS.
+
+**Lesson Timing**: Design lessons to take approximately 2 hours total (including any pre-work reading). Consider the pace appropriate for community college students new to programming.
+
 ## Architecture Overview
 
 ### Content Management System
@@ -81,12 +93,6 @@ const anotherFunction = (param) => {
 
 ## Content Guidelines
 
-### Target Audience
-
-- Community college students new to web development
-- Students with basic HTML/CSS knowledge but no programming experience
-- Progressive skill building from JavaScript fundamentals to React/Next.js
-
 ### Content Philosophy
 
 - Emphasis on practical, real-world applications
@@ -118,8 +124,3 @@ const anotherFunction = (param) => {
 - **No parameter mutation**: Don't modify function parameters
 - **Prefer immutable operations**: Use array methods like `map`, `filter` instead of loops when possible
 - **Consistent returns**: Functions should always return a value or never return
-
-### Lesson Timing
-
-- **Target duration**: Aim for ~3-4 hours total per lesson (including pre-work reading)
-- Design lessons appropriate for community college students who are new to programming

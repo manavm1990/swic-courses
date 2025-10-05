@@ -10,7 +10,7 @@ This course builds core client-side programming skills using JavaScript. Student
 
 The course continues on into React and NextJS.
 
-**Lesson Timing**: Design lessons to take approximately 2 hours total (including any pre-work reading). Consider the pace appropriate for community college students new to programming.
+**Lesson Timing**: Design lessons to take approximately 2-3 hours total (including any pre-work reading). Consider the pace appropriate for community college students new to programming.
 
 ## JavaScript Coding Standards
 
