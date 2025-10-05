@@ -615,21 +615,16 @@ test("myFunction handles typical input correctly", () => {
 
 **Part 1: Set up your first test file**
 
-<CopyableCode>
-{`import {
+Just create `utils.test.js` in the same folder as your `utils.js` file. Add this boilerplate:
+
+```javascript
+import { describe, it, expect } from "vitest";
+import {
   getStudentPercentage,
   getClassAverage,
   addAssignmentToCourse,
 } from "./utils.js";
-import DATA from "./data.js";
-
-const CIS277 = DATA[0];
-
-describe("Student Management Functions", () => {
-// Your tests go here
-});`}
-
-</CopyableCode>
+```
 
 **Part 2: Convert your console.info statements**
 Convert these manual tests:
@@ -643,12 +638,29 @@ console.info(`Maria's percentage: ${getStudentPercentage(CIS277, maria.id)}%`);
 Into proper automated tests:
 
 ```javascript
-test("calculates Maria's percentage correctly", () => {
-  const maria = CIS277.students.find(({ name }) => name === "Maria");
-  const percentage = getStudentPercentage(CIS277, maria.id);
+import { getStudentPercentage } from "./utils.js";
+import { test, expect } from "vitest";
 
-  // Replace with actual expected value after running your manual test
-  expect(percentage).toBe(/* the actual number you saw */);
+test("calculates Maria's percentage correctly", () => {
+  // Arrange: Create minimal test data for Maria only
+  const data = {
+    students: [
+      {
+        id: 1,
+        assignments: [
+          { name: "Project 1", points: 85, maxPoints: 100 },
+          { name: "Quiz 1", points: 18, maxPoints: 20 },
+        ],
+      },
+    ],
+  };
+  const id = 1; // Maria's ID
+
+  // Act: Call the function being tested
+  const percentage = getStudentPercentage(data, id);
+
+  // Assert: Verify the result
+  expect(percentage).toBe(86); // * It's rounded...
 });
 ```
 
