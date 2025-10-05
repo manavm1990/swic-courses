@@ -294,4 +294,61 @@ const lessons = [
       },
     ],
   },
+  {
+    id: "browser-javascript-dom",
+    title: "Browser JavaScript & DOM",
+    description:
+      "Bridge from console JavaScript to interactive web applications by mastering DOM manipulation, event handling, and browser APIs.",
+    lessons: [
+      {
+        id: "console-to-browser",
+        title: "From Console to Browser",
+        description:
+          "Understanding the browser environment, developer tools, and how JavaScript runs in web pages. Setting up your development workflow.",
+        video: null,
+      },
+      {
+        id: "dom-fundamentals",
+        title: "DOM Fundamentals",
+        description:
+          "What is the DOM? Understanding the document tree structure, nodes vs elements, and how browsers parse HTML into JavaScript objects.",
+        video: null,
+      },
+      {
+        id: "selecting-elements",
+        title: "Selecting DOM Elements",
+        description:
+          "Master querySelector and querySelectorAll to find elements. Learn CSS selectors, NodeList vs Arrays, and element relationships.",
+        video: null,
+      },
+      {
+        id: "manipulating-content-styles",
+        title: "Manipulating Content & Styles",
+        description:
+          "Change text, HTML content, and styles dynamically. Work with classList to toggle Tailwind classes and create interactive interfaces.",
+        video: null,
+      },
+      {
+        id: "creating-elements",
+        title: "Creating & Adding Elements",
+        description:
+          "Generate new DOM elements programmatically. Learn createElement, appendChild, and building dynamic content from JavaScript data.",
+        video: null,
+      },
+      {
+        id: "event-handling-basics",
+        title: "Event Handling Basics",
+        description:
+          "Respond to user interactions with addEventListener. Handle clicks, form input, and other events to create responsive web applications.",
+        video: null,
+      },
+      {
+        id: "interactive-project",
+        title: "Interactive Project: Task Manager",
+        description:
+          "Apply DOM manipulation skills to build a functional task manager app with add, edit, delete, and toggle functionality.",
+        video: null,
+      },
+    ],
+  },
 ] as const satisfies Module[];
