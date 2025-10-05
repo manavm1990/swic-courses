@@ -106,13 +106,6 @@ const lessons = [
         video: null,
       },
       {
-        id: "semantic-html",
-        title: "Semantic HTML: Why It Matters",
-        description:
-          "Learn the importance of semantic HTML for accessibility, SEO, and maintainable code. Avoid common mistakes and write clean, meaningful markup.",
-        video: null,
-      },
-      {
         id: "terminal-x-git",
         title: "Terminal + Git",
         description: "Reinforce using Git and Terminal commands.",
