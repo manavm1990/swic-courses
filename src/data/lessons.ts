@@ -305,7 +305,11 @@ const lessons = [
         title: "From Console to Browser",
         description:
           "Understanding the browser environment, developer tools, and how JavaScript runs in web pages. Setting up your development workflow.",
-        video: null,
+        video: {
+          duration: 801,
+          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/dom.png",
+          url: "https://d8n3.c1.e2-8.dev/swic/videos/dom.mp4",
+        },
       },
       {
         id: "dom-fundamentals",
