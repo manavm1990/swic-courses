@@ -154,8 +154,8 @@ const lessons = [
           "Learn the importance of semantic HTML for accessibility, SEO, and maintainable code. Avoid common mistakes and write clean, meaningful markup.",
         video: {
           duration: 1222,
-          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/html.png",
-          url: "https://d8n3.c1.e2-8.dev/swic/videos/html.mp4",
+          thumbnail: "https://videos.learnjs.tech/swic/videos/html.png",
+          url: "https://videos.learnjs.tech/swic/videos/html.mp4",
         },
       },
     ],
@@ -208,8 +208,8 @@ const lessons = [
           "Learn to process collections efficiently using callback functions with map, filter, and forEach - turning data transformation into simple, readable code.",
         video: {
           duration: 2134,
-          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/objects.png",
-          url: "https://d8n3.c1.e2-8.dev/swic/videos/objects-arrays.mp4",
+          thumbnail: "https://videos.learnjs.tech/swic/videos/objects.png",
+          url: "https://videos.learnjs.tech/swic/videos/objects-arrays.mp4",
         },
       },
       {
@@ -219,8 +219,8 @@ const lessons = [
           "Learn the fundamentals of testing - from console.log debugging to automated testing with Vitest. Perfect introduction for beginners.",
         video: {
           duration: 424,
-          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/vitest.png",
-          url: "https://d8n3.c1.e2-8.dev/swic/videos/vitest.mp4",
+          thumbnail: "https://videos.learnjs.tech/swic/videos/vitest.png",
+          url: "https://videos.learnjs.tech/swic/videos/vitest.mp4",
         },
       },
     ],
@@ -288,8 +288,8 @@ const lessons = [
           "Advanced testing practices including complex data structures, immutability testing, and test-driven development workflow.",
         video: {
           duration: 424,
-          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/vitest.png",
-          url: "https://d8n3.c1.e2-8.dev/swic/videos/vitest.mp4",
+          thumbnail: "https://videos.learnjs.tech/swic/videos/vitest.png",
+          url: "https://videos.learnjs.tech/swic/videos/vitest.mp4",
         },
       },
     ],
@@ -307,8 +307,8 @@ const lessons = [
           "Understanding the browser environment, developer tools, and how JavaScript runs in web pages. Setting up your development workflow.",
         video: {
           duration: 801,
-          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/dom.png",
-          url: "https://d8n3.c1.e2-8.dev/swic/videos/dom.mp4",
+          thumbnail: "https://videos.learnjs.tech/swic/videos/dom.png",
+          url: "https://videos.learnjs.tech/swic/videos/dom.mp4",
         },
       },
       {
