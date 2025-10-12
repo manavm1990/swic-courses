@@ -1,6 +1,6 @@
+import { CopyableCode } from "@/components/code-block";
 import { Figure } from "@/components/figure";
 import { VideoYT } from "@/components/video-yt";
-import { CopyableCode } from "@/components/code-block";
 import { ExternalLinkIcon } from "@/icons/external-link-icon";
 import { transformerColorizedBrackets } from "@shikijs/colorized-brackets";
 import type { MDXComponents } from "mdx/types";
@@ -39,7 +39,7 @@ let highlighterPromise: Promise<Highlighter> | null = null;
 async function getHighlighter() {
   if (!highlighterPromise) {
     highlighterPromise = createHighlighter({
-      langs: ["javascript", "css", "html", "bash", "json", "markdown"],
+      langs: ["javascript", "css", "html", "bash", "json", "markdown", "jsx"],
       themes: [theme],
     });
   }
@@ -79,25 +79,30 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     a: ({ href, children, ...props }) => {
       // Check if it's an external link
-      const isExternal = href && (href.startsWith('http') || href.startsWith('https'));
-      
+      const isExternal =
+        href && (href.startsWith("http") || href.startsWith("https"));
+
       if (isExternal) {
         return (
-          <a 
-            href={href} 
+          <a
+            href={href}
             {...props}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1"
           >
             {children}
-            <ExternalLinkIcon className="w-4 h-4 shrink-0" />
+            <ExternalLinkIcon className="h-4 w-4 shrink-0" />
           </a>
         );
       }
-      
+
       // Internal links keep default styling
-      return <a href={href} {...props}>{children}</a>;
+      return (
+        <a href={href} {...props}>
+          {children}
+        </a>
+      );
     },
     h1: ({ children }) => {
       const id = generateId(getTextContent(children));
