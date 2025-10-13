@@ -158,6 +158,13 @@ const lessons = [
           url: "https://videos.learnjs.tech/swic/videos/html.mp4",
         },
       },
+      {
+        id: "css-fundamentals-review",
+        title: "CSS Fundamentals Review",
+        description:
+          "Review essential CSS concepts: selectors, properties, box model, and layout basics. Build the foundation needed for Tailwind and browser-based styling.",
+        video: null,
+      },
     ],
   },
   {

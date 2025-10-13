@@ -1,0 +1,271 @@
+# CSS Fundamentals Review
+
+## Introduction
+
+- **Icebreaker**: Look around you right now. How are the objects in your room arranged? Some things are lined up in rows, others stacked in columns, and some are positioned in grids. CSS layout works the same way!
+- **Real-world scenario**: Before diving into Tailwind CSS, we need to understand what's happening under the hood. Every utility class in Tailwind maps to actual CSS properties.
+- **Lesson objectives**: Review essential CSS concepts, master Flexbox and Grid layouts, and build the foundation for Tailwind success.
+- **Introduction to the concept**: CSS (Cascading Style Sheets) controls how HTML elements look and are arranged on the page. Think of HTML as the skeleton and CSS as the skin and muscle.
+
+## Core Concept Overview
+
+### CSS Selectors - Finding Elements
+
+CSS selectors are how you **target specific elements** to style them. These exact same selectors will be crucial when you start using `querySelector()` in JavaScript and when working with Tailwind utility classes.
+
+```css
+/* Element selector - targets all h1 tags */
+h1 {
+  color: blue;
+}
+
+/* Class selector - targets elements with class="highlight" */
+.highlight {
+  background: yellow;
+}
+
+/* ID selector - targets element with id="header" */
+#header {
+  font-size: 24px;
+}
+
+/* Descendant selector - targets p inside div */
+div p {
+  margin: 1rem;
+}
+
+/* Child selector - targets direct li children of ul */
+ul > li {
+  list-style: none;
+}
+
+/* Attribute selector - targets inputs with specific type */
+input[type="text"] {
+  border: 1px solid gray;
+}
+```
+
+**Why this matters**: Soon you'll use these same selectors with `document.querySelector('.highlight')` and apply Tailwind classes like `class="highlight bg-yellow-200"`. Master these patterns now!
+
+**Quick Practice**: Look at any HTML page you built previously. Can you identify:
+
+- How to select all buttons? (`button`)
+- How to select an element with class "hero"? (`.hero`)
+- How to select a specific element with id "nav"? (`#nav`)
+- How to select all paragraphs inside a specific div? (`.container p`)
+
+### The Box Model - Every Element's Foundation
+
+Every HTML element is a rectangular box with four parts:
+
+- **Content**: The actual text or image
+- **Padding**: Space inside the element, around the content
+- **Border**: A line around the padding
+- **Margin**: Space outside the element, pushing other elements away
+
+Think of it like a picture frame: content is the photo, padding is the matting, border is the frame, and margin is the space between frames on a wall.
+
+### Key Layout Properties
+
+- `display`: How an element behaves (`block`, `inline`, `flex`, `grid`)
+- `width`/`height`: Size of elements
+- `margin`/`padding`: Spacing around and inside elements
+
+## Hands-On Application
+
+### Flexbox - One-Dimensional Layout
+
+Flexbox is perfect for arranging items in a **single row or column**. Think of it like organizing books on a shelf.
+
+**Basic Flexbox Container:**
+
+```css
+.container {
+  display: flex;
+  justify-content: center; /* Horizontal alignment */
+  align-items: center; /* Vertical alignment */
+  gap: 1rem; /* Space between items */
+}
+```
+
+**Common Flexbox Patterns:**
+
+```css
+/* Horizontal navigation */
+.nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Centered content */
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Equal-width columns */
+.columns {
+  display: flex;
+}
+.column {
+  flex: 1; /* Each takes equal space */
+}
+```
+
+### Grid - Two-Dimensional Layout
+
+Grid is perfect for **complex layouts** with rows and columns. Think of it like organizing items in a spreadsheet.
+
+**Basic Grid Container:**
+
+```css
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* 3 equal columns */
+  grid-template-rows: auto auto; /* 2 flexible rows */
+  gap: 1rem; /* Space between all items */
+}
+```
+
+**Practical Grid Examples:**
+
+```css
+/* Simple card layout */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* Header-sidebar-main layout */
+.page-layout {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "sidebar main";
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: auto 1fr;
+}
+```
+
+### Activity: Layout Challenge
+
+Create these three layouts using HTML and CSS:
+
+1. A horizontal navigation bar with evenly spaced links (Flexbox)
+2. A 3-column card layout that wraps to new rows (Grid)
+3. A page with header, sidebar, and main content area (Grid)
+
+## Advanced Concepts & Comparisons
+
+### When to Use Flexbox vs Grid
+
+**Use Flexbox when:**
+
+- Arranging items in a single row or column
+- You want items to grow/shrink based on content
+- Creating navigation bars, button groups, or centering content
+
+**Use Grid when:**
+
+- Creating complex layouts with rows AND columns
+- You need precise control over item placement
+- Building page layouts, card grids, or form layouts
+
+### Responsive Design Basics
+
+```css
+/* Mobile-first approach */
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Larger screens */
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+  }
+}
+```
+
+Note the 'mobile-first' approach: start with styles for small screens, then add media queries for larger screens. So, we wouldn't usually do: `@media (max-width: 768px) { ... }`.
+
+## Troubleshooting & Best Practices
+
+### Common Layout Issues
+
+**Problem**: Items not centering properly
+
+```css
+/* Solution: Use both justify-content and align-items */
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+```
+
+**Problem**: Grid items not filling container
+
+```css
+/* Solution: Use fr units for flexible sizing */
+.grid {
+  grid-template-columns: 1fr 2fr 1fr; /* Middle column twice as wide */
+}
+```
+
+**Problem**: Flexbox items wrapping unexpectedly
+
+```css
+/* Solution: Control flex-wrap behavior */
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap; /* or wrap if you want wrapping */
+}
+```
+
+### Best Practices
+
+1. **Start simple**: Use Flexbox for one-dimensional layouts, Grid for two-dimensional
+2. **Mobile-first**: Design for small screens first, then enhance for larger screens
+3. **Use semantic HTML**: Choose HTML elements based on meaning, not appearance
+4. **Test across devices**: What works on desktop might break on mobile
+
+## Wrap-Up & Assessment
+
+### Key Takeaways
+
+- **CSS selectors** help you target specific HTML elements
+- **The box model** explains spacing around elements
+- **Flexbox** is perfect for one-dimensional layouts (rows or columns)
+- **Grid** excels at two-dimensional layouts (complex arrangements)
+- **Responsive design** adapts layouts to different screen sizes
+
+### Knowledge Check
+
+1. When would you choose Flexbox over Grid?
+2. What's the difference between `justify-content` and `align-items` in Flexbox?
+3. How do you create equal-width columns with Grid?
+4. What's the purpose of the `gap` property?
+5. How does the box model affect element spacing?
+
+### Hands-on Assessment
+
+Build a responsive "About Me" page that includes:
+
+- A header with your name and navigation links
+- A hero section with your photo and brief bio
+- A skills section with a grid of skill cards
+- A contact section with social media links
+
+**Requirements:**
+
+- Use Flexbox for the header navigation and contact links
+- Use Grid for the skills section
+- Make it responsive (looks good on mobile and desktop)
+- Apply proper spacing using margin, padding, and gap
+
+This foundation will prepare you perfectly for Tailwind CSS, where these same concepts are applied through utility classes like `flex`, `grid`, `justify-center`, and `gap-4`.
