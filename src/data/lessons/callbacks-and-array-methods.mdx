@@ -58,7 +58,7 @@ exams.forEach((exam) => {
 
 **Mental model**: Think of these as three different types of **assembly line workers**:
 
-1. **map**: The **transformer** - takes each item, transforms it, and creates a new collection (MOST IMPORTANT)
+1. **map**: - takes each item, calls the callback function to create new data, and creates a new array with all of the new data. The new data is nothing but the original items, but has been created from the callback function's return. This means that the newly created array always has the same number of items as the original array.
 2. **filter**: The **quality inspector** - examines each item and keeps only the ones that pass the test
 3. **forEach**: The **announcer** - looks at each item and does something with it, but doesn't create a new collection. We won't use this as much as the other two.
 
