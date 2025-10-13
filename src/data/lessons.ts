@@ -212,17 +212,6 @@ const lessons = [
           "Learn to process collections efficiently using callback functions with map, filter, and forEach - turning data transformation into simple, readable code.",
         video: null,
       },
-      {
-        id: "js-testing-basics",
-        title: "JavaScript Testing Basics",
-        description:
-          "Learn the fundamentals of testing - from console.log debugging to automated testing with Vitest. Perfect introduction for beginners.",
-        video: {
-          duration: 424,
-          thumbnail: "https://videos.learnjs.tech/swic/videos/vitest.png",
-          url: "https://videos.learnjs.tech/swic/videos/vitest.mp4",
-        },
-      },
     ],
   },
   {
@@ -282,7 +271,18 @@ const lessons = [
       "Professional testing practices for catching bugs before users do - from manual console debugging to automated testing with modern tools.",
     lessons: [
       {
-        id: "js-testing",
+        id: "js-testing-basics",
+        title: "JavaScript Testing Basics",
+        description:
+          "Learn the fundamentals of testing - from console.log debugging to automated testing with Vitest. Perfect introduction for beginners.",
+        video: {
+          duration: 424,
+          thumbnail: "https://videos.learnjs.tech/swic/videos/vitest.png",
+          url: "https://videos.learnjs.tech/swic/videos/vitest.mp4",
+        },
+      },
+      {
+        id: "js-testing-advanced",
         title: "JavaScript Testing Advanced",
         description:
           "Advanced testing practices including complex data structures, immutability testing, and test-driven development workflow.",
