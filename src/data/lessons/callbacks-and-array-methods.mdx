@@ -177,12 +177,6 @@ const honorRoll = students.filter((student) => {
   return student.grade >= 90;
 });
 console.log("Honor roll students:", honorRoll);
-
-// 3. DISPLAY: Show each student's info (forEach - use sparingly)
-console.log("=== Class Roster ===");
-students.forEach((student) => {
-  console.log(`${student.name}: ${student.grade}% in ${student.subject}`);
-});
 ```
 
 **Your turn**: Add a property `isHonorRoll: true/false` to each student using map.
