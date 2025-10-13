@@ -2,6 +2,8 @@
 
 ## Pre-Work
 
+Follow along with the following resources as you go through the video lesson portion ☝️:
+
 1. Read [Objects](https://javascript.info/object) through "Object references and copying" section
 2. Read [Arrays](https://javascript.info/array) and work through the examples in your Developer Console
 
@@ -33,7 +35,7 @@ const student = {
   lastName: "Johnson",
   age: 20,
   major: "Computer Science",
-  isEnrolled: true
+  isEnrolled: true,
 };
 
 // Accessing information from the "filing cabinet"
@@ -55,12 +57,14 @@ const favoriteBook = {
   pages: 352,
   isAvailable: true,
   genre: "Technology",
-  publishedYear: 1999
+  publishedYear: 1999,
 };
 
 // Reading the "ID card"
 console.log(`${favoriteBook.title} by ${favoriteBook.author}`);
-console.log(`Published in ${favoriteBook.publishedYear}, ${favoriteBook.pages} pages`);
+console.log(
+  `Published in ${favoriteBook.publishedYear}, ${favoriteBook.pages} pages`,
+);
 ```
 
 ### Arrays: Organized Lists
@@ -74,7 +78,7 @@ const favoritesSongs = [
   "Hotel California",
   "Stairway to Heaven",
   "Sweet Caroline",
-  "Don't Stop Believin'"
+  "Don't Stop Believin'",
 ];
 
 // Accessing songs by their position (starting from 0)
@@ -123,20 +127,22 @@ const student1 = {
   year: "sophomore",
   gpa: 3.7,
   major: "Web Development",
-  isOnDeansList: true
+  isOnDeansList: true,
 };
 
 const student2 = {
   name: "Jordan Kim",
-  id: "S67890", 
+  id: "S67890",
   year: "freshman",
   gpa: 3.9,
   major: "Cybersecurity",
-  isOnDeansList: true
+  isOnDeansList: true,
 };
 
 // Using the student information
-console.log(`${student1.name} is a ${student1.year} studying ${student1.major}`);
+console.log(
+  `${student1.name} is a ${student1.year} studying ${student1.major}`,
+);
 
 if (student1.isOnDeansList) {
   console.log(`Congratulations ${student1.name} on making the Dean's List!`);
@@ -151,7 +157,11 @@ if (student1.isOnDeansList) {
 
 ```javascript
 // Different types of course lists
-const fallCourses = ["JavaScript Fundamentals", "Database Design", "Web Design"];
+const fallCourses = [
+  "JavaScript Fundamentals",
+  "Database Design",
+  "Web Design",
+];
 const springCourses = ["React Development", "Node.js", "Project Management"];
 const allCourses = ["Intro to Programming", "HTML/CSS", "JavaScript", "React"];
 
@@ -174,25 +184,25 @@ console.log("Updated fall courses:", fallCourses);
 const courseCatalog = [
   {
     code: "WEB101",
-    title: "Introduction to Web Development", 
+    title: "Introduction to Web Development",
     credits: 3,
     instructor: "Dr. Smith",
-    isAvailable: true
+    isAvailable: true,
   },
   {
-    code: "JS201", 
+    code: "JS201",
     title: "JavaScript Fundamentals",
     credits: 4,
     instructor: "Prof. Johnson",
-    isAvailable: true
+    isAvailable: true,
   },
   {
     code: "DB301",
     title: "Database Design",
-    credits: 3, 
+    credits: 3,
     instructor: "Dr. Davis",
-    isAvailable: false
-  }
+    isAvailable: false,
+  },
 ];
 
 // Working with the catalog
@@ -201,7 +211,9 @@ console.log("Total courses available:", courseCatalog.length);
 // Finding information about a specific course
 const firstCourse = courseCatalog[0];
 console.log(`${firstCourse.code}: ${firstCourse.title}`);
-console.log(`Taught by ${firstCourse.instructor} (${firstCourse.credits} credits)`);
+console.log(
+  `Taught by ${firstCourse.instructor} (${firstCourse.credits} credits)`,
+);
 
 // Checking availability
 if (firstCourse.isAvailable) {
@@ -249,7 +261,7 @@ const person = {
   name: "Maria",
   age: 25,
   job: "Developer",
-  city: "Chicago"
+  city: "Chicago",
 };
 
 // ✅ Array - a collection of similar items (people's names)
@@ -259,7 +271,7 @@ const teamMembers = ["Maria", "John", "Sarah", "Mike"];
 const team = [
   { name: "Maria", age: 25, role: "Frontend" },
   { name: "John", age: 28, role: "Backend" },
-  { name: "Sarah", age: 26, role: "Designer" }
+  { name: "Sarah", age: 26, role: "Designer" },
 ];
 ```
 
@@ -273,14 +285,14 @@ const student = {
   name: "Taylor Wilson",
   contact: {
     email: "taylor@email.com",
-    phone: "555-0123"
+    phone: "555-0123",
   },
   courses: ["Math", "Science", "History"],
   grades: {
     math: 95,
     science: 87,
-    history: 92
-  }
+    history: 92,
+  },
 };
 
 // Accessing nested information
@@ -299,7 +311,7 @@ const car = {
   make: "Honda",
   model: "Civic",
   year: 2020,
-  "fuel-type": "gasoline" // Property name with hyphen needs brackets
+  "fuel-type": "gasoline", // Property name with hyphen needs brackets
 };
 
 // Dot notation - when you know the exact property name
@@ -342,7 +354,7 @@ originalList.push("D");
 console.log(originalList); // ["A", "B", "C", "D"] - original changed!
 
 // ✅ If you want to keep the original unchanged, make a copy first
-const originalList = ["A", "B", "C"]; 
+const originalList = ["A", "B", "C"];
 const newList = [...originalList]; // Creates a copy
 newList.push("D");
 console.log(originalList); // ["A", "B", "C"] - unchanged
@@ -386,7 +398,7 @@ const user = {
   name: "Jessica",
   age: 24,
   email: "jessica@email.com",
-  courses: ["Math", "Science", "History"]
+  courses: ["Math", "Science", "History"],
 };
 ```
 
@@ -437,9 +449,15 @@ console.log("Hobbies:", myProfile.hobbies);
 
 ```javascript
 // Create arrays for different categories of your favorites
-const favoriteMovies = [/* add at least 4 movies */];
-const favoriteFoods = [/* add at least 5 foods */];
-const favoriteColors = [/* add at least 3 colors */];
+const favoriteMovies = [
+  /* add at least 4 movies */
+];
+const favoriteFoods = [
+  /* add at least 5 foods */
+];
+const favoriteColors = [
+  /* add at least 3 colors */
+];
 
 // Practice array methods
 // Add a new movie to your list
@@ -461,8 +479,8 @@ const myCourses = [
     instructor: "Professor Smith",
     credits: 3,
     currentGrade: 95,
-    isCompleted: false
-  }
+    isCompleted: false,
+  },
   // Add at least 2 more courses
 ];
 
@@ -476,6 +494,7 @@ const myCourses = [
 **Part 4: Learning Reflection**
 
 Write a brief reflection (in a GitHub Gist or similar) answering:
+
 1. Which mental model helped you most (filing cabinet, playlist, etc.)?
 2. What was the most confusing part about objects vs arrays?
 3. How do you decide when to use an object vs an array?

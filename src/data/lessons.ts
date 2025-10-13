@@ -199,18 +199,18 @@ const lessons = [
         title: "Objects and Arrays: Data Organization",
         description:
           "Master JavaScript's fundamental data structures for organizing information - objects for related properties and arrays for collections.",
-        video: null,
+        video: {
+          duration: 2134,
+          thumbnail: "https://videos.learnjs.tech/swic/videos/objects.png",
+          url: "https://videos.learnjs.tech/swic/videos/objects-arrays.mp4",
+        },
       },
       {
         id: "callbacks-and-array-methods",
         title: "Callbacks and Array Methods",
         description:
           "Learn to process collections efficiently using callback functions with map, filter, and forEach - turning data transformation into simple, readable code.",
-        video: {
-          duration: 2134,
-          thumbnail: "https://videos.learnjs.tech/swic/videos/objects.png",
-          url: "https://videos.learnjs.tech/swic/videos/objects-arrays.mp4",
-        },
+        video: null,
       },
       {
         id: "js-testing-basics",
