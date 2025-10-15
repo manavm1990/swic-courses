@@ -269,6 +269,13 @@ const lessons = [
           "An overview of different programming paradigms (e.g., imperative, functional, object-oriented) and their significance in JavaScript.",
         video: null,
       },
+      {
+        id: "dom-review-component-patterns",
+        title: "DOM Review & Component Patterns",
+        description:
+          "Review the DOM API and learn component-based thinking patterns in vanilla JavaScript - the foundation for React development.",
+        video: null,
+      },
     ],
   },
   {

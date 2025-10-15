@@ -1,0 +1,418 @@
+# DOM Review & Component Patterns
+
+You've learned JavaScript fundamentals and built interactive web applications using the DOM. Now it's time to **review the DOM concepts** and learn the **component-based thinking** that powers React.
+
+## Learning Objectives
+
+By the end of this lesson, you'll be able to:
+
+- Review how JavaScript interacts with HTML through the DOM API
+- Understand the `document` object and browser API concepts
+- Create component functions that return HTML (like React components)
+- Handle events and manage state (like React's useState)
+- Build the exact same examples from React Quick Start in vanilla JS
+- Recognize React patterns when you see them
+
+## DOM Review: JavaScript Meets the Browser
+
+### JavaScript Doesn't Know HTML
+
+Remember this fundamental concept: **JavaScript only understands objects, functions, arrays, and primitives**. JavaScript has no built-in knowledge of HTML, CSS, or browsers.
+
+```javascript
+// JavaScript knows this:
+const user = { name: "Alice", age: 25 };
+const numbers = [1, 2, 3, 4, 5];
+const addTwo = (x) => x + 2;
+
+// JavaScript does NOT know this:
+// <div>, <button>, <p>, <ul>, etc.
+```
+
+### The Browser API Bridge
+
+The **browser** solves this problem by providing **APIs** (Application Programming Interfaces) that let JavaScript interact with web page elements. Think of APIs as **toolkits** that extend JavaScript's capabilities.
+
+**Key Browser APIs:**
+
+- **DOM API** - Manipulate HTML elements
+- **Event API** - Respond to user interactions
+- **Storage API** - Save data in browser memory
+- **Fetch API** - Request data from servers
+- **Canvas API** - Draw graphics
+
+All of these APIs are **objects** that JavaScript can use!
+
+### The `document` Object: Your Gateway to HTML
+
+The `document` object is your main interface to the HTML page. It's part of the **global `window` object** but you can use it directly:
+
+```javascript
+// The document object gives you access to HTML
+console.log(document.title); // Page title
+console.log(document.URL); // Current page URL
+console.log(document.body); // The <body> element
+
+// Find elements (return JavaScript objects!)
+const button = document.getElementById("my-button");
+
+// NodeList of elements.
+// It will get any/all elements with class "card".
+// A NodeList is like an array, but not quite.
+// We can use 'Array.from()' to convert it to a real array if needed.
+// We are accessing the Array prototype method directly to create a new array FROM the NodeList.
+const cards = document.querySelectorAll(".card");
+
+// First <p> element. A single element, not a NodeList.
+const firstParagraph = document.querySelector("p");
+
+// These are all JavaScript objects with properties and methods
+console.log(button.tagName); // "BUTTON"
+console.log(button.textContent); // Button's text
+console.log(button.className); // CSS classes`}
+```
+
+### DOM Manipulation Review
+
+Let's review the essential DOM operations you've learned in the previous class:
+
+```javascript
+// 1. FINDING ELEMENTS
+const saveButton = document.getElementById("save-btn");
+const allCards = document.querySelectorAll(".card");
+const firstInput = document.querySelector('input[type="text"]');
+
+// 2. CHANGING CONTENT
+saveButton.textContent = 'Saving...';
+saveButton.innerHTML = '<span>💾</span> Save';
+
+// 3. CHANGING STYLES (especially with Tailwind)
+saveButton.classList.add('bg-green-500', 'text-white');
+saveButton.classList.remove('bg-blue-500');
+saveButton.classList.toggle('hidden');
+
+// 4. CREATING NEW ELEMENTS
+const newCard = document.createElement('div');
+newCard.className = 'card p-4 bg-white rounded shadow';
+newCard.innerHTML = '<h3>New Card</h3>';
+document.getElementById('cards-container').appendChild(newCard);
+
+// 5. EVENT HANDLING
+saveButton.addEventListener('click', function() {
+alert('Button clicked!');
+});
+// 6. REMOVING ELEMENTS
+newCard.remove();
+// or
+document.getElementById('cards-container').removeChild(newCard);`;
+}
+```
+
+## Hands-On: React Patterns in Vanilla JavaScript
+
+Your instructor will provide a **Vite template** for the rest of this lesson. You should be following along and typing the code yourself to get the most out of it. Commit your work frequently!
+
+### Your First Component Function
+
+Create a new directory under `src/` called `components/` and inside it create a file `button.js`. This will hold your first "component".
+
+```jsx
+export default function Button() {
+  return `<button>I'm a button</button>`;
+}
+```
+
+Note that function components are capitalized by convention. They don't use the camelCase naming with a verb like regular functions.
+
+Now, back in `src/main.js`, import and render this component:
+
+```javascript
+// With Vite bundler, no need for .js extension 🤓
+import Button from "./components/button";
+
+// Look in the `index.html` file for the <div id="app"></div> element
+// It's empty to start. JS uses this to render our components dynamically
+document.getElementById("app").innerHTML = Button();
+```
+
+**Key insight**: A component is just **a function that returns HTML**!
+
+### Adding Event Handlers
+
+Let's make your Button component interactive. We need to attach event handlers after the HTML is rendered:
+
+```javascript
+// src/components/button.js
+export default function Button() {
+  const handleClick = () => {
+    alert("Button clicked!");
+  };
+
+  const html = `<button id="my-btn">I'm a button</button>`;
+
+  const attachEvents = () => {
+    document.getElementById("my-btn").addEventListener("click", handleClick);
+  };
+
+  return { html, attachEvents };
+}
+```
+
+Now update `main.js` to use both parts:
+
+```javascript
+// src/main.js
+import Button from "./components/button.js";
+
+const button = Button();
+document.getElementById("app").innerHTML = button.html;
+button.attachEvents();
+```
+
+**The pattern**: Return both the HTML and a function to attach events. Render first, then wire up the events.
+
+### Passing Event Handlers
+
+You can make the component more flexible by passing in the handler. IN this way, we are decoupling the button's behavior from its implementation. This allows us to reuse the Button component with different behaviors.
+
+```javascript
+// src/components/button.js
+export default function Button(onClick) {
+  const html = `<button id="my-btn">I'm a button</button>`;
+
+  const attachEvents = () => {
+    document.getElementById("my-btn").addEventListener("click", onClick);
+  };
+
+  return { html, attachEvents };
+}
+
+// src/main.js
+import Button from "./components/button.js";
+
+const handleClick = () => {
+  console.log("Clicked!");
+};
+
+const button = Button(handleClick);
+document.getElementById("app").innerHTML = button.html;
+button.attachEvents();
+```
+
+### Displaying Data
+
+Components can accept parameters (like function arguments) to customize what they display:
+
+```javascript
+// src/components/profile.js
+export default function Profile(user) {
+  return `
+    <div class="p-4 border rounded">
+      <img src="${user.imageUrl}" alt="${user.name}" class="w-20 h-20 rounded-full">
+      <h2 class="text-xl font-bold">${user.name}</h2>
+      <p>${user.bio}</p>
+    </div>
+  `;
+}
+
+// src/main.js
+import Profile from "./components/profile";
+
+const user = {
+  name: "Hedy Lamarr",
+  imageUrl: "https://i.imgur.com/yXOvdOSs.jpg",
+  bio: "Inventor and actress",
+};
+
+document.getElementById("app").innerHTML = Profile(user);
+```
+
+**Pattern**: Pass data as parameters to make components reusable.
+
+### Conditional Rendering
+
+Show different content based on conditions:
+
+```javascript
+export default function Greeting(isLoggedIn) {
+  if (isLoggedIn) {
+    return `<h1>Welcome back!</h1>`;
+  }
+  return `<h1>Please sign in.</h1>`;
+};
+
+// Or use ternary for inline conditions
+export default function StatusBadge(isActive) {
+  return `
+    <span class="${isActive ? "bg-green-500" : "bg-gray-500"} px-2 py-1 rounded">
+      ${isActive ? "Active" : "Inactive"}
+    </span>
+  `;
+};
+```
+
+### Rendering Lists
+
+Create multiple elements from an array of data:
+
+```javascript
+// src/components/shopping-list.js
+export default function ShoppingList(items) {
+  const listItems = items
+    .map((item) => {
+      const style = item.isFruit ? "color: magenta;" : "";
+      return `<li style="${style}">${item.title}</li>`;
+    })
+    .join("");
+
+  return `
+    <ul>
+      ${listItems}
+    </ul>
+  `;
+}
+
+// src/main.js
+import ShoppingList from "./components/shopping-list.js";
+
+const products = [
+  { id: 1, title: "Cabbage", isFruit: false },
+  { id: 2, title: "Garlic", isFruit: false },
+  { id: 3, title: "Apple", isFruit: true },
+];
+
+document.getElementById("app").innerHTML = ShoppingList(products);
+```
+
+**Pattern**: Use `map()` to transform data into HTML, then `join('')` to combine the array into a single string.
+
+### State: Updating the Screen
+
+Components often need to remember and update information. Let's build a counter:
+
+```javascript
+// src/components/counter-button.js
+export default function CounterButton(currentCount) {
+  return `<button id="counter-btn" class="px-4 py-2 bg-blue-500 text-white rounded">
+    Clicked ${currentCount} times
+  </button>`;
+}
+
+// src/main.js
+import CounterButton from "./components/counter-button.js";
+
+let count = 0;
+
+const handleClick = () => {
+  count = count + 1;
+  render();
+};
+
+const render = () => {
+  document.getElementById("app").innerHTML = CounterButton(count);
+  document.getElementById("counter-btn").addEventListener("click", handleClick);
+};
+
+render();
+```
+
+**Pattern**: When state changes, re-render the component to update the screen.
+
+**Notice the pain?** You have to manually call `render()` every time state changes. Forget to call it? Your UI doesn't update. This gets tedious fast.
+
+**What you've learned (under the hood concept):** The pattern of storing state in a variable and re-rendering when it changes is exactly what React does automatically. You're seeing the mechanism that powers React's state management - React just handles the `render()` call for you.
+
+### Sharing State Between Components
+
+What if you want multiple counters that update together? You need to move the state up to a common parent and pass it down to each counter:
+
+```javascript
+// src/components/counter-button.js
+export default function CounterButton(id, currentCount) {
+  return `<button id="counter-${id}" class="px-4 py-2 bg-blue-500 text-white rounded">
+    Clicked ${currentCount} times
+  </button>`;
+}
+
+// src/main.js
+import CounterButton from "./components/counter-button.js";
+
+let count = 0;
+
+const App = () => {
+  return `
+    <div>
+      <h1>Counters that update together</h1>
+      <div id="container-1"></div>
+      <div id="container-2"></div>
+    </div>
+  `;
+};
+
+const handleClick = () => {
+  count = count + 1;
+  render();
+};
+
+const render = () => {
+  document.getElementById("app").innerHTML = App();
+
+  // Render both buttons with the same count
+  document.getElementById("container-1").innerHTML = CounterButton(1, count);
+  document.getElementById("container-2").innerHTML = CounterButton(2, count);
+
+  // Attach the same handler to both
+  document.getElementById("counter-1").addEventListener("click", handleClick);
+  document.getElementById("counter-2").addEventListener("click", handleClick);
+};
+
+render();
+```
+
+**Pattern**: "Lifting state up" - when multiple components need the same data, move it to their common parent.
+
+**This is getting absurd, right?** Every single render you have to:
+
+1. Clear and rebuild the entire app HTML
+2. Manually inject each child component's HTML into specific containers
+3. Hunt down every interactive element by ID
+4. Re-attach every single event listener
+
+And we only have **TWO buttons**. Imagine 10 buttons. Or 50. Or a real application with hundreds of interactive elements.
+
+**What you've learned (under the hood concept):** "Lifting state up" is a fundamental React pattern. When components need to share data, you move the state to their common parent and pass it down as props. You're learning the _why_ of React's architecture - this pain is exactly what motivated React's design.
+
+### Why This Sucks (And Why React Exists)
+
+Let's be honest about what you just experienced:
+
+**The ID Hell:** Every element needs a unique ID. You're manually generating `counter-1`, `counter-2`, `container-1`, `container-2`. In a real app, you'd have hundreds of IDs to track. One typo breaks everything.
+
+**The Event Listener Nightmare:** After every render, you rebuild the HTML from scratch. That means every `addEventListener` call is gone. You have to re-attach them manually, every single time. Miss one? That button stops working, and you'll spend an hour debugging.
+
+**The Manual Re-render Burden:** Every time data changes, you call `render()`. Every single time. In a complex app with dozens of state variables, you'll forget. Your UI will show stale data and you won't know why.
+
+**The String Template Mess:** You're writing HTML in strings with no syntax highlighting, no autocomplete, no error checking. Good luck finding that missing closing tag.
+
+**The Coordination Complexity:** Want to share state? Manually render each child. Pass down data. Track their IDs. Wire up their events. Now multiply that by every component in your app.
+
+This approach **does not scale**. You've built the exact patterns React uses, but you've done it the hard way to understand _why React exists_.
+
+## What You've Actually Learned
+
+You didn't just learn how to make counters. You learned the fundamental concepts that power modern UI frameworks:
+
+### Core Concepts (That React Uses Under The Hood)
+
+1. **Component-based architecture** - UI as composable functions
+2. **Props/Parameters** - passing data into components
+3. **State management** - storing data that changes over time
+4. **Re-rendering on state change** - updating the UI when data changes
+5. **Lifting state up** - sharing state through a common parent
+6. **Event handling** - making UIs interactive
+
+These aren't "React concepts" - they're **UI development concepts**. React just implements them cleanly.
+
+## Assessment
+
+In addition to your code repo with commits, write a reflection. Answer these questions. Did you struggle? What was hard? What was easy? What surprised you? Ultimately, did what you see in the video correlate with your JS experience and knowledge base so far?
