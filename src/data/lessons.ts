@@ -219,6 +219,13 @@ const lessons = [
           "Learn to process collections efficiently using callback functions with map, filter, and forEach - turning data transformation into simple, readable code.",
         video: null,
       },
+      {
+        id: "js-object-methods-intro",
+        title: "Object Methods Basics",
+        description:
+          "Intro to built-in Object helpers: keys, values, entries, assign, and spread. Learn how they pair with map/filter for shaping and inspecting data.",
+        video: null,
+      },
     ],
   },
   {
@@ -336,6 +343,18 @@ const lessons = [
         description:
           "Review the DOM API and learn component-based thinking patterns in vanilla JavaScript - the foundation for React development.",
         video: null,
+      },
+      {
+        id: "react-vite-starter-walkthrough",
+        title: "React + Vite Starter Walkthrough",
+        description:
+          "Walk through Vite’s React starter: index.html root mount point, createRoot/StrictMode in main.jsx, App component with useState and HMR.",
+        video: {
+          duration: 1084,
+          thumbnail:
+            "https://d8n3.c1.e2-8.dev/swic/videos/vite-react-count.png",
+          url: "https://videos.learnjs.tech/swic/videos/vite-react-count.mp4",
+        },
       },
     ],
   },

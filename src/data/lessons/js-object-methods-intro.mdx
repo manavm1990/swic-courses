@@ -1,0 +1,357 @@
+# Object Methods Basics
+
+## Introduction
+
+**Icebreaker**: Think about your backpack. You know what's inside: notebooks, pens, maybe a laptop. If someone asked you for a list of everything, you'd pull each item out and name it. In JavaScript, when we want a list of the contents of an object, we use helper methods instead of unpacking by hand.
+
+**Real-world scenario**: Apps constantly take objects (like a user profile, product info, or game character) and need to display pieces of them, count things, or turn them into arrays so they can use `map` and `filter`. You just learned how powerful array methods are. Now you'll learn the simple bridge: turning object data into arrays you can process.
+
+### What You'll Learn Today
+
+- Difference between objects (containers with named properties) and arrays (ordered lists)
+- How to list an object's property names with `Object.keys()`
+- How to list an object's property values with `Object.values()`
+- How to get both at once with `Object.entries()`
+- How to copy/merge objects safely using spread (`{ ...obj }`) and `Object.assign()`
+- How these pair with `map`, `filter`, and callbacks
+
+### Quick Callback Reminder
+
+In the previous lesson you passed **callback functions** to array methods like `map` and `filter`. Those methods loop for you and "call back" your logic. Today you'll see how object helper methods let you convert object data into arrays so you can reuse those same skills.
+
+## Core Concept Overview
+
+### Objects vs Arrays (Quick Review)
+
+```javascript
+const student = {
+  name: "Alex",
+  grade: 92,
+  enrolled: true,
+};
+
+const grades = [92, 88, 75];
+```
+
+- Object: named properties (like labeled drawers)
+- Array: ordered items (like numbered boxes)
+
+### Listing Property Names: Object.keys()
+
+```javascript
+const student = { name: "Alex", grade: 92, enrolled: true };
+const propertyNames = Object.keys(student);
+console.log(propertyNames); // ["name", "grade", "enrolled"]
+```
+
+Use case: Build a dynamic UI listing fields, or check if a property exists.
+
+### Listing Property Values: Object.values()
+
+```javascript
+const student = { name: "Alex", grade: 92, enrolled: true };
+const propertyValues = Object.values(student);
+console.log(propertyValues); // ["Alex", 92, true]
+```
+
+Use case: Turn values into a readable line: `propertyValues.join(", ")`.
+
+### Pairing Keys and Values: Object.entries()
+
+```javascript
+const student = { name: "Alex", grade: 92, enrolled: true };
+const entries = Object.entries(student);
+console.log(entries);
+// [["name", "Alex"], ["grade", 92], ["enrolled", true]]
+```
+
+Each entry is a tiny 2-item array: `[key, value]`. This makes it easy to use `map`:
+
+```javascript
+const lines = Object.entries(student).map(([key, value]) => `${key}: ${value}`);
+console.log(lines);
+// ["name: Alex", "grade: 92", "enrolled: true"]
+```
+
+### Copying and Merging Objects (Without Mutating)
+
+Mutating means changing an existing object directly. We prefer creating new copies.
+
+```javascript
+const original = { name: "Alex", grade: 92 };
+
+// Spread copy
+const copy = { ...original };
+
+// Add or override while copying
+const withStatus = { ...original, enrolled: true };
+
+// Merge two objects
+const extra = { major: "Biology", grade: 93 }; // grade overrides
+const merged = { ...original, ...extra };
+
+console.log(merged); // { name: "Alex", grade: 93, major: "Biology" }
+```
+
+`Object.assign()` does similar work:
+
+```javascript
+const merged2 = Object.assign({}, original, extra);
+```
+
+Always start with an empty `{}` target if you don't want to modify the first argument.
+
+### Key Terms
+
+- Property name (key)
+- Property value (value)
+- Entry: a `[key, value]` pair
+- Spread operator: `...` syntax for copying/merging
+- Immutable update: creating a new object instead of changing the old one
+
+### Conceptual Quiz
+
+1. What does `Object.keys()` return?
+   - a) Only values
+   - b) Array of property names
+   - c) A single string
+   - d) An object
+2. What is an entry from `Object.entries(obj)`?
+   - a) A string
+   - b) A number
+   - c) An array with two items: key and value
+   - d) Always an object
+3. Which creates a new object while adding a property?
+   - a) `original.newProp = 1`
+   - b) `{ ...original, newProp: 1 }`
+   - c) `delete original.prop`
+   - d) `Object.values(original)`
+4. What does immutable mean here?
+   - a) Never log values
+   - b) Avoid changing existing objects; make new ones
+   - c) Use only arrays
+   - d) Remove properties
+
+Answers: 1-b, 2-c, 3-b, 4-b
+
+## Hands-On Application
+
+### Exercise 1: Inspecting an Object
+
+```javascript
+const book = {
+  title: "JavaScript Basics",
+  pages: 180,
+  inStock: true,
+};
+
+const keys = Object.keys(book);
+const values = Object.values(book);
+const summaryLines = Object.entries(book).map(
+  ([key, value]) => `${key}: ${value}`,
+);
+
+console.log(keys); // ["title", "pages", "inStock"]
+console.log(values); // ["JavaScript Basics", 180, true]
+console.log(summaryLines); // ["title: JavaScript Basics", ...]
+```
+
+Your turn: Add a new property `format: "paperback"` using spread and re-run.
+
+### Exercise 2: Converting Objects to Arrays for Filtering
+
+```javascript
+const userScores = {
+  alex: 95,
+  jordan: 72,
+  taylor: 88,
+  casey: 60,
+};
+
+// Convert to entries and filter high scorers (>= 80)
+const highScorers = Object.entries(userScores)
+  .filter(([_, score]) => score >= 80)
+  .map(([name, score]) => `${name} (${score}%)`);
+
+console.log(highScorers);
+// ["alex (95%)", "taylor (88%)"]
+```
+
+Your turn: Create a new array of objects: `{ name, score }` for those high scorers.
+
+### Exercise 3: Merging Settings
+
+```javascript
+const defaultSettings = {
+  theme: "light",
+  notifications: true,
+  itemsPerPage: 10,
+};
+
+const userSettings = {
+  theme: "dark",
+  itemsPerPage: 20,
+};
+
+const appliedSettings = { ...defaultSettings, ...userSettings };
+console.log(appliedSettings);
+// { theme: "dark", notifications: true, itemsPerPage: 20 }
+```
+
+Your turn: Add a new setting `language: "en"` while merging.
+
+### Exercise 4: Safe Copy Before Update
+
+```javascript
+const profile = { name: "Alex", level: 3 };
+
+// Bad (mutates): profile.level = 4;
+
+// Good (copy + change)
+const updatedProfile = { ...profile, level: 4 };
+console.log(profile.level); // 3
+console.log(updatedProfile.level); // 4
+```
+
+Your turn: Create `promotedProfile` that also adds `badge: "Gold"`.
+
+### Exercise 5: Entries with Map for Display
+
+```javascript
+const product = { name: "Laptop", price: 899, inStock: true };
+
+const labels = Object.entries(product).map(
+  ([key, value]) => `${key.toUpperCase()}: ${value}`,
+);
+console.log(labels);
+// ["NAME: Laptop", "PRICE: 899", "INSTOCK: true"]
+```
+
+Your turn: Change the callback to return objects: `{ label: key, value }`.
+
+## Advanced Concepts & Comparisons
+
+### keys vs entries vs values
+
+- Need just the property names? `Object.keys(obj)`
+- Need just the raw data values? `Object.values(obj)`
+- Need both for processing with `map` or `filter`? `Object.entries(obj)`
+
+### When to Use Spread vs Object.assign
+
+- Spread is shorter and common in modern code: `{ ...a, ...b }`
+- `Object.assign({}, a, b)` is similar but more verbose
+- Always avoid using `Object.assign(a, b)` unless you intend to modify `a`
+
+### Combining with Array Methods
+
+```javascript
+const stats = { wins: 12, losses: 5, ties: 2 };
+
+// Sum all numeric values
+const totalGames = Object.values(stats).reduce((sum, n) => sum + n, 0);
+console.log(totalGames); // 19
+```
+
+### Pattern: Transform Object to Array → Process → Back to Object
+
+```javascript
+const grades = { alex: 95, jordan: 72, taylor: 88 };
+
+// Curve everyone +5, then build a new object
+const curvedEntries = Object.entries(grades).map(([name, score]) => [
+  name,
+  score + 5,
+]);
+
+const curvedGrades = Object.fromEntries(curvedEntries);
+console.log(curvedGrades); // { alex: 100, jordan: 77, taylor: 93 }
+```
+
+`Object.fromEntries()` turns `[key, value]` pairs back into an object.
+
+## Troubleshooting & Best Practices
+
+### Common Mistakes
+
+1. Forgetting that `Object.keys()` returns an array (so you can use `length` and `map`).
+2. Accidentally mutating original objects instead of copying.
+3. Mixing up entries shape: it is `[key, value]`, not `{ key, value }`.
+
+### Defensive Checks
+
+```javascript
+const printObject = (obj) => {
+  if (!obj || typeof obj !== "object") return;
+  Object.entries(obj).forEach(([key, value]) => {
+    console.log(`${key}: ${value}`);
+  });
+};
+```
+
+### Choosing Methods Decision Guide
+
+- Want a list of names to loop? `Object.keys()`
+- Want a list of just numbers to add? `Object.values()`
+- Want to build display strings or filter by property names? `Object.entries()`
+- Want to copy/extend data? Spread or `Object.assign({}, ...)`
+
+## Wrap-Up & Assessment
+
+### Key Takeaways
+
+1. Objects store named data; arrays store ordered lists
+2. `Object.keys()`, `values()`, and `entries()` turn object data into arrays
+3. Spread copying keeps code predictable and avoids accidental mutations
+4. Entries pair perfectly with `map`, `filter`, and `reduce`
+5. You can convert entries back into an object using `Object.fromEntries()`
+
+### Quick Advanced Quiz
+
+1. What does `[name, score]` represent inside an `entries.map(([name, score]) => ...)` callback?
+   - a) Two separate arrays
+   - b) Destructured key and value from one entry pair
+   - c) Always numbers
+   - d) A mistake
+2. Which will safely merge without changing originals?
+   - a) `Object.assign(original, extra)`
+   - b) `{ ...original, ...extra }`
+   - c) `original += extra`
+   - d) `merge(original, extra)`
+
+Answers: 1-b, 2-b
+
+### Homework: Mini Data Inspector
+
+Build a mini "data inspector" script (in your assignment repo) that:
+
+1. Takes an object like:
+   ```javascript
+   const user = { id: 7, name: "Casey", role: "editor", active: true };
+   ```
+2. Logs a formatted list of properties (`ROLE: editor` etc.)
+3. Creates an array of property names longer than 3 characters
+4. Creates a new object with only truthy values
+5. Adds a timestamp property immutably
+6. Prints counts: total properties vs kept truthy properties
+
+Suggested functions (all single responsibility):
+
+- `formatEntries(obj)` → returns array of strings
+- `filterLongKeys(obj, min = 3)` → returns array of keys
+- `truthyOnly(obj)` → returns new object
+- `addTimestamp(obj)` → returns new object with `timestamp`
+
+Stretch: Add a `toPairs(obj)` function using `Object.entries()` and rebuild using `Object.fromEntries()` after filtering out keys that start with a vowel.
+
+### Reflection Prompt
+
+Write (or record) a quick reflection:
+
+- Which object helper felt most useful today?
+- How did turning object data into arrays connect back to the previous callbacks/array methods lesson?
+- Where do you think you will use these in upcoming DOM lessons?
+
+---
+
+Next: You'll continue practicing with data structures while moving toward manipulating the DOM. Keep using your callback + array method skills—they grow more powerful with objects involved!

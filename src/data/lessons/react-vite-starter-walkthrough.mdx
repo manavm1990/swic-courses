@@ -1,0 +1,104 @@
+# React + Vite Starter Walkthrough
+
+## Introduction
+
+- Objective: Understand how Vite boots a React app and where your code runs.
+- You’ll map the HTML mount point to React’s render flow and practice `useState` updates.
+
+## Core Concept Overview
+
+### 1) HTML mount point (index.html)
+
+```html
+<div id="root"></div>
+<script type="module" src="/src/main.jsx"></script>
+```
+
+- `#root` is the only DOM node React takes control of.
+- The module script loads your app entry (`src/main.jsx`).
+
+### 2) Entry (src/main.jsx)
+
+```jsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.jsx";
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
+```
+
+- `createRoot(...).render(...)` mounts your component tree into `#root`.
+- `StrictMode` runs extra checks in development.
+
+### 3) App component (src/App.jsx)
+
+```jsx
+import { useState } from "react";
+
+export default function App() {
+  const [count, setCount] = useState(0);
+  return (
+    <button onClick={() => setCount((prev) => prev + 1)}>
+      count is {count}
+    </button>
+  );
+}
+```
+
+- `useState` returns `[state, setState]`. Calling `setState` schedules a re-render.
+- Vite HMR updates the UI instantly as you edit files.
+
+## Hands-On (10 minutes)
+
+1. Start dev server in your Vite app: `npm run dev` and open the URL.
+2. Edit `src/App.jsx`:
+   - Change the button label and observe HMR.
+   - Add a "Reset" button that sets count back to 0.
+3. Create `src/Greeting.jsx` and render it inside `App`:
+
+```jsx
+// src/Greeting.jsx
+export default function Greeting({ name }) {
+  return <h2>Hello, {name}</h2>;
+}
+```
+
+```jsx
+// in src/App.jsx
+import Greeting from "./Greeting.jsx";
+
+export default function App() {
+  return (
+    <>
+      <Greeting name="Student" />
+      {/* existing content */}
+    </>
+  );
+}
+```
+
+## Advanced Concepts & Comparisons
+
+- Imperative DOM (manually selecting/updating nodes) vs React’s declarative model (describe UI for current state; React applies changes).
+- Asset imports: relative (`./assets/react.svg`) vs absolute (`/vite.svg` from project root).
+
+## Wrap-Up
+
+- React renders your component tree into a single mount node.
+- `main.jsx` wires the app; `App.jsx` contains UI/state; Vite provides fast HMR.
+
+## Practice Checklist (React Quick Start)
+
+- Event handlers: button with onClick handler; pass the function, don’t call it.
+- useState counter: increment on click; add a Reset button.
+- Multiple counters: render two counters that update independently.
+- Lift state up: move count to parent so two buttons share the same count.
+- Props: pass `count` and `onClick` to children; destructure in child.
+- Conditional rendering: show/hide text based on state.
+- Lists & keys: render a list from an array with stable `key`s.
+- Controlled inputs: bind `<input value={state} onChange={...} />` to state.
+- Bonus: use functional updaters (e.g., `setCount(prev => prev + 1)`) when next state depends on previous.
