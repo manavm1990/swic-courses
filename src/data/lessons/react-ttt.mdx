@@ -1,0 +1,358 @@
+# Building Tic-Tac-Toe in React
+
+## Introduction
+
+You've built interactive components in vanilla JavaScript and felt the pain of manual DOM updates, event re-attachment, and remembering to call `render()` every time state changes. React automates all of that.
+
+**The patterns you learned last week are identical to React's patterns**—React just provides cleaner syntax and handles the tedious parts automatically.
+
+### What You'll Build
+
+A complete tic-tac-toe game with:
+
+- Interactive game board that alternates between X and O
+- Winner detection
+
+### Learning Objectives
+
+By the end of this project, you'll be able to:
+
+- Convert vanilla JS component patterns to React components
+- Manage state with `useState` instead of plain variables
+- Lift state up
+- Build interactive UIs with JSX
+
+## Pre-Work: From Vanilla to React
+
+Before starting the tutorial, review these concept mappings. Understanding these connections will make React feel familiar rather than foreign.
+
+### Components: Same Pattern, Better Syntax
+
+**Vanilla JS**
+
+```javascript
+export default function Button() {
+  return `<button>Click me</button>`;
+}
+```
+
+**React**
+
+```jsx
+export default function Button() {
+  return <button>Click me</button>;
+}
+```
+
+The pattern is identical—a function that returns UI. React uses JSX instead of template strings, giving you autocomplete, type checking, and syntax highlighting.
+
+### State: Automatic Re-rendering
+
+**Vanilla JS**
+
+```javascript
+let count = 0;
+
+const handleClick = () => {
+  count = count + 1;
+  render(); // YOU must remember to call this
+};
+```
+
+**React**
+
+```jsx
+const [count, setCount] = useState(0);
+
+const handleClick = () => {
+  setCount(count + 1); // Re-render happens automatically
+};
+```
+
+No more forgetting to call `render()`. React handles it when you call the setter function.
+
+### Events: Inline Instead of Manual Attachment
+
+**Vanilla JS**
+
+```javascript
+// Render HTML first
+document.getElementById("app").innerHTML = `<button id="btn">Click</button>`;
+
+// Then manually attach events
+document.getElementById("btn").addEventListener("click", handleClick);
+
+// Re-attach after every render or your button stops working
+```
+
+**React**
+
+```jsx
+<button onClick={handleClick}>Click</button>
+```
+
+Event handlers live right in the JSX. No IDs needed. No manual re-attachment. No forgetting to wire things up.
+
+### Props: Still Just Function Parameters
+
+**Vanilla JS**
+
+```javascript
+function Greeting(name) {
+  return `<h1>Hello, ${name}</h1>`;
+}
+```
+
+**React**
+
+```jsx
+function Greeting({ name }) {
+  return <h1>Hello, {name}</h1>;
+}
+```
+
+Props are function parameters. The destructuring syntax `{ name }` is just cleaner than `props.name`.
+
+### Lifting State Up: Same Concept
+
+**Vanilla JS**
+You moved `let count` from child function scope to parent scope so multiple components could share it.
+
+**React**
+You move `useState` from child component to parent component so multiple components can share it.
+
+**The concept is identical.** React just uses `useState` hooks instead of plain variables.
+
+---
+
+## Pre-Work Reflection Questions
+
+Answer these before starting the tutorial. You'll need to reference the [previous lesson](/dom-review-component-patterns) They'll prime your brain to appreciate what React solves.
+
+1. **Manual rendering:** What happened in your vanilla counter if you forgot to call `render()` after updating state?
+
+2. **Event listeners:** In the shared counter example, how many times did you need to call `addEventListener`? Every render? Just once?
+
+3. **Unique IDs:** Why did you need IDs like `counter-1`, `counter-2`, `container-1` in vanilla JS?
+
+4. **String templates:** What made writing HTML in template strings difficult compared to writing actual HTML?
+
+Write your answers in a markdown file in your project. You'll revisit these after completing the tutorial.
+
+## The Tutorial
+
+Follow the official [React Tic-Tac-Toe Tutorial](https://react.dev/learn/tutorial-tic-tac-toe) on react.dev. Just use their Code Sandbox environment to experiment with the code. Keep a notebook handy to jot down notes and questions. Their breakdowns and explanations are excellent.
+
+🛑 **STOP** when you get to _Adding time travel._
+
+**Don't just copy-paste code.** Type it yourself. Make mistakes. Debug them. That's how you learn.
+
+The tutorial is divided into sections.
+
+Below you will find corresponding checkpoints. After each major section below, **stop and complete the checkpoint** before continuing.
+
+Create a `REFLECTION.md` gist. Answer the supplementary checkpoint questions thoughtfully. This is how you cement your learning.
+
+---
+
+## Checkpoint 1: Building the Board
+
+**Complete tutorial through:** "Passing data through props"
+
+### Checkpoint 1: What You Should Have
+
+- A `Square` component that accepts and displays a `value` prop
+- A `Board` component that renders 9 `Square` components
+- The board displays numbers 1-9
+
+### Checkpoint 1: Verify Your Understanding
+
+Open your browser DevTools. Inspect a square button. You should see it renders as a `<button>` element with a number inside.
+
+**Test:** Change one of the `<Square value="1" />` lines to `<Square value="X" />`. Does it display an X? If yes, props are working correctly.
+
+### Checkpoint 1: Comprehension Check
+
+**Question:** In vanilla JS, you wrote `${user.name}` in template strings. In React, you write `{value}` in JSX. What's the same? What's different?
+
+**Answer:** Both "escape into JavaScript" to insert dynamic values. Template strings use `${}`, JSX uses `{}`. Both are ways of mixing data with markup.
+
+---
+
+## Checkpoint 2: Interactive Components
+
+**Complete tutorial through:** "Making an interactive component"
+
+### Checkpoint 2: What You Should Have
+
+- Clicking a square logs "clicked!" to the console
+- Clicking a square changes it to display "X"
+- Each square maintains its own state using `useState`
+
+### Checkpoint 2: Verify Your Understanding
+
+Open the browser console. Click different squares. Each should log "clicked!" and change to "X" independently.
+
+**Vanilla connection:** Remember your counter button that needed manual `addEventListener` calls after every render? Look at your Square component—the `onClick` is right there in the JSX. No manual attachment needed.
+
+### Checkpoint 2: Comprehension Check
+
+**Question:** Why does `onClick={handleClick}` work but `onClick={handleClick()}` cause problems?
+
+**Answer:** `onClick={handleClick}` passes a function reference—React calls it when clicked. `onClick={handleClick()}` calls the function immediately during render, which updates state, which triggers a render, which calls it again... infinite loop.
+
+**Question:** What does `useState(null)` return?
+
+**Answer:** An array with two elements: `[currentValue, setterFunction]`. We destructure it as `const [value, setValue] = useState(null)`.
+
+---
+
+## Checkpoint 3: Lifting State Up
+
+**Complete tutorial through:** "Lifting state up"
+
+### Checkpoint 3: What You Should Have
+
+- `Board` component has `useState` managing an array of 9 squares
+- `Square` components receive `value` and `onSquareClick` as props
+- `Square` components no longer have their own `useState`
+- Clicking squares still works
+
+### Checkpoint 3: Verify Your Understanding
+
+Look at your `Square` component. It should no longer have `useState`—it's now a "controlled component" that receives all its data from props.
+
+Look at your `Board` component. It should have `useState` with `Array(9).fill(null)`.
+
+**Test:** Click a square. Check React DevTools (Components tab). Find the `Board` component and look at its `squares` state. You should see the array updated with "X" in the clicked position.
+
+### Checkpoint 3: Vanilla Connection
+
+**Remember** your shared counter example? You moved `let count` from the child button function up to the parent scope so multiple buttons could share the same count. That's exactly what you just did—moved state from `Square` up to `Board`.
+
+The difference? In vanilla JS, you had to:
+
+1. Rebuild all the HTML
+2. Manually find each button by ID
+3. Re-attach event listeners to all of them
+
+In React, you just passed `onSquareClick` as a prop. React handles the rest.
+
+### Checkpoint 3: Comprehension Check
+
+**Question:** Why did you need to lift state up to the `Board` component?
+
+**Answer:** To check for a winner, `Board` needs to see all 9 squares at once. Individual squares can't determine the winner—only the board can.
+
+**Question:** How does clicking a square in the child `Square` component update state in the parent `Board` component?
+
+**Answer:** The `Square` calls the `onSquareClick` function (which was passed as a prop), and that function lives in `Board` where it can call `setSquares` to update the board's state.
+
+---
+
+## Checkpoint 4: Taking Turns
+
+**Complete tutorial through:** "Taking turns"
+
+### Checkpoint 4: What You Should Have
+
+- Squares alternate between X and O when clicked
+- Can't overwrite existing squares (clicking a filled square does nothing)
+- Status message shows whose turn it is
+- Game recognizes a winner and stops accepting moves
+
+### Checkpoint 4: Verify Your Understanding
+
+Play a complete game:
+
+1. Click squares alternating X and O—verify it switches automatically
+2. Try clicking the same square twice—verify it ignores the second click
+3. Get three in a row—verify the status says "Winner: X" or "Winner: O"
+4. After winning, try clicking empty squares—verify they don't accept clicks
+
+### Checkpoint 4: The `calculateWinner` Function
+
+You now have a working tic-tac-toe game! The `calculateWinner` function is key. It checks all possible winning combinations and returns the winner if found.
+
+Review how it works. Try modifying it to also return the winning line (the indices of the squares that made the win).
+
+Take a moment to appreciate that you built a complete interactive game in React from scratch!
+
+## Additional Reflection & Documentation
+
+### Part 1: Vanilla vs React
+
+**Question:** What was easier in React compared to your vanilla counter example?
+
+Think about:
+
+- State management
+- Event handling
+- Re-rendering
+- Multiple interactive components
+
+**Question:** What was harder in React?
+
+Think about:
+
+- New syntax (JSX)
+- New concepts (hooks)
+- Understanding when and why components re-render
+
+### Part 2: Understanding `useState`
+
+**Question:** Explain in your own words what `const [squares, setSquares] = useState(Array(9).fill(null))` does.
+
+Your explanation should cover:
+
+- What `useState` returns
+- Why we use array destructuring
+- What the initial value `Array(9).fill(null)` means
+- What happens when you call `setSquares`
+
+### Part 3: Immutability
+
+**Question:** Why do we call `.slice()` before modifying the squares array?
+
+Consider this broken code:
+
+```javascript
+function handleClick(i) {
+  squares[i] = "X"; // Mutating directly - BAD
+  setSquares(squares); // React might not detect the change
+}
+```
+
+vs. correct code:
+
+```javascript
+function handleClick(i) {
+  const nextSquares = squares.slice(); // Create copy - GOOD
+  nextSquares[i] = "X";
+  setSquares(nextSquares);
+}
+```
+
+Explain why the second version works but the first might not.
+
+### Part 4: Pre-Work Revisited
+
+Look back at your pre-work reflection questions. Now that you've built the game:
+
+**Question:** Do you understand why React exists? What specific pain points does it solve?
+
+**Question:** What pattern from vanilla JS do you most appreciate React automating?
+
+---
+
+## Final Checklist
+
+Before you consider this project complete, verify:
+
+- [ ] Your game works perfectly (can play and detect winners)
+- [ ] You have a `REFLECTION.md` with thoughtful answers
+- [ ] Your code is formatted consistently
+
+**Congratulations!** You've built a complete React application from scratch.
+
+Remember: Debugging is a skill. Getting stuck and figuring it out makes you a better developer.

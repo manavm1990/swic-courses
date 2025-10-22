@@ -344,18 +344,6 @@ const lessons = [
           "Review the DOM API and learn component-based thinking patterns in vanilla JavaScript - the foundation for React development.",
         video: null,
       },
-      {
-        id: "react-vite-starter-walkthrough",
-        title: "React + Vite Starter Walkthrough",
-        description:
-          "Walk through Vite’s React starter: index.html root mount point, createRoot/StrictMode in main.jsx, App component with useState and HMR.",
-        video: {
-          duration: 1084,
-          thumbnail:
-            "https://d8n3.c1.e2-8.dev/swic/videos/vite-react-count.png",
-          url: "https://videos.learnjs.tech/swic/videos/vite-react-count.mp4",
-        },
-      },
     ],
   },
   {
@@ -385,6 +373,33 @@ const lessons = [
           thumbnail: "https://videos.learnjs.tech/swic/videos/vitest.png",
           url: "https://videos.learnjs.tech/swic/videos/vitest.mp4",
         },
+      },
+    ],
+  },
+  {
+    id: "react-fundamentals",
+    title: "React Fundamentals",
+    description:
+      "Build interactive UIs with React. Learn components, state management, props, and modern React patterns through hands-on projects.",
+    lessons: [
+      {
+        id: "react-vite-starter-walkthrough",
+        title: "React + Vite Starter Walkthrough",
+        description:
+          "Walk through Vite’s React starter: index.html root mount point, createRoot/StrictMode in main.jsx, App component with useState and HMR.",
+        video: {
+          duration: 1084,
+          thumbnail:
+            "https://d8n3.c1.e2-8.dev/swic/videos/vite-react-count.png",
+          url: "https://videos.learnjs.tech/swic/videos/vite-react-count.mp4",
+        },
+      },
+      {
+        id: "react-ttt",
+        title: "Building Tic-Tac-Toe in React",
+        description:
+          "Build a complete tic-tac-toe game following React's official tutorial. Learn state management, component hierarchy, and time travel with immutable updates.",
+        video: null,
       },
     ],
   },
