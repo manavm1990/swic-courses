@@ -321,36 +321,84 @@ const printObject = (obj) => {
 
 Answers: 1-b, 2-b
 
-### Homework: Mini Data Inspector
+### Homework: Data Inspector
 
-Build a mini "data inspector" script (in your assignment repo) that:
+Build a data inspector script in `src/data-inspector.js` that demonstrates object method mastery through practical transformations.
 
-1. Takes an object like:
-   ```javascript
-   const user = { id: 7, name: "Casey", role: "editor", active: true };
-   ```
-2. Logs a formatted list of properties (`ROLE: editor` etc.)
-3. Creates an array of property names longer than 3 characters
-4. Creates a new object with only truthy values
-5. Adds a timestamp property immutably
-6. Prints counts: total properties vs kept truthy properties
+#### Setup
 
-Suggested functions (all single responsibility):
+```javascript
+const user = {
+  id: 7,
+  name: "Casey",
+  role: "editor",
+  active: true,
+};
 
-- `formatEntries(obj)` → returns array of strings
-- `filterLongKeys(obj, min = 3)` → returns array of keys
-- `truthyOnly(obj)` → returns new object
-- `addTimestamp(obj)` → returns new object with `timestamp`
+const products = {
+  laptop: 899,
+  mouse: 25,
+  keyboard: 0, // out of stock
+  webcam: null, // discontinued
+  headphones: 150,
+};
+```
 
-Stretch: Add a `toPairs(obj)` function using `Object.entries()` and rebuild using `Object.fromEntries()` after filtering out keys that start with a vowel.
+#### Tasks (Complete All)
 
-### Reflection Prompt
+**1. Property Report** - Log formatted user properties in uppercase:
+```
+ID: 7
+NAME: Casey
+ROLE: editor
+ACTIVE: true
+```
 
-Write (or record) a quick reflection:
+**2. Long Keys** - Create an array of property names from `user` that are longer than 3 characters. Log the count and the array.
 
-- Which object helper felt most useful today?
-- How did turning object data into arrays connect back to the previous callbacks/array methods lesson?
-- Where do you think you will use these in upcoming DOM lessons?
+**3. Active Products** - Create a new object containing only products with truthy values (remove out of stock and discontinued items).
+
+**4. Add Timestamp** - Create a new user object with an added `timestamp` property (use `Date.now()`). Verify the original `user` object is unchanged.
+
+**5. Price Analysis** - Calculate and log:
+- Total value of all active products
+- Number of available products vs total products
+
+**6. Transform Pipeline** - Demonstrate the pattern: object → entries → filter/map → back to object:
+- Take the `products` object
+- Filter to items under $100
+- Apply a 10% discount
+- Return as a new object
+
+#### Grading Criteria
+
+- **Correctness (40%)**: Output matches requirements
+- **Method Selection (30%)**: Uses appropriate `Object.keys()`, `values()`, `entries()`, spread
+- **Immutability (20%)**: No mutations, creates new objects/arrays
+- **Code Quality (10%)**: Readable, properly formatted
+
+### Reflection Questions (Required)
+
+Answer these in a markdown file or video:
+
+**1. Method Selection Justification**
+- Why did you use `Object.entries()` for Task 1 instead of `Object.keys()`?
+- In Task 6, why use `Object.fromEntries()` instead of building the object manually with a loop?
+
+**2. Immutability Verification**
+- In Task 4, how do you prove the original `user` wasn't mutated? What would you log to verify?
+- What would break if you used `Object.assign(user, { timestamp: Date.now() })` instead of spread?
+
+**3. Edge Cases**
+- What happens if `products.keyboard` was `undefined` instead of `0`? Would it be filtered out in Task 3?
+- If a product value was `"free"` (string), how would Task 5 break? How would you fix it?
+
+**4. Alternative Approaches**
+- Could you complete Task 2 without using `filter()`? Show the alternative.
+- Could you complete Task 3 without `Object.entries()` and `Object.fromEntries()`? What would you use?
+
+**5. Debugging Scenario**
+Your Task 6 output includes `laptop: 809.1` even though laptops cost $899 (over $100). What's the bug? Walk through your debugging process.
 
 ---
 
