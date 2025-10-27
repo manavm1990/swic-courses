@@ -231,12 +231,11 @@ my-dom-project/
 
 ## Your First Browser JavaScript
 
-Let's create a simple but complete example using proper Vite project structure:
+Let's create a simple but complete example in the Vite template repo provided by your instructor. Update `index.html` to reflect this.
 
 ### HTML File (index.html)
 
-<CopyableCode language="html">
-  {`<!DOCTYPE html>
+```html
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -250,13 +249,15 @@ Let's create a simple but complete example using proper Vite project structure:
   
   <script type="module" src="./main.js"></script>
 </body>
-</html>`}
-</CopyableCode>
+</html>
+```
+
+Proceed to `src/main.js`
 
 ### JavaScript File (main.js)
 
-<CopyableCode language="javascript">
-{`// Variables - same as console JavaScript
+```js
+// Variables - same as console JavaScript
 let clickCount = 0;
 
 // Get references to HTML elements
@@ -266,15 +267,14 @@ const countElement = document.getElementById('click-count');
 
 // Function - same logic as console JavaScript
 function updateGreeting() {
-clickCount++;
-greetingElement.textContent = 'Hello, Browser JavaScript!';
-countElement.textContent = \`Button clicks: \${clickCount}\`;
+  clickCount++;
+  greetingElement.textContent = 'Hello, Browser JavaScript!';
+  countElement.textContent = \`Button clicks: \${clickCount}\`;
 }
 
 // Event listener - this is new! Responds to user interaction
-button.addEventListener('click', updateGreeting);`}
-
-</CopyableCode>
+button.addEventListener('click', updateGreeting);
+```
 
 ### What's Happening Here?
 
