@@ -401,31 +401,7 @@ console.log("Number of links:", links.length);
 
 6. **How do you think** this knowledge will change how you approach web development?
 
-**Format**: Write naturally, like you're explaining to a friend. Use bullet points, incomplete sentences, or whatever feels authentic to you.
-
-**Deliverable**: Submit `reflection.md` file.
-
-## Common "Gotchas" When Moving to Browser
-
-### 1. Case-Sensitive IDs and Classes
-
-```html
-<button id="addTask">Add Task</button>
-```
-
-```javascript
-document.getElementById("addtask"); // ❌ Won't work
-document.getElementById("addTask"); // ✅ Correct
-```
-
-### 2. Null References
-
-```javascript
-const element = document.getElementById("nonexistent-id");
-console.log(element); // null - The DOM returns `null`, not `undefined`
-
-element.textContent = "Hello"; // ❌ Error! Can't call methods on null
-```
+Your reflection should also reflect on the video portion of this lesson. How did the video help/hinder your understanding of the lesson contents. Be specific. Your reflection should 'prove' that you watched the video and made some specific observations.
 
 ## Looking Ahead
 
@@ -437,13 +413,3 @@ You now understand how your JavaScript skills translate to the browser environme
 - Different types of HTML elements and how to work with them
 - The relationship between HTML structure and JavaScript objects
 - Browser developer tools for DOM inspection
-
-## Key Takeaways
-
-1. **Your JavaScript knowledge transfers completely** - same variables, functions, loops, and logic
-2. **Browser adds interaction** - users can click, type, and interact with your code
-3. **Developer Tools are essential** - Console tab works just like Node.js console, plus more tools
-4. **HTML + JavaScript work together** - JavaScript manipulates HTML elements to create dynamic experiences
-5. **Setup matters** - Proper project structure and tools make development smoother
-
-The exciting part? Everything you've learned about JavaScript fundamentals becomes dramatically more powerful when users can interact with it. Let's keep building on that foundation!
