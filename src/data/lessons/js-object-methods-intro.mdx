@@ -136,29 +136,9 @@ Answers: 1-b, 2-c, 3-b, 4-b
 
 ## Hands-On Application
 
-### Exercise 1: Inspecting an Object
+### Exercise 1: Converting Objects to Arrays for Filtering
 
-```javascript
-const book = {
-  title: "JavaScript Basics",
-  pages: 180,
-  inStock: true,
-};
-
-const keys = Object.keys(book);
-const values = Object.values(book);
-const summaryLines = Object.entries(book).map(
-  ([key, value]) => `${key}: ${value}`,
-);
-
-console.log(keys); // ["title", "pages", "inStock"]
-console.log(values); // ["JavaScript Basics", 180, true]
-console.log(summaryLines); // ["title: JavaScript Basics", ...]
-```
-
-Your turn: Add a new property `format: "paperback"` using spread and re-run.
-
-### Exercise 2: Converting Objects to Arrays for Filtering
+The examples below are a bit contrived, as we could just have made an array of objects with the names and the scores. However, if we are not in control of the data source, it could be the case that we have a messy schema like this one, where it's the student names as keys with the scores.
 
 ```javascript
 const userScores = {
@@ -170,6 +150,12 @@ const userScores = {
 
 // Convert to entries and filter high scorers (>= 80)
 const highScorers = Object.entries(userScores)
+
+  /**
+    * The underscore is just a placeholder to skip over the name, as we just care about filtering by `score`. 
+    * This is using array desctructuring, where now the first item is the name, which we don't care about for the filter,
+    * and the second item is the score, which we do want to use for the filter!
+    */
   .filter(([_, score]) => score >= 80)
   .map(([name, score]) => `${name} (${score}%)`);
 
