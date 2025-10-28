@@ -81,6 +81,7 @@ The course continues on into React and NextJS.
 ## Wrap-Up & Assessment
 
 - Key takeaways and recap of main points
-- Advanced conceptual quiz (15–20 questions)
 - Hands-on assessment or real-world problem-solving task
+- Detailed reflection document that demonstrates authentic understanding of the topic. Have the learner detail what 😕 them and what they found straightforward.
+- Assessments should be designed such that they are difficult to 'fake' with search engines or AI tools.
 ```

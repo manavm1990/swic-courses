@@ -16,8 +16,6 @@ This course builds core client-side programming skills using JavaScript. Student
 
 The course continues on into React and NextJS.
 
-**Lesson Timing**: Design lessons to take approximately 2 hours total (including any pre-work reading). Consider the pace appropriate for community college students new to programming.
-
 ## Architecture Overview
 
 ### Content Management System
@@ -51,45 +49,7 @@ The platform uses a custom content management approach:
 - Hands-On Application (step-by-step process, examples, activities)
 - Advanced Concepts & Comparisons (deeper dive, pros/cons, applications)
 - Troubleshooting & Best Practices (common challenges, industry practices)
-- Wrap-Up & Assessment (key takeaways, advanced quiz, hands-on assessment)
-
-### Copyable Code Blocks
-
-The platform provides two types of code blocks for different educational purposes:
-
-#### Regular Code Blocks (Read-Only)
-
-Use standard markdown code blocks for examples, demos, and explanatory code that students should read and understand but not copy:
-
-```javascript
-// Example code for understanding concepts
-const example = "This is for learning, not copying";
-```
-
-#### Copyable Code Blocks (Starter Code)
-
-Use the `CopyableCode` component for starter code, templates, or code snippets that students need to paste into their projects:
-
-```jsx
-import { CopyableCode } from "@/components/code-block";
-
-<CopyableCode language="javascript">
-  {`// Students can click to copy this starter code
-const starterFunction = () => {
-  // TODO: Implement this
-};
-
-const anotherFunction = (param) => {
-  return param * 2;
-};`}
-</CopyableCode>;
-```
-
-**When to use each:**
-
-- **CopyableCode**: Function stubs, boilerplate code, configuration files, starter templates
-- **Regular blocks**: Examples, explanations, completed solutions, demo code
-- **Rule of thumb**: If students need to paste it, make it copyable. If they need to understand it, keep it read-only.
+- Wrap-Up & Assessment (key takeaways, advanced quiz, hands-on assessment, reflection). The reflection should demonstrate authentic understanding of the topic, detailing what confused the learner and what they found straightforward. Assessments should be designed such that they are difficult to 'fake' with search engines or AI tools.
 
 ## Content Guidelines
 
