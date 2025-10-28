@@ -78,19 +78,19 @@ console.log(lines);
 Mutating means changing an existing object directly. We prefer creating new copies.
 
 ```javascript
-const original = { name: "Alex", grade: 92 };
+const student = { name: "Alex", grade: 92 };
 
 // Spread copy
-const copy = { ...original };
+const spreadStudent = { ...student };
 
 // Add or override while copying
-const withStatus = { ...original, enrolled: true };
+const studentWithEnrollmentStatus = { ...student, enrolled: true };
 
 // Merge two objects
-const extra = { major: "Biology", grade: 93 }; // grade overrides
-const merged = { ...original, ...extra };
+const addlCourse = { major: "Biology", grade: 93 }; // grade overrides
+const studentWithAddlCourse = { ...student, ...addlCourse };
 
-console.log(merged); // { name: "Alex", grade: 93, major: "Biology" }
+console.log(studentWithAddlCourse); // { name: "Alex", grade: 93, major: "Biology" }
 ```
 
 `Object.assign()` does similar work:
