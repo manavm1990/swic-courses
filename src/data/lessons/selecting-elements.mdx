@@ -1,0 +1,221 @@
+# Selecting DOM Elements
+
+## Introduction
+
+You know the DOM is made of objects. Now you need to find them. Beginners often throw selectors at the problem until one sticks—then the page layout changes and everything breaks.
+
+This lesson teaches you to write selectors that work reliably. You'll understand why some snap under pressure and others don't, and you'll defend your code against the most common failure: querying for something that doesn't exist.
+
+### Learning Objectives
+
+By the end of this lesson, you'll be able to:
+
+- Use CSS selectors to find single and multiple elements
+- Choose the right selector method for the job
+- Handle the "element not found" case without crashing
+- Recognize when selectors are fragile and fix them
+
+---
+
+## Core Concepts
+
+### Three Main Selector Methods
+
+**`document.getElementById()`** — Find one element by ID (fastest, most specific):
+
+```javascript
+const header = document.getElementById("main-header");
+```
+
+**`document.querySelector()`** — Find the first match using CSS selectors:
+
+```javascript
+const firstButton = document.querySelector("button");
+const formInput = document.querySelector("input[type='email']");
+const cardTitle = document.querySelector(".card .title");
+```
+
+**`document.querySelectorAll()`** — Find all matches (returns a NodeList):
+
+```javascript
+const allButtons = document.querySelectorAll("button");
+const allRequired = document.querySelectorAll("input[required]");
+
+// Loop through them
+allButtons.forEach((btn) => {
+  btn.addEventListener("click", handleClick);
+});
+```
+
+### CSS Selectors You'll Use Most
+
+```javascript
+// By tag
+document.querySelector("button");
+
+// By class
+document.querySelector(".btn");
+document.querySelector(".btn.primary"); // both classes
+
+// By ID
+document.querySelector("#header");
+
+// By attribute
+document.querySelector("input[type='email']");
+document.querySelector("[data-user-id='42']");
+
+// Combinations
+document.querySelector(".card .title"); // .title inside .card
+document.querySelector("button.primary"); // <button class="primary">
+```
+
+### The Data Attribute Hook
+
+Instead of relying on class names (which can change for styling), use `data-*` attributes as stable anchors:
+
+```html
+<div class="card rounded bg-white p-4 shadow" data-product-id="42">
+  <h3 class="text-lg font-bold">Coffee Grinder</h3>
+  <button class="btn bg-blue-500">Add to Cart</button>
+</div>
+```
+
+```javascript
+// Fragile (breaks if classes change):
+const addBtn = document.querySelector(".card .btn");
+
+// Stable (explicit intent):
+const addBtn = document.querySelector('[data-product-id="42"] .btn');
+```
+
+### NodeList Is Not an Array
+
+`querySelectorAll()` returns a **NodeList**, which looks like an array but isn't:
+
+```javascript
+const buttons = document.querySelectorAll("button");
+
+// This works (NodeList has forEach):
+buttons.forEach((btn) => console.log(btn));
+
+// This breaks (NodeList has no map):
+buttons.map((btn) => btn.textContent); // ❌ NodeList has no map method
+
+// Solution: convert to array
+const btnArray = Array.from(buttons);
+btnArray.map((btn) => btn.textContent); // ✅ Works
+```
+
+### The Null Check
+
+**Most common beginner crash**:
+
+```javascript
+// Selector returns null if element doesn't exist
+const button = document.querySelector(".missing-button");
+button.addEventListener("click", handleClick); // ❌ Error: button is null
+```
+
+**Always guard**:
+
+```javascript
+const button = document.querySelector(".missing-button");
+if (button) {
+  button.addEventListener("click", handleClick); // ✅ Safe
+} else {
+  console.log("Button not found—check your selector");
+}
+
+// Or use optional chaining (modern browsers):
+button?.addEventListener("click", handleClick); // ✅ Also safe
+```
+
+---
+
+## Hands-On Practice
+
+### Lab 1: Selector Scavenger Hunt
+
+Create an HTML file with:
+
+```html
+<header id="main-header">
+  <h1>My Site</h1>
+  <nav class="navbar">
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="https://external.com">External</a>
+  </nav>
+</header>
+
+<main>
+  <form data-form-type="login">
+    <input type="email" placeholder="Email" required />
+    <input type="password" placeholder="Password" required />
+    <button type="submit" class="btn primary">Log In</button>
+  </form>
+
+  <div class="card" data-product-id="1">
+    <h3 class="card-title">Product A</h3>
+    <p class="price">$19.99</p>
+  </div>
+  <div class="card" data-product-id="2">
+    <h3 class="card-title">Product B</h3>
+    <p class="price">$29.99</p>
+  </div>
+</main>
+```
+
+**Tasks** (write JavaScript to do each):
+
+1. Select the main header by ID and log it.
+2. Select all links inside `.navbar` using `querySelectorAll` and log how many there are.
+3. Select internal links (those starting with `/`) and append `" [internal]"` to their text.
+4. Select all required inputs and add a yellow outline (`style.outline = "2px solid gold"`).
+5. Select all `.card` elements, loop through them, and add a `data-viewed="true"` attribute to each.
+6. Select the product with `data-product-id="2"` and change its price to `"$24.99"`.
+
+**Guard against null on at least one selector** (try targeting something that doesn't exist to practice the guard).
+
+### Lab 2: Refactor for Stability
+
+You have this brittle selector:
+
+```javascript
+const title = document.querySelector("main .card .card-title");
+```
+
+Refactor it to use a data attribute instead. Show both versions in a comment.
+
+## Assessment
+
+### Part 1: Complete Both Labs
+
+Do Lab 1 and Lab 2 as written. Your code should run without errors and correctly manipulate the HTML.
+
+### Part 2: Reflection (Video or `selectors-reflection.md`)
+
+Answer these questions concretely:
+
+1. In Lab 1, which task initially confused you most? Walk through what you tried, what broke, and how you fixed it. Show code.
+2. Show your refactored selector from Lab 2. Explain why the new one is more stable than the original.
+3. When did `Array.from()` become necessary? Why couldn't you use the NodeList directly?
+4. Describe one debugging step you took that helped you figure out a broken selector—what did you check, and what did you learn?
+5. When would you use a data attribute instead of a class name? Give a concrete example from your labs.
+
+**Grading criteria**:
+
+- Labs run without errors and correctly manipulate the HTML
+- At least one selector uses a data attribute defensively
+- Code includes null guards on at least one query
+- Reflection proves you debugged real problems (not generic answers)
+
+---
+
+## Key Takeaways
+
+1. **Use `querySelector` for flexibility**, `getElementById` when you have an ID.
+2. **Data attributes are stable hooks** for JavaScript—use them freely.
+3. **NodeList ≠ Array**—convert with `Array.from()` if you need array methods.
+4. **Always check for null** before calling methods on queried elements.
+5. **Shorter, intentional selectors outlive fragile chains.**
