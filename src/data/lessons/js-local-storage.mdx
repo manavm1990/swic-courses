@@ -1,0 +1,465 @@
+# localStorage: Browser Storage Fundamentals
+
+## Introduction
+
+Every browser has a small storage system built in. It's called localStorage. Think of it as a notebook that lives in your browser and remembers things even after you close the tab or restart your computer.
+
+This lesson teaches you how localStorage works at the API level. Not in React. Not in a framework. Just vanilla JavaScript and the browser.
+
+Understanding localStorage at this level matters because once you see how the raw API works, you'll recognize what a `useLocalStorage` custom hook is actually doing—it's wrapping this same browser API in cleaner React syntax. That is our next lesson.
+
+### Learning Objectives
+
+By the end of this lesson, you will be able to understand what localStorage is and its actual limitations, use the core localStorage methods to save and retrieve data, handle errors when reading or writing to localStorage, recognize when localStorage is appropriate and when it is not, and understand that localStorage is fundamentally different from a database.
+
+---
+
+## What localStorage Actually Is
+
+localStorage is a key-value store built into every modern browser. Your browser gives each website its own isolated storage space. You can save things there, and they persist across page refreshes and even after closing the browser.
+
+Here are the core methods:
+
+```javascript
+// Save something
+localStorage.setItem("username", "alice");
+
+// Get it back
+const name = localStorage.getItem("username");
+console.log(name); // 'alice'
+
+// Remove one item
+localStorage.removeItem("username");
+
+// Remove everything for this site
+localStorage.clear();
+
+// Check if a key exists
+if (localStorage.getItem("username")) {
+  console.log("Username exists");
+}
+```
+
+That is the entire API. Four methods. localStorage stores everything as strings, which matters more than it sounds.
+
+localStorage persists across browser sessions. Close your browser today, come back tomorrow, and the data is still there. It survives page refreshes. Refresh the page mid-session and the data is waiting.
+
+The limit is approximately five to ten megabytes per domain, depending on your browser. That is enough for preferences and form data. It is not enough for gigabytes of anything.
+
+---
+
+## What localStorage Is NOT
+
+This distinction is critical. localStorage looks like a database but absolutely is not one. Misunderstanding this difference causes problems in production applications.
+
+### Not Shared Between Devices
+
+If you save data to localStorage on your laptop, your phone cannot see it. Each device has its own browser sandbox. Each browser—Chrome, Firefox, Safari—has its own storage. localStorage belongs to that specific browser on that specific device.
+
+A real database is shared. All your devices, all users who need access, see the same data from a central source.
+
+### Not Secure
+
+Any JavaScript code running on your page can read localStorage. If your site gets compromised or someone injects malicious code, they can read everything in localStorage.
+
+Never store passwords, API tokens, credit card numbers, or sensitive data in localStorage. Never. It is readable as plain text by any script on the page.
+
+A real database has encryption, authentication, and access controls.
+
+### Not for Multi-User Applications
+
+localStorage is per-user, per-browser. If Alice saves a note in her browser's localStorage and Bob visits the same site, Bob sees his own empty localStorage. They do not share anything.
+
+Real applications need shared data. Multiple users need to see the same data. That requires a backend database and an API.
+
+### Not Persistent Across Sites
+
+localStorage for example.com is completely separate from localStorage for example.org. Websites cannot access each other's storage. This is a security feature, but it also means localStorage is fundamentally local to one website.
+
+---
+
+## The Critical Limitation: Everything Is a String
+
+Here is something that catches beginners off guard. localStorage only stores strings. Everything goes in as a string. Everything comes back out as a string.
+
+```javascript
+// Storing a string works fine
+localStorage.setItem("greeting", "hello");
+localStorage.getItem("greeting"); // 'hello'
+
+// Storing a number
+localStorage.setItem("count", 42);
+localStorage.getItem("count"); // '42' - it is a string now!
+"42" === 42; // false
+
+// Storing an object directly does not work
+const user = { name: "alice", age: 30 };
+localStorage.setItem("user", user);
+localStorage.getItem("user"); // '[object Object]' - useless!
+```
+
+This is why JSON exists. JSON is a format for converting JavaScript objects into strings and back again.
+
+```javascript
+// Convert object to string
+const user = { name: "alice", age: 30 };
+const userString = JSON.stringify(user);
+console.log(userString); // '{"name":"alice","age":30}'
+
+/**
+ * Important distinction:
+ *
+ * - `.json` files are a file format (you have seen them, like data.json)
+ * - `JSON.` is a JavaScript object provided by the browser
+ *
+ * The `JSON` object has methods:
+ * - JSON.stringify() converts JavaScript objects into JSON strings
+ * - JSON.parse() converts JSON strings back into JavaScript objects
+ *
+ * Notice `JSON` is like `localStorage`.
+ * It is another global object provided by the browser's Web API.
+ * These are built-in methods you get for free in any browser.
+ */
+
+// Store the string
+localStorage.setItem("user", userString);
+
+// Get it back
+const stored = localStorage.getItem("user");
+console.log(stored); // '{"name":"alice","age":30}'
+
+// Convert string back to object
+const parsed = JSON.parse(stored);
+console.log(parsed.name); // 'alice'
+console.log(parsed.age); // 30
+```
+
+This convert-to-string, store-it, retrieve-it, convert-back-to-object dance is so common that it becomes automatic. But it also means anything can go wrong in the process.
+
+---
+
+## Handling Errors with try/catch
+
+JSON parsing is one of the few places in vanilla JavaScript where things commonly fail. The data in localStorage might be corrupted. Someone might have manually edited their browser storage. An old version of your code saved a different format. When you call `JSON.parse()` on invalid JSON, it throws an error and your program stops.
+
+`try/catch` lets you handle these failures gracefully.
+
+```javascript
+// Dangerous - crashes if JSON is invalid
+const data = JSON.parse(localStorage.getItem("todos"));
+// If the stored data is corrupted, this line stops execution
+
+// Safe - catches the error
+try {
+  const data = JSON.parse(localStorage.getItem("todos"));
+  console.log("Loaded todos:", data);
+} catch (error) {
+  console.error("Could not load todos:", error.message);
+  // Continue with a fallback
+  const data = [];
+}
+```
+
+Here is what happens. The `try` block runs. If any error occurs, JavaScript stops executing the try block and jumps to the `catch` block. The `catch` block receives the error object. You can log it, handle it, provide a fallback, or try again.
+
+### Practical Pattern for localStorage
+
+Here is the pattern you will use constantly:
+
+```javascript
+function loadTodos() {
+  try {
+    const stored = localStorage.getItem("todos");
+
+    // If nothing stored, return empty array
+    if (!stored) {
+      return [];
+    }
+
+    // Parse the JSON
+    const todos = JSON.parse(stored);
+
+    // Verify it is an array (defensive programming)
+    if (!Array.isArray(todos)) {
+      console.warn("Stored data is not an array");
+      return [];
+    }
+
+    return todos;
+  } catch (error) {
+    console.error("Error loading todos from storage:", error.message);
+    return [];
+  }
+}
+
+function saveTodos(todos) {
+  try {
+    const json = JSON.stringify(todos);
+    localStorage.setItem("todos", json);
+  } catch (error) {
+    console.error("Error saving todos to storage:", error.message);
+    // Maybe the storage is full? Log it and continue.
+  }
+}
+```
+
+Notice that the `catch` blocks do not re-throw errors or stop execution. They log the problem and provide a sensible default (empty array). This is defensive programming. Your application continues even if storage fails.
+
+---
+
+## When to Use localStorage
+
+localStorage is appropriate for specific use cases. Understanding these boundaries matters.
+
+**Appropriate uses include user preferences.** If a user toggles dark mode, save that preference to localStorage. On their next visit, load their preference. This survives device restarts and is specific to that browser.
+
+**Form drafts are appropriate.** If a user fills out a long form and closes the browser, save their input to localStorage. When they return, pre-fill the form with their previous answers. This prevents data loss.
+
+**Cache small API responses.** If you fetch data from an API, save it to localStorage so you do not re-fetch on every page load. This improves performance. The API is the source of truth. localStorage is just a performance cache.
+
+**Settings and state that belong to the current user only.** Font size, language preference, whether they have seen a tutorial, their last search query.
+
+**Inappropriate uses include storing passwords or tokens.** Never. These belong in HTTP-only cookies handled by the backend, or they should not be stored at all.
+
+**Multi-user or shared data is inappropriate.** Do not use localStorage for data that multiple users need to access or modify. That needs a real backend.
+
+**Large datasets are inappropriate.** You will hit the five to ten megabyte limit quickly. Use a real database.
+
+**Data that needs to sync across devices is inappropriate.** localStorage is per-device. If a user needs to see the same data on their phone and laptop, you need a backend.
+
+---
+
+## Exploring localStorage in the Browser
+
+The easiest way to see localStorage in action is through the browser developer tools.
+
+Open any website. Press F12 to open Developer Tools. Navigate to the Application or Storage tab. You will see a localStorage section showing all the data that website has stored.
+
+Try this experiment yourself. Go to a news website. Open Developer Tools. Look at their localStorage. Many sites store user preferences, dark mode settings, or article read status there.
+
+You can even modify localStorage directly in DevTools and watch the site react. This is useful for debugging. But remember that you are only modifying your local copy. Other browsers, other devices, other users do not see your changes.
+
+---
+
+## A Complete Example: Counter with localStorage
+
+Here is a complete vanilla JavaScript example that saves a counter to localStorage and loads it back on page reload.
+
+Create a file called `index.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>localStorage Counter</title>
+  </head>
+  <body class="flex min-h-screen items-center justify-center bg-gray-100">
+    <section class="rounded-lg bg-white p-8 text-center shadow-lg">
+      <h1 class="mb-6 text-3xl font-bold text-gray-900">
+        Counter with localStorage
+      </h1>
+      <output id="count" class="my-8 block text-6xl font-bold text-blue-600"
+        >0</output
+      >
+      <fieldset class="mb-6 flex justify-center gap-2 border-0 p-0">
+        <button
+          id="decrement"
+          class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+        >
+          -1
+        </button>
+        <button
+          id="increment"
+          class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+        >
+          +1
+        </button>
+        <button
+          id="reset"
+          class="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+        >
+          Reset
+        </button>
+      </fieldset>
+      <p class="text-sm text-gray-600">
+        Refresh the page. Your count will persist.
+      </p>
+    </section>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
+```
+
+Use your template repository (the one your instructor provided) for this example. It already has Vite and Tailwind CSS set up. Just drop in the HTML above and then the JavaScript below into `src/main.js`.
+
+```javascript
+// Load counter from localStorage on page load
+function loadCounter() {
+  try {
+    const stored = localStorage.getItem("counter");
+
+    // If nothing stored, start at 0
+    if (stored === null) return 0;
+
+    // Parse the stored value
+    const count = parseInt(stored, 10);
+
+    // Verify it is a valid number
+    if (isNaN(count)) {
+      console.warn("Stored counter is not a valid number, resetting to 0");
+      return 0;
+    }
+
+    return count;
+  } catch (error) {
+    console.error("Error loading counter from storage:", error.message);
+    return 0;
+  }
+}
+
+// Save counter to localStorage
+function saveCounter(count) {
+  try {
+    localStorage.setItem("counter", count.toString());
+  } catch (error) {
+    console.error("Error saving counter to storage:", error.message);
+    // If storage fails, we still have the value in memory
+    // The user just will not see it persist on next load
+  }
+}
+
+// Initialize counter from storage
+let counter = loadCounter();
+const countDisplay = document.getElementById("count");
+countDisplay.textContent = counter;
+
+// Set up event listeners
+document.getElementById("increment").addEventListener("click", () => {
+  counter++;
+  countDisplay.textContent = counter;
+  saveCounter(counter);
+});
+
+document.getElementById("decrement").addEventListener("click", () => {
+  counter--;
+  countDisplay.textContent = counter;
+  saveCounter(counter);
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  counter = 0;
+  countDisplay.textContent = counter;
+  saveCounter(counter);
+});
+```
+
+Here is what happens. When the page loads, `loadCounter()` runs. It attempts to get the counter from localStorage. If nothing is stored, it returns zero. It tries to parse the value as a number. If that fails, it returns zero. The counter is set to this value.
+
+When you click a button, the counter increments or decrements. The display updates. `saveCounter()` is called. It converts the counter to a string and stores it in localStorage.
+
+Refresh the page. The counter is still there. Close the browser and open it tomorrow. The counter is still there.
+
+---
+
+## Common Mistakes
+
+### Mistake 1: Forgetting JSON.stringify
+
+```javascript
+// WRONG
+const user = { name: "alice", age: 30 };
+localStorage.setItem("user", user); // Stores '[object Object]'
+localStorage.getItem("user"); // '[object Object]' - useless
+
+// RIGHT
+localStorage.setItem("user", JSON.stringify(user));
+```
+
+### Mistake 2: Not Handling JSON Parse Errors
+
+```javascript
+// WRONG - crashes if data is corrupted
+const data = JSON.parse(localStorage.getItem("data"));
+
+// RIGHT - catches and handles errors
+try {
+  const data = JSON.parse(localStorage.getItem("data"));
+} catch (error) {
+  console.error("Invalid data in storage");
+  const data = null;
+}
+```
+
+### Mistake 3: Trusting localStorage as a Database
+
+```javascript
+// WRONG - thinking this syncs across devices
+localStorage.setItem("user_posts", JSON.stringify(allUserPosts));
+// Other devices and other users do not see this
+
+// RIGHT - only store user-specific, local data
+localStorage.setItem("user_preferences", JSON.stringify(userPreferences));
+```
+
+### Mistake 4: Not Checking if localStorage Is Available
+
+In rare cases (private browsing in some browsers, certain restrictions), localStorage might not be available. Code defensively.
+
+```javascript
+// Safe check
+if (typeof localStorage !== "undefined") {
+  localStorage.setItem("data", "value");
+} else {
+  console.warn("localStorage is not available");
+}
+```
+
+---
+
+## Checkpoint: Build a Simple Todo App
+
+Your checkpoint is different from the counter example. Build a simple todo application that:
+
+1. Has an input field and an "Add Todo" button
+2. When you click "Add Todo", the input value is added to a list displayed on the page
+3. Each todo persists to localStorage as you add items
+4. When you refresh the page, your todos are still there
+5. Include error handling with try/catch (localStorage might fail)
+
+**Requirements:**
+
+- Use localStorage to persist todos
+- Use JSON.stringify/JSON.parse for storing the array
+- Use the same error handling pattern from this lesson
+- Store your todos under a key name you choose (you'll reuse this in the React version)
+
+**In your REFLECTION document, note:**
+
+- What key name did you use for localStorage? (e.g., 'myTodos', 'tasks', etc.)
+- How did you structure your todos array? (e.g., strings? objects with id/text/done properties?)
+- What was confusing about persisting data?
+
+You can use AI to help, but try to build it yourself first! Understand the code you write. Then reflect on what you learned (as usual). And, create a 'tutorial video' teaching someone else how to build this app step-by-step. This video might be a bit longer, but try to keep it around 8-10 minutes max.
+
+**Bonus (Optional):** If you want to add smooth animations or transitions to your todo app, explore [Tailwind's transition utilities](https://tailwindcss.com/docs/animation) or [Motion for React](https://motion.dev/). Polish is nice, but it's not required—focus on getting localStorage working correctly first.
+
+## Key Takeaways
+
+localStorage is a simple browser API for storing small amounts of data that should survive page refreshes. It stores only strings, so you must use JSON.stringify to save objects and JSON.parse to load them back. Everything stored is readable by any JavaScript on the page, so never store sensitive data. localStorage is per-device, per-browser, and per-website. It is not a database and should not be used as one. Use try/catch when parsing JSON because stored data can be corrupted or in an unexpected format. localStorage is appropriate for user preferences, form drafts, and caching small API responses. It is not appropriate for shared data, sensitive data, or large datasets.
+
+---
+
+## Looking Ahead
+
+You now understand how localStorage works at the browser API level. Next, you will learn how to wrap this API in a custom React hook so that components do not need to know about JSON serialization or error handling. The hook will encapsulate all of this logic, making your components cleaner and your code more maintainable.
+
+---
+
+## Resources
+
+- [MDN - Window.localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+- [MDN - JSON.stringify and JSON.parse](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON)
+- [MDN - try...catch Statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch)

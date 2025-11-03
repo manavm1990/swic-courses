@@ -344,6 +344,13 @@ const lessons = [
           "Review the DOM API and learn component-based thinking patterns in vanilla JavaScript - the foundation for React development.",
         video: null,
       },
+      {
+        id: "js-local-storage",
+        title: "localStorage: Browser Storage Fundamentals",
+        description:
+          "Understand how browsers store data with localStorage. Learn when to use it, how to handle errors, and build persistent applications.",
+        video: null,
+      },
     ],
   },
   {
