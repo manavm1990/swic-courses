@@ -346,7 +346,7 @@ const lessons = [
       },
       {
         id: "js-local-storage",
-        title: "localStorage: Browser Storage Fundamentals",
+        title: "Browser Storage Fundamentals",
         description:
           "Understand how browsers store data with localStorage. Learn when to use it, how to handle errors, and build persistent applications.",
         video: null,
