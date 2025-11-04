@@ -83,5 +83,5 @@ The course continues on into React and NextJS.
 - Key takeaways and recap of main points
 - Hands-on assessment or real-world problem-solving task
 - Detailed reflection document that demonstrates authentic understanding of the topic. Have the learner detail what 😕 them and what they found straightforward.
-- Assessments should be designed such that they are difficult to 'fake' with search engines or AI tools.
+- Assessments need to reference checkpoint questions sprinkled throughout the lesson to ensure engagement and comprehension. We can even ask for screenshots of their work to ensure they did the hands-on parts. In some cases, even a short video walkthrough could be requested at critical steps.
 ```

@@ -49,7 +49,11 @@ The platform uses a custom content management approach:
 - Hands-On Application (step-by-step process, examples, activities)
 - Advanced Concepts & Comparisons (deeper dive, pros/cons, applications)
 - Troubleshooting & Best Practices (common challenges, industry practices)
-- Wrap-Up & Assessment (key takeaways, advanced quiz, hands-on assessment, reflection). The reflection should demonstrate authentic understanding of the topic, detailing what confused the learner and what they found straightforward. Assessments should be designed such that they are difficult to 'fake' with search engines or AI tools.
+- Wrap-Up & Assessment (key takeaways, hands-on assessment, reflection). The reflection should demonstrate authentic understanding of the topic, detailing what confused the learner and what they found straightforward. Assessments should be designed such that they are difficult to 'fake' with search engines or AI tools.
+
+To minimize reliance on AI tools, assessments should focus on practical application and reflection rather than rote memorization or simple Q&A formats.
+
+To encourage learners to actually read through the lesson and not just jump to the assessment, consider sprinkling small, formative questions or interactive elements throughout the lesson content that build up to the final assessment. These questions must be answered in full as part of the reflection. These questions could ask for screenshots of the output on their side to ensure that they have actually completed the steps. Ask about what 😕 them and how the solved it (with or without AI).
 
 ## Content Guidelines
 
@@ -73,14 +77,9 @@ The platform uses a custom content management approach:
 - **Single responsibility**: Each function should do one clear thing
 - **Keep functions short**: Aim for functions under 15 lines (excluding comments)
 - **Use descriptive names**: Function and variable names should be self-explanatory
-
-**Code Clarity & Maintainability**:
-
-- **Meaningful variable names**: Minimum 3 characters (except loop counters: i, j, k)
-- **Avoid nested complexity**: Keep nesting levels shallow for readability
+- **Consistent returns**: Functions should always return a value or never return
 
 **Immutability & Best Practices**:
 
 - **No parameter mutation**: Don't modify function parameters
 - **Prefer immutable operations**: Use array methods like `map`, `filter` instead of loops when possible
-- **Consistent returns**: Functions should always return a value or never return
