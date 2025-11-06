@@ -1,0 +1,689 @@
+# Function Components in Vanilla JavaScript
+
+## Introduction
+
+You've been updating the DOM by writing HTML strings directly in `main.js`:
+
+```js
+document.querySelector("#app").innerHTML = `
+  <h1 class="text-3xl font-bold underline">
+    Hello Vite!
+  </h1>
+`;
+```
+
+This works fine for simple apps, but what happens when you need to display 20 product cards? Or show the same user profile in multiple places? Repeating code gets messy fast.
+
+**Function components** solve this problem by wrapping UI patterns into reusable functions. You already know functions and template literals—this lesson just combines them in a practical way.
+
+## Learning Objectives
+
+By the end of this lesson, you'll be able to:
+
+- Write function components that return HTML strings
+- Understand component naming conventions (PascalCase vs camelCase)
+- Pass data into components using parameters
+- Compose multiple components together
+- Reduce code repetition in your projects
+- Understand how this prepares you for React development
+
+**Note:** In order to receive full credit for this lesson, you must
+
+## Assignment Requirements
+
+Use the GitHub Classroom repository created for this course to complete the following assignment
+
+**Note:** To receive full credit for this lesson, you must:
+
+1. **Complete all "Try it" and "Hands-On Practice" exercises** in the lesson
+2. **Provide screenshots** showing your browser output for each exercise
+3. **Use your own custom data/props** (not the exact examples from the lesson)
+   - Example: Instead of products with "Laptop" and "Mouse", use your own items
+   - Instead of users named "Sarah" and "Mike", use different names/data
+4. Include commits with clear messages showing your progress
+5. Reference the 'Try it' and 'Hands-On Practice' sections in your reflection. How did they help you understand the concepts and to ultimately complete the homework assignment?
+
+**Why custom data?** This proves you understand the concepts, not just copy-paste. Your screenshots will be unique to you.
+
+## What You Already Know
+
+**Functions that return values:**
+
+```js
+function getGreeting(name) {
+  return `Hello, ${name}!`;
+}
+
+const message = getGreeting("Sarah"); // "Hello, Sarah!"
+```
+
+**Template literals for HTML:**
+
+```js
+const html = `
+  <div class="card">
+    <h2>Product Name</h2>
+    <p>$29.99</p>
+  </div>
+`;
+```
+
+**Function components are just these two things combined:**
+
+```js
+function ProductCard() {
+  return `
+    <div class="card">
+      <h2>Product Name</h2>
+      <p>$29.99</p>
+    </div>
+  `;
+}
+```
+
+## Your First Component
+
+Let's start with the simplest possible example—a heading component.
+
+**Your Vite template starts with this in `index.html`:**
+
+```html
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+```
+
+**And this in `src/main.js`:**
+
+```js
+document.querySelector("#app").innerHTML = `
+  <h1 class="text-3xl font-bold underline">
+    Hello Vite!
+  </h1>
+`;
+```
+
+**Let's convert this to a component:**
+
+```js
+function Heading() {
+  return `
+    <h1 class="text-3xl font-bold underline">
+      Hello Vite!
+    </h1>
+  `;
+}
+
+document.querySelector("#app").innerHTML = Heading();
+```
+
+**What changed?**
+
+- Wrapped the HTML in a function called `Heading`
+- Called `Heading()` to get the HTML string
+- Result is identical, but now the heading is reusable
+
+**Try it yourself:** Copy this code into your `main.js` and verify it works the same.
+
+## Naming Convention: PascalCase vs camelCase
+
+**Important convention:** Component functions use **PascalCase** (capital first letter).
+
+```js
+// ✅ Component functions - PascalCase
+function UserCard() {}
+function ProductList() {}
+function NavigationBar() {}
+
+// ✅ Regular functions - camelCase
+function calculateTotal() {}
+function getUserData() {}
+function formatDate() {}
+```
+
+**Why the difference?**
+
+- **PascalCase** signals "this returns UI/markup"
+- **camelCase** signals "this does logic/calculations"
+- This convention comes from React and is widely adopted in the JavaScript community
+
+**Checkpoint Question:** Which naming style would you use for a function that renders a button? What about a function that validates an email address?
+
+## Adding Parameters (The "Props" Concept)
+
+The real power comes when you pass data into components:
+
+```js
+function Greeting(name) {
+  return `<h1 class="text-2xl font-bold">Hello, ${name}!</h1>`;
+}
+
+document.querySelector("#app").innerHTML = `
+  ${Greeting("Sarah")}
+  ${Greeting("Mike")}
+  ${Greeting("Jessica")}
+`;
+```
+
+**Output:**
+
+```html
+<h1 class="text-2xl font-bold">Hello, Sarah!</h1>
+<h1 class="text-2xl font-bold">Hello, Mike!</h1>
+<h1 class="text-2xl font-bold">Hello, Jessica!</h1>
+```
+
+Same component, different data—no repetition!
+
+**Hands-On Practice:** Create a `Badge` component that takes a `status` parameter and returns different colored badges:
+
+```js
+function Badge(status) {
+  // Your code here
+  // "success" should be green
+  // "warning" should be yellow
+  // "error" should be red
+}
+
+// Test it:
+document.querySelector("#app").innerHTML = `
+  ${Badge("success")}
+  ${Badge("warning")}
+  ${Badge("error")}
+`;
+```
+
+## Real-World Example: Product Card
+
+Let's build something practical:
+
+```js
+function ProductCard(name, price, inStock) {
+  const stockClass = inStock ? "text-green-600" : "text-red-600";
+  const stockText = inStock ? "In Stock" : "Out of Stock";
+
+  return `
+    <div class="rounded-lg border border-gray-200 p-4">
+      <h3 class="text-lg font-semibold">${name}</h3>
+      <p class="text-xl font-bold text-gray-900">$${price}</p>
+      <p class="${stockClass}">${stockText}</p>
+      <button class="mt-2 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+        Add to Cart
+      </button>
+    </div>
+  `;
+}
+
+// Use it
+document.querySelector("#app").innerHTML = `
+  <div class="grid grid-cols-3 gap-4 p-8">
+    ${ProductCard("Laptop", 999, true)}
+    ${ProductCard("Mouse", 29, true)}
+    ${ProductCard("Keyboard", 79, false)}
+  </div>
+`;
+```
+
+**Benefits:**
+
+- Write the card layout once
+- Reuse it with different data
+- Easy to maintain (change one function, all cards update)
+- Clean, readable code
+
+**Try it:** Add this to your project and see three product cards render!
+
+## Using Objects for Cleaner Parameters
+
+Multiple parameters get messy. Use objects instead:
+
+```js
+function ProductCard(product) {
+  return `
+    <div class="rounded-lg border p-4">
+      <h3 class="font-semibold">${product.name}</h3>
+      <p class="text-xl">$${product.price}</p>
+      <p class="${product.inStock ? "text-green-600" : "text-red-600"}">
+        ${product.inStock ? "In Stock" : "Out of Stock"}
+      </p>
+    </div>
+  `;
+}
+
+// Much cleaner to call
+const laptop = { name: "Laptop", price: 999, inStock: true };
+const mouse = { name: "Mouse", price: 29, inStock: true };
+
+document.querySelector("#app").innerHTML = `
+  <div class="grid grid-cols-2 gap-4 p-8">
+    ${ProductCard(laptop)}
+    ${ProductCard(mouse)}
+  </div>
+`;
+```
+
+**Why objects are better:**
+
+- Named properties are clearer than positional arguments
+- Easy to add new properties without breaking existing code
+- Matches how data comes from APIs and databases
+
+## Composing Components
+
+Components can call other components:
+
+```js
+function PriceTag(price) {
+  return `<span class="text-xl font-bold text-gray-900">$${price}</span>`;
+}
+
+function StockBadge(inStock) {
+  const color = inStock
+    ? "bg-green-100 text-green-800"
+    : "bg-red-100 text-red-800";
+  const text = inStock ? "In Stock" : "Out of Stock";
+  return `<span class="rounded px-2 py-1 text-sm ${color}">${text}</span>`;
+}
+
+function ProductCard(product) {
+  return `
+    <div class="rounded-lg border p-4">
+      <h3 class="font-semibold">${product.name}</h3>
+      ${PriceTag(product.price)}
+      ${StockBadge(product.inStock)}
+    </div>
+  `;
+}
+```
+
+**Benefits:**
+
+- Break complex UI into smaller pieces
+- Each component has one job
+- Easy to test and debug
+- Reuse small components in different contexts
+
+**Checkpoint Question:** If you needed to use `StockBadge` in a shopping cart component, would you need to rewrite it? Why or why not?
+
+## Mapping Arrays to Components
+
+Combine with `map()` to render lists:
+
+```js
+const products = [
+  { name: "Laptop", price: 999, inStock: true },
+  { name: "Mouse", price: 29, inStock: true },
+  { name: "Keyboard", price: 79, inStock: false },
+];
+
+document.querySelector("#app").innerHTML = `
+  <div class="grid grid-cols-3 gap-4 p-8">
+    ${products.map((product) => ProductCard(product)).join("")}
+  </div>
+`;
+```
+
+**What's happening:**
+
+1. `map()` transforms each product object into HTML using `ProductCard()`
+2. Returns an array of HTML strings: `["<div>...</div>", "<div>...</div>", "<div>...</div>"]`
+3. `join('')` concatenates them into one big string
+4. Result: all products rendered without repetition
+
+**Why `join('')` is necessary:**
+
+Without it, you'd see commas between cards:
+
+```js
+// Without join
+products.map((product) => ProductCard(product));
+// ["<div>Card 1</div>", "<div>Card 2</div>"]
+// Renders as: <div>Card 1</div>,<div>Card 2</div>
+
+// With join('')
+products.map((product) => ProductCard(product)).join("");
+// "<div>Card 1</div><div>Card 2</div>"
+// Renders cleanly with no commas
+```
+
+## Practical Exercise: User Profile Components
+
+Build these components step by step:
+
+```js
+// Step 1: Build individual pieces
+function Avatar(imageUrl) {
+  return `<img src="${imageUrl}" class="h-16 w-16 rounded-full" alt="User avatar" />`;
+}
+
+function UserName(name) {
+  return `<h2 class="text-xl font-bold">${name}</h2>`;
+}
+
+function UserBio(bio) {
+  return `<p class="text-gray-600">${bio}</p>`;
+}
+
+// Step 2: Compose them together
+function UserProfile(user) {
+  return `
+    <div class="flex items-center gap-4 rounded-lg border p-4">
+      ${Avatar(user.avatar)}
+      <div>
+        ${UserName(user.name)}
+        ${UserBio(user.bio)}
+      </div>
+    </div>
+  `;
+}
+
+// Step 3: Render multiple users
+const users = [
+  {
+    name: "Sarah",
+    bio: "Web Developer",
+    avatar: "https://i.pravatar.cc/150?img=1",
+  },
+  { name: "Mike", bio: "Designer", avatar: "https://i.pravatar.cc/150?img=2" },
+  {
+    name: "Jessica",
+    bio: "Product Manager",
+    avatar: "https://i.pravatar.cc/150?img=3",
+  },
+];
+
+document.querySelector("#app").innerHTML = `
+  <div class="space-y-4 p-8">
+    ${users.map((user) => UserProfile(user)).join("")}
+  </div>
+`;
+```
+
+**Try it:** Copy this into your project. You should see three user profile cards!
+
+## When to Use Components
+
+**Good use cases:**
+
+- Repeated UI patterns (cards, buttons, badges)
+- Lists of similar items (products, users, posts)
+- Complex layouts that need organization
+- Any markup you use more than once
+
+**When NOT to use:**
+
+- One-off elements that appear once
+- Very simple markup (single `<p>` tag)
+- When it makes code harder to read
+
+**Rule of thumb:** If you copy-paste HTML, make it a component instead.
+
+## Components vs Manual DOM Manipulation
+
+**Components (what we just learned):**
+
+```js
+function Counter(count) {
+  return `<p>Count: ${count}</p>`;
+}
+// Replace entire innerHTML each time
+document.querySelector("#app").innerHTML = Counter(5);
+```
+
+**Manual DOM (what you learned earlier):**
+
+```js
+const countElement = document.querySelector("#count");
+countElement.textContent = 5; // Update just this element
+```
+
+**Use components for:** Initial page render, static content, lists of items
+
+**Use manual DOM for:** Updating specific elements, handling events, dynamic changes
+
+**Often you'll use both together:**
+
+```js
+// Render initial UI with components
+function Counter(count) {
+  return `
+    <div>
+      <button id="increment" class="rounded bg-blue-500 px-4 py-2 text-white">+</button>
+      <p id="count">${count}</p>
+      <button id="decrement" class="rounded bg-red-500 px-4 py-2 text-white">-</button>
+    </div>
+  `;
+}
+
+let count = 0;
+document.querySelector("#app").innerHTML = Counter(count);
+
+// Add interactivity with manual DOM
+document.querySelector("#increment").addEventListener("click", () => {
+  count++;
+  document.querySelector("#count").textContent = count;
+});
+
+document.querySelector("#decrement").addEventListener("click", () => {
+  count--;
+  document.querySelector("#count").textContent = count;
+});
+```
+
+**Why this hybrid approach?**
+
+- Components make initial rendering clean
+- Manual DOM updates are efficient for small changes
+- Best of both worlds!
+
+## Organizing Components in Separate Files
+
+As your app grows, keep components in separate files:
+
+**src/components/ProductCard.js:**
+
+```js
+export function ProductCard(product) {
+  return `
+    <div class="rounded-lg border p-4">
+      <h3 class="font-semibold">${product.name}</h3>
+      <p class="text-xl">$${product.price}</p>
+    </div>
+  `;
+}
+```
+
+**src/main.js:**
+
+```js
+import { ProductCard } from "./components/ProductCard.js";
+
+const products = [
+  { name: "Laptop", price: 999 },
+  { name: "Mouse", price: 29 },
+];
+
+document.querySelector("#app").innerHTML = `
+  <div class="grid gap-4 p-8">
+    ${products.map(ProductCard).join("")}
+  </div>
+`;
+```
+
+**Benefits:**
+
+- Each component in its own file
+- Easy to find and maintain
+- Can reuse across different pages
+- Professional project structure
+
+## Common Mistakes and How to Fix Them
+
+### Mistake 1: Forgetting to Call the Function
+
+```js
+// ❌ Wrong - passing the function itself
+document.querySelector("#app").innerHTML = ProductCard;
+// Output: [Function: ProductCard]
+
+// ✅ Correct - calling the function
+document.querySelector("#app").innerHTML = ProductCard(product);
+```
+
+### Mistake 2: Missing `join('')` with map
+
+```js
+// ❌ Wrong - commas appear between items
+products.map((product) => ProductCard(product));
+
+// ✅ Correct - clean output
+products.map((product) => ProductCard(product)).join("");
+```
+
+### Mistake 3: Not Using Template Literals
+
+```js
+// ❌ Wrong - regular string
+function Heading() {
+  return "<h1>Hello</h1>";
+}
+
+// ✅ Correct - template literal for readability
+function Heading() {
+  return `
+    <h1 class="text-2xl">
+      Hello
+    </h1>
+  `;
+}
+```
+
+## Homework: Build a Movie Card Component Library
+
+Create a movie browsing interface using function components.
+
+**Requirements:**
+
+1. **Create these components** (in separate files in `src/components/`):
+   - `MovieCard(movie)` - displays title, year, rating, poster
+   - `RatingBadge(rating)` - colored badge (green for ≥8, yellow for ≥6, red for less than 6)
+   - `MovieList(movies)` - renders multiple MovieCards in a grid
+
+2. **Data to use:**
+
+```js
+const movies = [
+  {
+    title: "The Shawshank Redemption",
+    year: 1994,
+    rating: 9.3,
+    poster: "https://via.placeholder.com/200x300",
+  },
+  {
+    title: "The Godfather",
+    year: 1972,
+    rating: 9.2,
+    poster: "https://via.placeholder.com/200x300",
+  },
+  {
+    title: "The Dark Knight",
+    year: 2008,
+    rating: 9.0,
+    poster: "https://via.placeholder.com/200x300",
+  },
+  {
+    title: "Forrest Gump",
+    year: 1994,
+    rating: 8.8,
+    poster: "https://via.placeholder.com/200x300",
+  },
+  {
+    title: "Inception",
+    year: 2010,
+    rating: 8.8,
+    poster: "https://via.placeholder.com/200x300",
+  },
+];
+```
+
+3. **Styling requirements:**
+   - Use Tailwind classes
+   - Grid layout (3 columns on desktop)
+   - Cards should have hover effects
+   - RatingBadge should change color based on rating
+
+4. **Technical requirements:**
+   - All component functions use PascalCase
+   - Use objects for parameters
+   - Components are in separate files and imported
+   - Use `map()` and `join('')` to render the list
+
+**Bonus Challenge:**
+
+Add a `FilteredMovieList(movies, minRating)` component that only shows movies above a certain rating.
+
+**Deliverable:** Push to GitHub, submit repo link with screenshots
+
+## Reflection Questions
+
+Answer these in a `function-components-reflection.md` file:
+
+1. **Before this lesson, how did you handle repeating UI elements?** What problems did you encounter?
+
+2. **Explain in your own words:** Why do component functions use PascalCase instead of camelCase?
+
+3. **Give a real example** from your homework where breaking UI into smaller components made the code easier to work with.
+
+4. **What's the trickiest part** of using `map()` and `join('')` together? Did you forget `join('')` at first?
+
+5. **How does this relate to what you already knew?** Connect function components to concepts you learned earlier (functions, template literals, arrays).
+
+## Looking Ahead: This IS React (Almost)
+
+**Here's a secret:** What you just learned is 90% of how React works.
+
+**Vanilla JS component:**
+
+```js
+function Greeting(name) {
+  return `<h1>Hello, ${name}!</h1>`;
+}
+```
+
+**React component:**
+
+```jsx
+function Greeting({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+```
+
+**The differences:**
+
+- React uses JSX instead of template literals (looks like HTML, not strings)
+- React handles re-rendering automatically
+- React has built-in state management
+
+**The similarities:**
+
+- Both are functions that return UI
+- Both use PascalCase
+- Both accept parameters (props)
+- Both compose together
+- Same mental model!
+
+You're already thinking like a React developer. When we get to React, it'll feel familiar—just with better tools.
+
+## Key Takeaways
+
+1. **Function components** = functions that return HTML strings
+2. **PascalCase** for components, camelCase for regular functions
+3. **Parameters** let you pass data into components (like props in React)
+4. **Composition** = components calling other components
+5. **Combine with `map()`** to render lists from arrays
+6. **Always use `join('')`** after `map()` to avoid commas
+7. **Reduces repetition** and makes code more maintainable
+8. **This pattern is fundamental** to modern JavaScript frameworks
+
+**Congratulations!** You just learned one of the most important patterns in modern web development. This isn't just "vanilla JavaScript"—it's the foundation that React, Vue, and every modern framework is built on.

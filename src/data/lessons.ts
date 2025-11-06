@@ -296,6 +296,13 @@ const lessons = [
         video: null,
       },
       {
+        id: "function-components",
+        title: "Function Components",
+        description:
+          "Learn to build reusable UI components with JavaScript functions that return DOM elements. Understand component structure and composition.",
+        video: null,
+      },
+      {
         id: "js-local-storage",
         title: "Browser Storage Fundamentals",
         description:
