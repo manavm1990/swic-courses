@@ -417,7 +417,7 @@ const lessons = [
       },
       {
         id: "react-local-storage",
-        title: "Persisting State with localStorage in React",
+        title: "localStorage in React",
         description:
           "Learn how to use localStorage to persist React state across sessions. Build a simple app that saves user preferences and data locally.",
         video: null,
