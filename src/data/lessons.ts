@@ -415,6 +415,13 @@ const lessons = [
           "Build a complete tic-tac-toe game following React's official tutorial. Learn state management, component hierarchy, and time travel with immutable updates.",
         video: null,
       },
+      {
+        id: "react-local-storage",
+        title: "Persisting State with localStorage in React",
+        description:
+          "Learn how to use localStorage to persist React state across sessions. Build a simple app that saves user preferences and data locally.",
+        video: null,
+      },
     ],
   },
 ] as const satisfies Module[];

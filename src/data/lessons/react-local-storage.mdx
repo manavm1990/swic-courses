@@ -1,0 +1,409 @@
+# localStorage and Custom Hooks in React
+
+## Introduction
+
+You now understand how localStorage works at the browser API level. You know how to serialize objects to JSON, deserialize them back, and handle errors when things go wrong.
+
+But there's a problem. If you put all that logic directly in your React components, your components become cluttered and repetitive. Every component that needs persistent state has to remember to do the JSON serialization dance, error handling, and storage updates. That violates a core principle of good code: don't repeat yourself.
+
+This lesson teaches you how to extract that storage logic into a **custom hook**. A custom hook is just a JavaScript function that uses React's built-in hooks. When you create a `useLocalStorage` hook, you're wrapping the raw browser API in a clean React interface. Your components stay focused on rendering. The hook handles all the boring storage logic behind the scenes.
+
+This also requires understanding `useEffect`, which is where side effects happen in React. A side effect is when your code does something outside React's world—like talking to localStorage, making API calls, or setting up timers. We'll cover this carefully, because `useEffect` is easy to misuse.
+
+### Learning Objectives
+
+By the end of this lesson, you will understand what custom hooks are and why they matter, recognize that `useEffect` is for side effects and escaping React's control, build a `useLocalStorage` custom hook from scratch, use the `useLocalStorage` hook in components, understand when you actually need `useEffect` and when you don't, and integrate persistent state into a React app without cluttering component logic.
+
+---
+
+## The Problem: Storing State in React Components
+
+Imagine you have a React component that manages a list of todos. You want the todos to persist to localStorage so they survive a page refresh. Here's what the naive approach looks like:
+
+```jsx
+import { useState } from "react";
+
+export function TodoApp() {
+  const [todos, setTodos] = useState(() => {
+    // Load from localStorage on mount
+    try {
+      const stored = localStorage.getItem("todos");
+      return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      console.error("Error loading todos:", error);
+      return [];
+    }
+  });
+
+  const addTodo = (text) => {
+    const newTodos = [...todos, { id: Date.now(), text }];
+    setTodos(newTodos);
+
+    // Have to manually save every time
+    try {
+      localStorage.setItem("todos", JSON.stringify(newTodos));
+    } catch (error) {
+      console.error("Error saving todos:", error);
+    }
+  };
+
+  const removeTodo = (id) => {
+    const newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+
+    // Have to manually save every time
+    try {
+      localStorage.setItem("todos", JSON.stringify(newTodos));
+    } catch (error) {
+      console.error("Error saving todos:", error);
+    }
+  };
+
+  // ... more handlers, all with the same try/catch and save logic
+}
+```
+
+See the repetition? Every time state changes, you have to remember to save to localStorage with error handling. This is error-prone and pollutes the component logic. The component should focus on what it renders. The storage logic is noise.
+
+---
+
+## What Is a Custom Hook?
+
+A custom hook is a JavaScript function that uses React's built-in hooks. It has no special magic. It's just a convention: functions that use hooks start with `use`.
+
+Here's the simplest custom hook:
+
+```jsx
+import { useState } from "react";
+
+export function useCounter(initialValue = 0) {
+  const [count, setCount] = useState(initialValue);
+
+  const increment = () => setCount((c) => c + 1);
+  const decrement = () => setCount((c) => c - 1);
+
+  return [count, increment, decrement];
+}
+```
+
+Now you can use this hook in any component:
+
+```jsx
+function MyComponent() {
+  const [count, increment, decrement] = useCounter(0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>+</button>
+      <button onClick={decrement}>-</button>
+    </div>
+  );
+}
+```
+
+The hook encapsulates state logic. The component doesn't need to know how the counter works. It just calls the hook and uses what it returns. This is the pattern we'll use for localStorage.
+
+---
+
+## Understanding useEffect: Escaping React
+
+Before we build the `useLocalStorage` hook, you need to understand `useEffect`. This is important because misusing `useEffect` is one of the most common bugs in React.
+
+React's job is to render UI based on state and props. That's its domain. But sometimes you need to do things **outside** React's control. Those are called **side effects**.
+
+Examples of side effects include the following: saving to localStorage (talking to the browser), making API requests (talking to the internet), setting up event listeners (talking to the DOM), setting timers, or logging analytics.
+
+`useEffect` is React's way of saying "Hey, after rendering, do this side effect." Here's the structure:
+
+```jsx
+import { useEffect } from "react";
+
+function MyComponent() {
+  useEffect(
+    () => {
+      // This code runs AFTER the component renders
+      console.log("Component rendered");
+
+      // Optional: return a cleanup function
+      return () => {
+        console.log("Component is about to re-render or unmount");
+      };
+    },
+    [
+      /* dependency array */
+    ],
+  );
+
+  return <div>Hello</div>;
+}
+```
+
+The function you pass to `useEffect` runs after the component renders. If you return a function from `useEffect`, that cleanup function runs before the next effect or when the component unmounts.
+
+### The Dependency Array
+
+The second argument to `useEffect` is the **dependency array**. It controls when the effect runs:
+
+```jsx
+// Runs after EVERY render
+useEffect(() => {
+  console.log("Runs every render");
+});
+
+// Runs only ONCE, after the first render
+useEffect(() => {
+  console.log("Runs only once");
+}, []);
+
+// Runs whenever 'count' changes
+useEffect(() => {
+  console.log("Count changed:", count);
+}, [count]);
+
+// Runs whenever 'count' OR 'name' changes
+useEffect(() => {
+  console.log("Count or name changed");
+}, [count, name]);
+```
+
+This is critical. If you forget the dependency array, `useEffect` runs after every render, which causes infinite loops and bugs. If you include the wrong dependencies, the effect doesn't run when it should.
+
+### The React Docs Reality Check
+
+React's official documentation has a section called "You Might Not Need an Effect." Read the title carefully. Most beginners and even seasoned React developers overuse `useEffect`. You should use it only when you actually need to interact with something outside React. For local state, derived state, event handlers, or data fetching (which we'll cover with SWR later), `useEffect` is usually the wrong tool.
+
+We're using it here only because we need to save to localStorage (a browser API) whenever state changes. That's a legitimate side effect.
+
+---
+
+## Building useLocalStorage
+
+Now let's build the `useLocalStorage` custom hook. This wraps all the localStorage logic so components stay clean.
+
+```jsx
+import { useState, useEffect } from "react";
+
+export function useLocalStorage(key, initialValue) {
+  // Initialize state from localStorage, falling back to initialValue
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.error(`Error reading localStorage key "${key}":`, error);
+      return initialValue;
+    }
+  });
+
+  // Save to localStorage whenever storedValue changes
+  // This is the side effect—we're talking to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(key, JSON.stringify(storedValue));
+    } catch (error) {
+      console.error(`Error writing to localStorage key "${key}":`, error);
+    }
+  }, [key, storedValue]);
+
+  return [storedValue, setStoredValue];
+}
+```
+
+Let's trace through what happens. When the component first mounts, `useState` runs with a function as the initial value. Inside that function, we load from localStorage. If nothing is stored, we use the `initialValue`. This is the initial state.
+
+Then `useEffect` runs. It saves the current `storedValue` to localStorage. The dependency array `[key, storedValue]` means this effect runs after every render where `key` or `storedValue` changed.
+
+So the flow is: component mounts → initial state loads from localStorage → effect runs and saves it (just in case) → user clicks a button → state changes → effect runs again and saves the new value.
+
+The hook takes two arguments: the localStorage key and the initial value. It returns a state setter pair, just like `useState`. Components don't need to know about JSON serialization or error handling. The hook hides that complexity.
+
+---
+
+## Using useLocalStorage in Components
+
+Now your component is clean:
+
+```jsx
+import { useLocalStorage } from "./useLocalStorage";
+
+export function TodoApp() {
+  const [todos, setTodos] = useLocalStorage("todos", []);
+
+  const addTodo = (text) => {
+    setTodos([...todos, { id: Date.now(), text }]);
+    // That's it. Saving happens automatically in the hook.
+  };
+
+  return (
+    <div>
+      <h1>Todos</h1>
+      <input
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            addTodo(e.target.value);
+            e.target.value = "";
+          }
+        }}
+        placeholder="Add a todo..."
+      />
+      <ul>
+        {todos.map((todo) => (
+          <li key={todo.id}>{todo.text}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+Compare this to the naive version earlier. The component is much cleaner. It just calls `useLocalStorage` and uses the state pair. It doesn't worry about serialization, error handling, or when to save. The hook handles all of that.
+
+---
+
+## Using useLocalStorage from `@uidotdev/usehooks`
+
+You don't have to write your own `useLocalStorage` hook. The library `@uidotdev/usehooks` provides [a battle-tested version.](https://usehooks.com/uselocalstorage)
+
+First, install it in your project:
+
+```bash
+npm i @uidotdev/usehooks
+```
+
+Then import and use it:
+
+```jsx
+import { useLocalStorage } from "@uidotdev/usehooks";
+
+export function TodoApp() {
+  const [todos, setTodos] = useLocalStorage("todos", []);
+  // Same API, same benefit, better error handling
+
+  // Rest of your component...
+}
+```
+
+The API is identical. You import it, pass the key and initial value, and use the returned state pair. Production apps use `@uidotdev/usehooks` because it handles edge cases better than a simple custom hook. But understanding how to build one yourself teaches you the pattern. You can explore other useful hooks in the [useHooks documentation.](https://usehooks.com/)
+
+---
+
+## Key Insights About Hooks
+
+Custom hooks are a powerful pattern. They encapsulate stateful logic so you can reuse it across components. They keep components focused on rendering, not on infrastructure. They make testing easier because you can test the hook independently from any component.
+
+The `useLocalStorage` hook specifically demonstrates a fundamental React principle: separate concerns. The component's concern is "what should the UI look like?" The hook's concern is "how do I keep this state in sync with localStorage?" By splitting these concerns, both are easier to understand and maintain.
+
+`useEffect` is the tool for side effects. But remember: you might not need it. Most of the time, you need SWR for data fetching, regular event handlers for clicks, and `useState` for local state. `useEffect` is for the special cases where you need to step outside React's world.
+
+---
+
+## Checkpoint: Build a Persistent Todo App
+
+Build a simple todo application using the `useLocalStorage` hook. **Keep the scope minimal.**
+
+**What to build:**
+
+1. Create a component that uses `useLocalStorage` to persist todos
+2. Display an input field and an "Add" button
+3. When the user types and presses Enter (or clicks Add), add the input value as a new todo
+4. Display all todos on the page using `.map()`
+5. Refresh the page and verify todos are still there
+
+**That's it.** No delete button, no checkboxes, no animations. Just add and display. Start with the standard Vite React template your instructor provided.
+
+**Steps to get started:**
+
+1. `npm i @uidotdev/usehooks`
+2. Create a `useLocalStorage` hook file (or import from the library)
+3. Create a component that uses it
+4. Test by adding a few todos, refreshing the page, and checking DevTools
+
+Now, create a video demo of your working app and explain how you pulled it off. Show the code, the app in action, and the localStorage contents in DevTools.
+
+**In your REFLECTION document, answer these questions:**
+
+1. What localStorage key did you use for your todos?
+2. How did you structure each todo object? (e.g., just a string? an object with id and text?)
+3. Open Developer Tools (F12), go to Application → localStorage, and take a screenshot showing your saved todos. Paste that screenshot in your reflection.
+4. Explain what `useEffect` is doing inside the `useLocalStorage` hook. Why is it necessary?
+5. When the user clicks "Add," which function runs first: the component's state setter or the `useEffect`?
+
+Continue with your reflection for the content below. Be sure to communicate what you've learned clearly.
+
+---
+
+## When NOT to Use useEffect
+
+Because `useEffect` is misused so often, here are common cases where you should NOT use it:
+
+Do not use `useEffect` to handle form input changes. Use `onChange` handlers directly. Do not use `useEffect` to derive new state from existing state. Calculate it in the render function instead. Do not use `useEffect` to handle button clicks. Use `onClick` handlers. Do not use `useEffect` for fetching data inside a component (we'll learn SWR for this). Do not use `useEffect` to synchronize two separate state variables. Combine them into a single state object.
+
+If you find yourself thinking "I need `useEffect` to update state when props change," stop. Usually you should lift state up or use derived state instead.
+
+---
+
+## Common Mistakes with Custom Hooks
+
+### Mistake 1: Forgetting the use Prefix
+
+Custom hooks must start with `use`. This tells React and other developers that this is a hook and follows hook rules. If you write `function loadStorage()` instead of `function useLocalStorage()`, other developers won't realize it uses hooks, and they'll accidentally break the rules by calling it conditionally.
+
+### Mistake 2: Calling Hooks Conditionally
+
+Hooks must be called in the same order on every render. Never call a hook inside an if statement or loop.
+
+```jsx
+// WRONG - breaks React's rules
+function MyComponent(shouldUseStorage) {
+  if (shouldUseStorage) {
+    const [value, setValue] = useLocalStorage("key", []);
+  }
+}
+
+// RIGHT - always call hooks
+function MyComponent(shouldUseStorage) {
+  const [value, setValue] = useLocalStorage("key", []);
+
+  if (shouldUseStorage) {
+    // Use the hook's value here
+  }
+}
+```
+
+### Mistake 3: Infinite Effect Loops
+
+If your dependency array includes a dependency that changes every render, `useEffect` runs every render and causes infinite loops.
+
+```jsx
+// WRONG - causes infinite loop
+useEffect(() => {
+  localStorage.setItem("todos", JSON.stringify(todos));
+}, [todos.length, todos]); // Object/array equality changes every render
+
+// RIGHT - list only what actually changes
+useEffect(() => {
+  localStorage.setItem("todos", JSON.stringify(todos));
+}, [todos]);
+```
+
+---
+
+## Key Takeaways
+
+Custom hooks extract stateful logic so components stay focused on rendering. A `useLocalStorage` hook wraps the raw browser API in clean React syntax. `useEffect` is for side effects like localStorage, API calls, or timers. The dependency array controls when effects run. You often don't need `useEffect`—read "You Might Not Need an Effect." Hooks must follow rules: always call them at the top level, never conditionally. The pattern of separating concerns—components render, hooks manage state logic—makes your code more maintainable and testable.
+
+---
+
+## Looking Ahead
+
+You now understand how to create persistent React apps using custom hooks. Next, we'll learn about data fetching and why `useEffect` is usually the wrong tool for that job. Instead, we'll use SWR, which handles the complex cases like race conditions, retries, and caching automatically.
+
+---
+
+## Resources
+
+- [React Documentation: useEffect](https://react.dev/reference/react/useEffect)
+- [React Documentation: You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)
+- [useHooks Documentation](https://usehooks.com/)
+- [Custom Hooks Documentation](https://react.dev/learn/reusing-logic-with-custom-hooks)
