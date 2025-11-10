@@ -89,7 +89,7 @@ export function useCounter(initialValue = 0) {
   const increment = () => setCount((c) => c + 1);
   const decrement = () => setCount((c) => c - 1);
 
-  return [count, increment, decrement];
+  return { count, increment, decrement };
 }
 ```
 
@@ -97,7 +97,7 @@ Now you can use this hook in any component:
 
 ```jsx
 function MyComponent() {
-  const [count, increment, decrement] = useCounter(0);
+  const { count, increment, decrement } = useCounter(0);
 
   return (
     <div>
