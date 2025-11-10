@@ -16,6 +16,15 @@ This works fine for simple apps, but what happens when you need to display 20 pr
 
 **Function components** solve this problem by wrapping UI patterns into reusable functions. You already know functions and template literals—this lesson just combines them in a practical way.
 
+## Before You Begin
+
+**Use your template repository** for all practice exercises and the homework assignment. If you haven't set this up yet:
+
+1. Accept the GitHub Classroom assignment link from your instructor
+2. Clone the repository to your local machine
+3. Run `npm install` to install dependencies
+4. Start the dev server with `npm run dev`
+
 ## Learning Objectives
 
 By the end of this lesson, you'll be able to:
@@ -26,8 +35,6 @@ By the end of this lesson, you'll be able to:
 - Compose multiple components together
 - Reduce code repetition in your projects
 - Understand how this prepares you for React development
-
-**Note:** In order to receive full credit for this lesson, you must
 
 ## Assignment Requirements
 
@@ -50,11 +57,11 @@ Use the GitHub Classroom repository created for this course to complete the foll
 **Functions that return values:**
 
 ```js
-function getGreeting(name) {
+function createGreeting(name) {
   return `Hello, ${name}!`;
 }
 
-const message = getGreeting("Sarah"); // "Hello, Sarah!"
+const message = createGreeting("Sarah"); // "Hello, Sarah!"
 ```
 
 **Template literals for HTML:**
@@ -82,6 +89,8 @@ function ProductCard() {
 ```
 
 ## Your First Component
+
+**Practice Workflow:** For each exercise, you'll create separate practice files (`practice-01.js`, `practice-02.js`, etc.) to keep your work organized. You'll need to update the `<script>` tag in `index.html` to load each practice file as you work through them. The final homework assessment will use `main.js`.
 
 Let's start with the simplest possible example—a heading component.
 
@@ -124,7 +133,15 @@ document.querySelector("#app").innerHTML = Heading();
 - Called `Heading()` to get the HTML string
 - Result is identical, but now the heading is reusable
 
-**Try it yourself:** Copy this code into your `main.js` and verify it works the same.
+### Try It 1: Your First Component
+
+In your template repository, create a new file `src/practice-01.js` and add the `Heading()` component code above. Update your `index.html` to load this file instead of `main.js`:
+
+```html
+<script type="module" src="/src/practice-01.js"></script>
+```
+
+Verify it works the same as the original. Take a screenshot of your browser showing the result.
 
 ## Naming Convention: PascalCase vs camelCase
 
@@ -156,7 +173,7 @@ The real power comes when you pass data into components:
 
 ```js
 function Greeting(name) {
-  return `<h1 class="text-2xl font-bold">Hello, ${name}!</h1>`;
+  return `<p class="text-2xl font-bold">Hello, ${name}!</p>`;
 }
 
 document.querySelector("#app").innerHTML = `
@@ -169,21 +186,28 @@ document.querySelector("#app").innerHTML = `
 **Output:**
 
 ```html
-<h1 class="text-2xl font-bold">Hello, Sarah!</h1>
-<h1 class="text-2xl font-bold">Hello, Mike!</h1>
-<h1 class="text-2xl font-bold">Hello, Jessica!</h1>
+<p class="text-2xl font-bold">Hello, Sarah!</p>
+<p class="text-2xl font-bold">Hello, Mike!</p>
+<p class="text-2xl font-bold">Hello, Jessica!</p>
 ```
 
 Same component, different data—no repetition!
 
-**Hands-On Practice:** Create a `Badge` component that takes a `status` parameter and returns different colored badges:
+### Try It 2: Multiple Greetings
+
+Create `src/practice-02.js` with the `Greeting()` component code. Update `index.html` to load this file. Test it with your own custom names (not Sarah, Mike, or Jessica). Take a screenshot.
+
+### Hands-On Practice 1: Badge Component
+
+Create `src/practice-03.js` with a `Badge` component that takes a `status` parameter and returns different colored badges:
 
 ```js
 function Badge(status) {
   // Your code here
-  // "success" should be green
-  // "warning" should be yellow
-  // "error" should be red
+  // "success" should be green background (bg-green-500)
+  // "warning" should be yellow background (bg-yellow-500)
+  // "error" should be red background (bg-red-500)
+  // All badges should have white text and padding
 }
 
 // Test it:
@@ -193,6 +217,8 @@ document.querySelector("#app").innerHTML = `
   ${Badge("error")}
 `;
 ```
+
+**Hint**: Use an if/else statement or ternary operators to choose the right color class based on the status parameter. Update `index.html` to load `practice-03.js`. Take a screenshot of your three badges.
 
 ## Real-World Example: Product Card
 
@@ -232,7 +258,9 @@ document.querySelector("#app").innerHTML = `
 - Easy to maintain (change one function, all cards update)
 - Clean, readable code
 
-**Try it:** Add this to your project and see three product cards render!
+### Try It 3: Product Cards
+
+Create `src/practice-04.js` with the `ProductCard()` component. Change the product data to your own items (not Laptop, Mouse, Keyboard). Update `index.html`. Take a screenshot of your three custom product cards.
 
 ## Using Objects for Cleaner Parameters
 
@@ -304,7 +332,11 @@ function ProductCard(product) {
 - Easy to test and debug
 - Reuse small components in different contexts
 
-**Checkpoint Question:** If you needed to use `StockBadge` in a shopping cart component, would you need to rewrite it? Why or why not?
+**Checkpoint Question**: If you needed to use `StockBadge` in a shopping cart component, would you need to rewrite it? Why or why not? Answer in your reflection.
+
+### Try It 4: Composing Components
+
+Create `src/practice-05.js` with the composed `ProductCard`, `PriceTag`, and `StockBadge` components shown above. Test it with your own product data. Update `index.html`. Take a screenshot.
 
 ## Mapping Arrays to Components
 
@@ -400,7 +432,9 @@ document.querySelector("#app").innerHTML = `
 `;
 ```
 
-**Try it:** Copy this into your project. You should see three user profile cards!
+### Hands-On Practice 2: User Profile Components
+
+Create `src/practice-06.js` with the user profile components (`Avatar`, `UserName`, `UserBio`, `UserProfile`). Change the user data to your own people (different names, bios, and avatars). Update `index.html`. Take a screenshot of your three custom user profiles.
 
 ## When to Use Components
 
@@ -442,10 +476,15 @@ countElement.textContent = 5; // Update just this element
 
 **Use manual DOM for:** Updating specific elements, handling events, dynamic changes
 
-**Often you'll use both together:**
+**You'll often combine both approaches:**
+
+1. Use a component function to render the initial HTML
+2. Then use manual DOM to update specific parts when things change
+
+Here's a simple example:
 
 ```js
-// Render initial UI with components
+// Component renders the initial counter UI
 function Counter(count) {
   return `
     <div>
@@ -456,10 +495,11 @@ function Counter(count) {
   `;
 }
 
+// Render once with component
 let count = 0;
 document.querySelector("#app").innerHTML = Counter(count);
 
-// Add interactivity with manual DOM
+// Update just the count text when buttons clicked (manual DOM)
 document.querySelector("#increment").addEventListener("click", () => {
   count++;
   document.querySelector("#count").textContent = count;
@@ -471,15 +511,29 @@ document.querySelector("#decrement").addEventListener("click", () => {
 });
 ```
 
-**Why this hybrid approach?**
+**Why this works well:**
 
-- Components make initial rendering clean
-- Manual DOM updates are efficient for small changes
-- Best of both worlds!
+- Component creates clean initial HTML structure
+- Manual DOM updates are fast for small changes
+- No need to re-render everything on each click
 
 ## Organizing Components in Separate Files
 
-As your app grows, keep components in separate files:
+As your app grows, keep components in separate files. Here's how to set it up step-by-step:
+
+### Step 1: Create the Components Folder
+
+In your project, create a new folder called `components` inside the `src` folder:
+
+```
+src/
+├── components/    ← Create this folder
+├── main.js
+```
+
+### Step 2: Create a Component File
+
+Inside `src/components/`, create a new file called `ProductCard.js`:
 
 **src/components/ProductCard.js:**
 
@@ -493,6 +547,12 @@ export function ProductCard(product) {
   `;
 }
 ```
+
+**Notice the `export` keyword** - this makes the function available to other files.
+
+### Step 3: Import and Use It
+
+In `src/main.js`, import the component:
 
 **src/main.js:**
 
@@ -511,12 +571,18 @@ document.querySelector("#app").innerHTML = `
 `;
 ```
 
-**Benefits:**
+**Notice the `import` statement** - this brings in the function from the other file.
+
+### Benefits
 
 - Each component in its own file
 - Easy to find and maintain
 - Can reuse across different pages
 - Professional project structure
+
+### Try It 5: Separate Files
+
+Create a `src/components/Badge.js` file with your Badge component from Hands-On Practice 1. Export it, then create `src/practice-07.js` that imports and uses it. Update `index.html` to load `practice-07.js`. Take a screenshot showing it works.
 
 ## Common Mistakes and How to Fix Them
 
@@ -561,16 +627,41 @@ function Heading() {
 
 ## Homework: Build a Movie Card Component Library
 
-Create a movie browsing interface using function components.
+**This is your graded assessment.** Create a movie browsing interface using function components in your template repository.
 
-**Requirements:**
+### File Structure
 
-1. **Create these components** (in separate files in `src/components/`):
-   - `MovieCard(movie)` - displays title, year, rating, poster
-   - `RatingBadge(rating)` - colored badge (green for ≥8, yellow for ≥6, red for less than 6)
-   - `MovieList(movies)` - renders multiple MovieCards in a grid
+For this assessment, use `main.js` (not practice files). Set up your project like this:
 
-2. **Data to use:**
+```
+src/
+├── components/
+│   ├── MovieCard.js
+│   ├── RatingBadge.js
+│   └── MovieList.js
+└── main.js
+```
+
+### Requirements
+
+1. **Create these components** (each in its own file):
+
+   **RatingBadge.js** - Takes a rating number, returns colored badge:
+   - Green (bg-green-500) for ≥8
+   - Yellow (bg-yellow-500) for ≥6
+   - Red (bg-red-500) for less than 6
+
+   **MovieCard.js** - Takes a movie object, displays:
+   - Movie poster image
+   - Title
+   - Year
+   - Rating badge (use your RatingBadge component)
+
+   **MovieList.js** - Takes an array of movies:
+   - Uses `map()` and `join('')` to render MovieCards
+   - Displays in a grid layout
+
+2. **Data to use in main.js:**
 
 ```js
 const movies = [
@@ -609,21 +700,27 @@ const movies = [
 
 3. **Styling requirements:**
    - Use Tailwind classes
-   - Grid layout (3 columns on desktop)
-   - Cards should have hover effects
-   - RatingBadge should change color based on rating
+   - Cards should have hover effects (hover:shadow-lg or similar)
+   - Grid layout with 3 columns
 
 4. **Technical requirements:**
    - All component functions use PascalCase
-   - Use objects for parameters
-   - Components are in separate files and imported
+   - Each component in its own file with `export`
+   - Import all components in `main.js`
    - Use `map()` and `join('')` to render the list
+   - Remember to use your own movie data (not the example movies)
 
-**Bonus Challenge:**
+5. **In main.js:**
+   - Import all three components
+   - Define your movie array (use your own movies, not the examples)
+   - Render the MovieList component
 
-Add a `FilteredMovieList(movies, minRating)` component that only shows movies above a certain rating.
+6. **Make sure index.html loads main.js:**
+   ```html
+   <script type="module" src="/src/main.js"></script>
+   ```
 
-**Deliverable:** Push to GitHub, submit repo link with screenshots
+**Deliverable:** Push to GitHub with commits showing your progress. Submit repo link with screenshots of your movie cards.
 
 ## Reflection Questions
 
