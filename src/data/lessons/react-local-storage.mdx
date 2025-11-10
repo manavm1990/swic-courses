@@ -26,10 +26,15 @@ import { useState } from "react";
 export function TodoApp() {
   const [todos, setTodos] = useState(() => {
     // Load from localStorage on mount
+    // `try/catch` for defensive coding. What if the data is corrupted? 🥅
     try {
       const stored = localStorage.getItem("todos");
+
+      // Did we find something?
+      // If so, parse it. If not, start with an empty array.
       return stored ? JSON.parse(stored) : [];
     } catch (error) {
+      // If parsing fails, log the error and start fresh
       console.error("Error loading todos:", error);
       return [];
     }
@@ -70,6 +75,8 @@ See the repetition? Every time state changes, you have to remember to save to lo
 ## What Is a Custom Hook?
 
 A custom hook is a JavaScript function that uses React's built-in hooks. It has no special magic. It's just a convention: functions that use hooks start with `use`.
+
+Custom hooks let you extract and reuse stateful logic across components. They keep components clean and focused on rendering.
 
 Here's the simplest custom hook:
 
@@ -139,6 +146,30 @@ function MyComponent() {
 }
 ```
 
+### The Cleanup Function
+
+The function you pass to `useEffect` runs after the component renders. If you return a function from `useEffect`, that cleanup function runs before the next effect runs or when the component unmounts.
+
+**Why cleanup?** If your effect sets up something that needs to be torn down (like an event listener, timer, or subscription), cleanup prevents memory leaks and duplicate handlers.
+
+Example: setting up an event listener.
+
+```jsx
+useEffect(() => {
+  // Set up: add event listener
+  window.addEventListener("resize", handleResize);
+
+  // Cleanup: remove it when component unmounts. Avoids memory leaks.
+  return () => {
+    window.removeEventListener("resize", handleResize);
+  };
+}, []);
+```
+
+Without cleanup, every time the effect runs, you add another listener without removing the old one. Memory leak.
+
+**For localStorage:** You don't need cleanup. You're just saving data, not setting up listeners or subscriptions. That's why the `useLocalStorage` hook doesn't use a cleanup function.
+
 The function you pass to `useEffect` runs after the component renders. If you return a function from `useEffect`, that cleanup function runs before the next effect or when the component unmounts.
 
 ### The Dependency Array
@@ -171,7 +202,9 @@ This is critical. If you forget the dependency array, `useEffect` runs after eve
 
 ### The React Docs Reality Check
 
-React's official documentation has a section called "You Might Not Need an Effect." Read the title carefully. Most beginners and even seasoned React developers overuse `useEffect`. You should use it only when you actually need to interact with something outside React. For local state, derived state, event handlers, or data fetching (which we'll cover with SWR later), `useEffect` is usually the wrong tool.
+React's official documentation has a section called "You Might Not Need an Effect." Read the title carefully. Don't worry about the full post, but consider bookmarking it for the future.
+
+Most beginners and even seasoned React developers overuse `useEffect`. You should use it only when you actually need to interact with something outside React. For local state, derived state, event handlers, or data fetching (which we'll cover with SWR later), `useEffect` is usually the wrong tool.
 
 We're using it here only because we need to save to localStorage (a browser API) whenever state changes. That's a legitimate side effect.
 
