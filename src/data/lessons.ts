@@ -420,7 +420,11 @@ const lessons = [
         title: "localStorage in React",
         description:
           "Learn how to use localStorage to persist React state across sessions. Build a simple app that saves user preferences and data locally.",
-        video: null,
+        video: {
+          duration: 1181,
+          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/react-local.png",
+          url: "https://videos.learnjs.tech/swic/videos/react-local-storage.mp4",
+        },
       },
     ],
   },
