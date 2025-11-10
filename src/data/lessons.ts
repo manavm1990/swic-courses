@@ -300,7 +300,12 @@ const lessons = [
         title: "Function Components",
         description:
           "Learn to build reusable UI components with JavaScript functions that return DOM elements. Understand component structure and composition.",
-        video: null,
+        video: {
+          duration: 703,
+          thumbnail:
+            "https://d8n3.c1.e2-8.dev/swic/videos/function-components.png",
+          url: "https://d8n3.c1.e2-8.dev/swic/videos/function-components.mp4",
+        },
       },
       {
         id: "js-local-storage",
