@@ -69,6 +69,42 @@ document.querySelector(".card .title"); // .title inside .card
 document.querySelector("button.primary"); // <button class="primary">
 ```
 
+### Attribute Selector Operators
+
+You can match attributes by pattern using special operators:
+
+```javascript
+// Starts with (^=)
+document.querySelector('a[href^="/"]'); // Internal links
+document.querySelector('img[src^="https"]'); // HTTPS images
+
+// Ends with ($=)
+document.querySelector('a[href$=".pdf"]'); // PDF links
+document.querySelector('img[alt$="logo"]'); // Alt text ending with "logo"
+
+// Contains (*=)
+document.querySelector('a[href*="example"]'); // Links containing "example"
+document.querySelector('[data-test*="user"]'); // Data attributes containing "user"
+```
+
+**Alternative approach using `.getAttribute()`**:
+
+If selector operators feel complex, filter with string methods instead:
+
+```javascript
+// Find all links, check href pattern
+const internalLinks = document.querySelectorAll("a");
+internalLinks.forEach((link) => {
+  if (link.getAttribute("href").startsWith("/")) {
+    link.textContent += " [internal]";
+  }
+});
+
+// This produces the same result as: document.querySelectorAll('a[href^="/"]')
+```
+
+Both work—pick whichever reads more clearly to you. The first is more concise; the second is more explicit about intent.
+
 ### The Data Attribute Hook
 
 Instead of relying on class names (which can change for styling), use `data-*` attributes as stable anchors:
@@ -96,15 +132,32 @@ const addBtn = document.querySelector('[data-product-id="42"] .btn');
 const buttons = document.querySelectorAll("button");
 
 // This works (NodeList has forEach):
-buttons.forEach((btn) => console.log(btn));
+buttons.forEach((btn) => console.log(btn)); // ✅ Works directly
 
 // This breaks (NodeList has no map):
-buttons.map((btn) => btn.textContent); // ❌ NodeList has no map method
-
-// Solution: convert to array
-const btnArray = Array.from(buttons);
-btnArray.map((btn) => btn.textContent); // ✅ Works
+buttons.map((btn) => btn.textContent); // ❌ Error: NodeList has no map method
 ```
+
+**When do you need `Array.from()`?**
+
+Only when you want to use array methods like `.map()`, `.filter()`, or `.reduce()`:
+
+```javascript
+// ❌ This breaks - NodeList has no map method
+const texts = document.querySelectorAll("button").map((btn) => btn.textContent);
+
+// ✅ Convert to array first
+const texts = Array.from(document.querySelectorAll("button")).map(
+  (btn) => btn.textContent,
+);
+
+// ✅ Or just use forEach - no conversion needed
+document
+  .querySelectorAll("button")
+  .forEach((btn) => console.log(btn.textContent));
+```
+
+**Rule of thumb**: If you're just looping and modifying elements, use NodeList directly with `forEach()`. If you need to transform data into a new collection, convert to array with `Array.from()`.
 
 ### The Null Check
 
@@ -170,7 +223,8 @@ Create an HTML file with:
 
 1. Select the main header by ID and log it.
 2. Select all links inside `.navbar` using `querySelectorAll` and log how many there are.
-3. Select internal links (those starting with `/`) and append `" [internal]"` to their text.
+3. **⭐ Select internal links (those starting with `/`) and append `" [internal]"` to their text.**
+   - _Hint: Use attribute selector operators (`^=`) or `.getAttribute()` with `.startsWith()` from the "Attribute Selector Operators" section above._
 4. Select all required inputs and add a yellow outline (`style.outline = "2px solid gold"`).
 5. Select all `.card` elements, loop through them, and add a `data-viewed="true"` attribute to each.
 6. Select the product with `data-product-id="2"` and change its price to `"$24.99"`.
@@ -186,6 +240,21 @@ const title = document.querySelector("main .card .card-title");
 ```
 
 Refactor it to use a data attribute instead. Show both versions in a comment.
+
+**Hint**: You'll need to add a `data-*` attribute to the HTML first. For example:
+
+```html
+<!-- Add this to your HTML -->
+<h3 class="card-title" data-title-id="1">Product A</h3>
+```
+
+Then your selector becomes:
+
+```javascript
+const title = document.querySelector('[data-title-id="1"]');
+```
+
+Show your refactored HTML and JavaScript in comments.
 
 ## Assessment
 
