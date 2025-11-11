@@ -304,7 +304,7 @@ const lessons = [
           duration: 703,
           thumbnail:
             "https://d8n3.c1.e2-8.dev/swic/videos/function-components.png",
-          url: "https://d8n3.c1.e2-8.dev/swic/videos/function-components.mp4",
+          url: "https://videos.learnjs.tech/swic/videos/function-components.mp4",
         },
       },
       {
