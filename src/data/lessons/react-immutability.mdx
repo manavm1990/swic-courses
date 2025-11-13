@@ -1,0 +1,543 @@
+# Immutability & Array Manipulation in React
+
+## Introduction
+
+In the previous lesson, you built a todo app that could add todos and persist them to localStorage using a custom hook. Your app could survive a page refresh, which was a big win.
+
+But it was missing critical functionality. You couldn't mark todos as complete, you couldn't delete them, and you couldn't filter the view to see only active or completed items.
+
+Here's the problem: when you try to implement these features, you might be tempted to do this:
+
+```javascript
+let myTodos = [{ id: 1, text: "Buy milk", completed: false }];
+myTodos[0].completed = true; // Just change it, right?
+```
+
+It feels natural—you're just updating the list. But React hates this approach. When you mutate state directly, React doesn't know that something changed. It looks at your `todos` array and thinks "same array reference, nothing to re-render," and your UI stays stale while your data is secretly different.
+
+This lesson teaches you the React patterns for updating and filtering arrays immutably—the way React expects.
+
+**Learning objectives:**
+
+- Understand why immutability matters in React
+- Use the spread operator to create new objects and arrays
+- Modify single items in an array without breaking React reactivity
+- Filter arrays to derive new state
+- Extend your existing todo app with toggle, delete, and filter features
+
+---
+
+Work through the explanations and exercises below using the Vite React template provided for this lesson. Make commits as you go. Then, for the assessment part, feel free to copy over any code from your previous Todo app that you built in the localStorage lesson. You can copy/paste that and add a commit such as "Paste in existing todo app" before implementing the new features for the toggle, delete, and filter functionalities as described in the assessment section.
+
+---
+
+## Core Concept Overview
+
+### The Immutability Principle
+
+Think of React state like a photograph. When you update a photo, you don't edit the original—you take a new photo. React compares the old photo to the new photo and says "these are different, I need to re-render."
+
+If you mutate state directly, you're editing the original photo in place. React compares it to itself and sees... the same thing. No change detected. No re-render.
+
+**The rule:** Always create a _new_ version of your state, never modify the original.
+
+### The Spread Operator: Creating New Objects
+
+Let's say you have a todo object:
+
+```javascript
+const todo = { id: 1, text: "Buy milk", completed: false };
+```
+
+You want to toggle `completed`. The wrong way:
+
+```javascript
+// ❌ DON'T DO THIS - mutates the original
+todo.completed = true;
+```
+
+The right way—use the spread operator `...`:
+
+```javascript
+// ✅ CREATE A NEW OBJECT with the change
+const updatedTodo = { ...todo, completed: !todo.completed };
+// Result: { id: 1, text: "Buy milk", completed: true }
+```
+
+What's happening: `{ ...todo }` copies all the properties from `todo` into a brand new object. Then `completed: !todo.completed` overwrites just that property. Everything else stays the same, but it's a new object. React sees the difference and re-renders.
+
+**Checkpoint question:** If you have `const person = { name: "Alex", age: 25 }`, write code that creates a new person object with the same name but age 26.
+
+---
+
+### Mapping: Modifying Arrays
+
+Now imagine you have an array of todos and you need to update just one of them:
+
+```javascript
+const todos = [
+  { id: 1, text: "Buy milk", completed: false },
+  { id: 2, text: "Study React", completed: false },
+  { id: 3, text: "Exercise", completed: false },
+];
+```
+
+User clicks on todo #2. You need to toggle its `completed` property. But you can't just do:
+
+```javascript
+// ❌ DON'T DO THIS - mutates the original array
+todos[1].completed = true;
+```
+
+Instead, use `map()` to create a new array. `map()` loops through each item and lets you decide what to return:
+
+```javascript
+// ✅ CREATE A NEW ARRAY with one item changed
+const updatedTodos = todos.map((todo) => {
+  if (todo.id === 2) {
+    // This is the todo we're updating - return a new version
+    return { ...todo, completed: !todo.completed };
+  }
+  // All other todos stay exactly the same
+  return todo;
+});
+```
+
+Or more concisely:
+
+```javascript
+const updatedTodos = todos.map((todo) =>
+  todo.id === 2 ? { ...todo, completed: !todo.completed } : todo,
+);
+```
+
+Translation: "For each todo, if it's the one I'm looking for, return a new version with `completed` toggled. Otherwise, return it unchanged. Give me the new array."
+
+React sees this new array and re-renders. The old array is untouched.
+
+**Checkpoint question:** Write code using `map()` that takes the todos array above and returns a new array where todo #1 has its text changed to "Buy milk (2% fat)".
+
+---
+
+### Filtering: Deriving State
+
+Filter creates a _new_ array with only the items that pass a test:
+
+```javascript
+// Show only completed todos
+const completedTodos = todos.filter((todo) => todo.completed === true);
+
+// Show only active (not completed) todos
+const activeTodos = todos.filter((todo) => todo.completed === false);
+```
+
+`filter()` returns a new array. It doesn't touch the original. This is perfect for view filtering—you want to display different subsets without changing your actual data.
+
+**Checkpoint question:** Write code that filters the todos array to show only items with text containing the word "React".
+
+---
+
+## Hands-On Application
+
+Open your React template repo and paste these exercises into `app.jsx` one at a time. Test each one before moving to the next.
+
+### Exercise 1: Toggle a Todo
+
+Copy this entire code block into your `App` component in `app.jsx`:
+
+```javascript
+import { useState } from "react";
+
+export default function App() {
+  const [todos, setTodos] = useState([
+    { id: 1, text: "Buy milk", completed: false },
+    { id: 2, text: "Study React", completed: false },
+  ]);
+
+  const toggleTodo = (todoId) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === todoId ? { ...todo, completed: !todo.completed } : todo,
+      ),
+    );
+  };
+
+  return (
+    <div>
+      <button onClick={() => toggleTodo(1)}>Toggle Todo 1</button>
+      <pre>{JSON.stringify(todos, null, 2)}</pre>
+    </div>
+  );
+}
+```
+
+**Note:** We're teaching about hook encapsulation, and ESLint will complain about state not being wrapped in custom hooks. We can ignore that for now, but you'll need to address that for your assessment version.
+
+**What to test:** Click the button and watch the `todos` array in the JSON display. Todo 1's `completed` should flip from `false` to `true`, then back to `false` each click.
+
+---
+
+### Exercise 2: Delete a Todo
+
+Replace your Exercise 1 code with this:
+
+```javascript
+import { useState } from "react";
+
+export default function App() {
+  const [todos, setTodos] = useState([
+    { id: 1, text: "Buy milk", completed: false },
+    { id: 2, text: "Study React", completed: false },
+    { id: 3, text: "Exercise", completed: false },
+  ]);
+
+  const deleteTodo = (todoId) => {
+    const updatedTodos = todos.filter((todo) => todo.id !== todoId);
+    setTodos(updatedTodos);
+  };
+
+  return (
+    <div>
+      <button onClick={() => deleteTodo(1)}>Delete Todo 1</button>
+      <button onClick={() => deleteTodo(2)}>Delete Todo 2</button>
+      <button onClick={() => deleteTodo(3)}>Delete Todo 3</button>
+      <pre>{JSON.stringify(todos, null, 2)}</pre>
+    </div>
+  );
+}
+```
+
+**What to test:** Click a delete button. That todo should vanish from the array. Once it's gone, clicking its button does nothing (because there's nothing to delete). The other todos stay in place.
+
+---
+
+### Exercise 3: Filter Display
+
+Replace your code with this:
+
+```javascript
+import { useState } from "react";
+
+export default function App() {
+  const [todos, setTodos] = useState([
+    { id: 1, text: "Buy milk", completed: false },
+    { id: 2, text: "Study React", completed: true },
+    { id: 3, text: "Exercise", completed: false },
+  ]);
+
+  const [filter, setFilter] = useState("all");
+
+  const displayedTodos = todos.filter((todo) => {
+    if (filter === "active") return !todo.completed;
+    if (filter === "completed") return todo.completed;
+    return true; // "all"
+  });
+
+  return (
+    <div>
+      <div>
+        <button onClick={() => setFilter("all")}>All</button>
+        <button onClick={() => setFilter("active")}>Active</button>
+        <button onClick={() => setFilter("completed")}>Completed</button>
+      </div>
+
+      <ul>
+        {displayedTodos.map((todo) => (
+          <li key={todo.id}>
+            {todo.text} - {todo.completed ? "Done" : "Not done"}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+**What to test:** Click each filter button. Notice how the list changes but the original `todos` array doesn't. "All" shows 3 items, "Active" shows 2 (items 1 and 3), "Completed" shows 1 (item 2). The filtering doesn't delete anything—it just changes what's displayed.
+
+---
+
+## Advanced Concepts & Comparisons
+
+### Why Not Just Mutate?
+
+You'll see YouTube tutorials where people do this:
+
+```javascript
+// ❌ Mutating state directly
+todos[0].completed = true;
+setTodos(todos);
+```
+
+React _might_ re-render anyway (depending on the situation), but you're relying on luck, not design. Sometimes it won't re-render when you expect it to. This creates bugs that are brutal to debug because the data is correct but the UI doesn't update.
+
+The immutability pattern is predictable: new state object → guaranteed re-render.
+
+### Map vs. For Loop
+
+Older code sometimes uses `for` loops:
+
+```javascript
+// ❌ Imperative approach (older style)
+const updatedTodos = [];
+for (let i = 0; i < todos.length; i++) {
+  if (todos[i].id === targetId)
+    updatedTodos.push({ ...todos[i], completed: !todos[i].completed });
+  else updatedTodos.push(todos[i]);
+}
+```
+
+vs. the declarative approach:
+
+```javascript
+// ✅ Declarative approach (modern React style)
+const updatedTodos = todos.map((todo) =>
+  todo.id === targetId ? { ...todo, completed: !todo.completed } : todo,
+);
+```
+
+The `map()` version is clearer: "transform each item in this specific way." It's what you're trying to communicate, and it's what you're actually doing. No noise about loop indices or push operations.
+
+---
+
+## Reference Implementation: Complete Todo App
+
+Here's how all these patterns work together in a complete todo app. **This is a reference implementation—don't just copy-paste it.** Study how `toggleTodo`, `deleteTodo`, and the filter logic integrate with the basic add functionality you built in the previous lesson.
+
+```javascript
+import { useState } from "react";
+import { useLocalStorage } from "./hooks/useLocalStorage"; // Import your custom hook
+
+export default function TodoApp() {
+  // Persist to localStorage using the custom hook from the previous lesson
+  const [todos, setTodos] = useLocalStorage("todos", []);
+
+  const [input, setInput] = useState("");
+  const [filter, setFilter] = useState("all"); // "all", "active", "completed"
+
+  const addTodo = (e) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const newTodo = {
+      id: Date.now(),
+      text: input,
+      completed: false,
+    };
+
+    setTodos([...todos, newTodo]); // Add to array
+    setInput(""); // Reset input
+  };
+
+  const toggleTodo = (todoId) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === todoId ? { ...todo, completed: !todo.completed } : todo,
+      ),
+    );
+  };
+
+  const deleteTodo = (todoId) => {
+    setTodos(todos.filter((todo) => todo.id !== todoId));
+  };
+
+  // Derive filtered list based on current filter
+  const displayedTodos = todos.filter((todo) => {
+    if (filter === "active") return !todo.completed;
+    if (filter === "completed") return todo.completed;
+
+    return true; // "all"
+  });
+
+  return (
+    <div>
+      <form onSubmit={addTodo}>
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Add a todo..."
+        />
+        <button type="submit">Add</button>
+      </form>
+
+      <div>
+        <button onClick={() => setFilter("all")}>All</button>
+        <button onClick={() => setFilter("active")}>Active</button>
+        <button onClick={() => setFilter("completed")}>Completed</button>
+      </div>
+
+      <ul>
+        {displayedTodos.map((todo) => (
+          <li key={todo.id}>
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              onChange={() => toggleTodo(todo.id)}
+            />
+            <span className={todo.completed ? "line-through opacity-50" : ""}>
+              {todo.text}
+            </span>
+            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+Study this reference implementation and compare it to your existing app. Notice:
+
+- `toggleTodo` uses `map()` to update one item—applying the pattern from Exercise 1
+- `deleteTodo` uses `filter()` to remove one item—applying the pattern from Exercise 2
+- `displayedTodos` derives a filtered view without changing the source array—applying the pattern from Exercise 3
+- All state changes create new arrays/objects (immutability principle)
+- localStorage stays in sync with every change (your custom hook handles this automatically)
+
+This shows how the three patterns you practiced in the exercises combine with your existing add functionality to create a complete app. Now you'll implement these features in your own app.
+
+---
+
+## Troubleshooting & Best Practices
+
+### "My update isn't showing on screen"
+
+Check: Did you call `setTodos()` with a _new_ array, or did you mutate the old one?
+
+```javascript
+// ❌ Mutated the old array - React won't re-render
+const updated = todos;
+updated[0].completed = true;
+setTodos(updated);
+
+// ✅ Created a new array - React will re-render
+const updated = todos.map((todo) =>
+  todo.id === 1 ? { ...todo, completed: true } : todo,
+);
+setTodos(updated);
+```
+
+### "I'm confused about when to use map() vs. filter()"
+
+- Use `map()` when you want to **transform** each item (including keeping it the same)
+- Use `filter()` when you want to **select** which items to keep
+
+### "The spread operator is confusing me"
+
+Think of it as "copy everything, then override what I specify":
+
+```javascript
+const original = { a: 1, b: 2, c: 3 };
+const updated = { ...original, b: 99 };
+// Result: { a: 1, b: 99, c: 3 }
+```
+
+It's a shallow copy. If you have nested objects, you need to think harder (but your todos don't have nesting, so you're fine).
+
+### Performance Note
+
+Calling `map()` or `filter()` on every render creates new arrays. For 100 todos, this is instant. For 10,000 todos, you might optimize later. But premature optimization is a trap—build it correctly first, optimize only if it's slow.
+
+---
+
+## Wrap-Up & Assessment
+
+You've learned the core patterns React requires: immutability, map for updates, filter for derivation.
+
+These aren't optional stylistic choices. They're how React knows when to update your UI.
+
+**Key takeaways:**
+
+- Never mutate state directly; create new objects/arrays
+- Spread operator (`...`) copies properties into a new object
+- `map()` transforms arrays while maintaining order and identity
+- `filter()` creates a new array with selected items
+- All three patterns together let you build reactive, predictable UIs
+
+---
+
+## Your Assignment: Extend Your Todo App
+
+Take the todo app you built in the localStorage lesson and add three new features. Work through them one at a time, testing each before moving to the next.
+
+### Feature 1: Toggle Completion
+
+Add the ability to mark todos as complete or incomplete.
+
+**Requirements:**
+
+- Add a checkbox (or clickable area) to each todo item
+- Clicking it should toggle the todo's `completed` property between `true` and `false`
+- Completed todos should have strikethrough styling (use Tailwind's `line-through` and `opacity-50` classes)
+- Use the `map()` pattern from Exercise 1—create a new array with one item changed
+
+**Hint:** Your `toggleTodo` function should look similar to the one in Exercise 1, but it needs to work with your actual todos array.
+
+### Feature 2: Delete Todos
+
+Add the ability to remove a todo from the list.
+
+**Requirements:**
+
+- Add a delete button to each todo item (could be an "×" or a "Delete" button)
+- Clicking it should remove that todo from the array completely
+- Use the `filter()` pattern from Exercise 2—create a new array without that item
+
+**Hint:** `filter()` keeps everything that passes the test, so you want to keep everything where `todo.id !== todoId`.
+
+### Feature 3: Filter View
+
+Add the ability to show different subsets of todos without deleting anything.
+
+**Requirements:**
+
+- Add three filter buttons above your todo list: "All", "Active", "Completed"
+- Clicking a button should show only those todos (but not delete the others from state)
+- "All" shows everything
+- "Active" shows only todos where `completed === false`
+- "Completed" shows only todos where `completed === true`
+- Use the derived state pattern from Exercise 3—filter the array for display without changing the original
+
+**Hint:** You'll need a `filter` state variable (like `"all"`, `"active"`, or `"completed"`) and a `displayedTodos` calculation.
+
+---
+
+### Additional Requirements
+
+- **Persistence:** All changes must automatically save to localStorage (your `useLocalStorage` hook handles this)
+- **Styling:** Make it look good with Tailwind CSS
+- **Clean code:** Use immutable patterns (`map`, `filter`, spread operator), not direct mutation
+- **No errors:** Check the browser console—no errors should appear
+
+**Important:** Don't just copy the reference implementation. Build these features yourself by applying what you learned in the exercises. The reference code is there to check your understanding after you've tried it yourself.
+
+---
+
+### Reflection Questions
+
+Answer these in a document:
+
+1. **Debugging:** Did you run into any bugs where the UI wasn't updating when you clicked something? What was causing it? How did you fix it?
+
+2. **Map pattern:** When you first looked at the `map()` pattern for toggling todos, what confused you? What made it click?
+
+3. **Immutability principle:** Explain in your own words: why can't you just do `todos[0].completed = true` and call `setTodos(todos)` to update the UI?
+
+4. **Implementation difficulty:** Which feature was hardest to implement—toggle, delete, or filter? Why?
+
+5. **Code comparison:** Compare your `toggleTodo` function to the one in the reference implementation. What's similar? What's different?
+
+---
+
+### Submission Checklist
+
+Before submitting, verify:
+
+- [ ] All three features (toggle, delete, filter) work correctly
+- [ ] Screenshot showing "All" filter view with some completed and some active todos
+- [ ] Screenshot showing "Active" filter view (only incomplete todos visible)
+- [ ] Screenshot showing "Completed" filter view (only completed todos visible)
+- [ ] Screenshot of browser DevTools → Application → localStorage showing your persisted todos
+- [ ] No console errors when using the app
+- [ ] Git commits with clear messages (e.g., "Add toggle completion feature", "Implement delete functionality", "Add view filters")
+- [ ] Reflection document with thoughtful answers to all five questions above

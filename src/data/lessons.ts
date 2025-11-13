@@ -415,14 +415,14 @@ const lessons = [
       },
       {
         id: "react-ttt",
-        title: "Building Tic-Tac-Toe in React",
+        title: "Building Tic-Tac-Toe",
         description:
           "Build a complete tic-tac-toe game following React's official tutorial. Learn state management, component hierarchy, and time travel with immutable updates.",
         video: null,
       },
       {
         id: "react-local-storage",
-        title: "localStorage in React",
+        title: "localStorage",
         description:
           "Learn how to use localStorage to persist React state across sessions. Build a simple app that saves user preferences and data locally.",
         video: {
@@ -430,6 +430,13 @@ const lessons = [
           thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/react-local.png",
           url: "https://videos.learnjs.tech/swic/videos/react-local-storage.mp4",
         },
+      },
+      {
+        id: "react-immutability",
+        title: "Immutability",
+        description:
+          "Learn immutability by flushing out a React to-do app. Understand why immutable updates are crucial for React's rendering performance.",
+        video: null,
       },
     ],
   },
