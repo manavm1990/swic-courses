@@ -438,6 +438,13 @@ const lessons = [
           "Learn immutability by flushing out a React to-do app. Understand why immutable updates are crucial for React's rendering performance.",
         video: null,
       },
+      {
+        id: "react-uncontrolled-forms",
+        title: "React Forms: The Modern Uncontrolled Way",
+        description:
+          "Build a contact form using modern uncontrolled React inputs with the form action prop and FormData.",
+        video: null,
+      },
     ],
   },
 ] as const satisfies Module[];

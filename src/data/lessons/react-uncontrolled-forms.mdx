@@ -1,0 +1,586 @@
+# React Forms: The Modern Uncontrolled Way
+
+## Introduction
+
+**Icebreaker:** Think about the last plain HTML form you wrote (or saw). Did you need JavaScript at all to make it work? Forms have always "just worked" in the browser. React doesn't change that — but it _does_ change how you _think_ about where the data lives.
+
+**Real-world scenario:** You're building a simple contact form for a local business website. All you need is: collect name, email, and a message, then display a confirmation. No live validation, no character counters, no fancy UI tricks. Just: "user fills out form → hits submit → see their data."
+
+You _could_ reach for `useState` and wire up every input with `value` and `onChange`. That's the controlled forms input and could be overkill depending on the needs of the form. The browser already knows how to manage form data. Let it do its job?
+
+**Learning objectives:**
+
+- Understand how uncontrolled inputs work in React (let the browser manage the data)
+- Use the modern `action` prop pattern instead of `onSubmit` + `event.preventDefault()`
+- Read form values on submit using the `FormData` API
+- Build a reusable `Input` component using a 3-step process
+- Build a complete contact form that displays submitted data
+- Recognize when this simple pattern is enough vs. when you'd need more control
+
+---
+
+**Note:** There are checkpoint questions throughout this lesson. Be sure to answer them in your written reflection at the end. Work through all exercises and commit your code as you go.
+
+---
+
+## Core Concept Overview
+
+### What Are Uncontrolled Inputs?
+
+In React, an **uncontrolled input** is one where:
+
+- The **browser (DOM)** is the source of truth for the input's current value
+- React renders the `<input>`, then mostly stays out of the way
+- You read the value when you need it — usually on submit
+- Little or no `useState` is required
+
+Think of it like this: the browser is already really good at managing text boxes, checkboxes, and select menus. Uncontrolled inputs let the browser do what it does best, and you just _read_ the values when you care about them.
+
+### The Modern Pattern: `action` Prop
+
+Traditionally, React developers used `onSubmit` with `event.preventDefault()` to handle form submissions:
+
+```jsx
+// Old pattern (still works, but verbose)
+function OldForm() {
+  function handleSubmit(event) {
+    event.preventDefault(); // Stop page reload
+    const formData = new FormData(event.currentTarget);
+    const name = formData.get("name");
+    console.log(name);
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="name" type="text" />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+**Modern React** (as shown in [the official React docs](https://react.dev/reference/react-dom/components/form#handle-form-submission-on-the-client)) uses the `action` prop instead:
+
+```jsx
+// Modern pattern (cleaner)
+function ModernForm() {
+  function handleSubmit(formData) {
+    const name = formData.get("name");
+    console.log(name);
+  }
+
+  return (
+    <form action={handleSubmit}>
+      <input name="name" type="text" />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+**What changed?**
+
+- No more `event.preventDefault()` — React handles that for you
+- No more `event.currentTarget` — the `FormData` object arrives directly as a parameter
+- Cleaner, more declarative code
+
+> **Key idea:** The `action` prop is the modern way to handle client-side form submissions in React. Use it instead of `onSubmit` + `event.preventDefault()`.
+
+Ironically, `action` was what was used prevalently in forms before JavaScript frameworks took over. Now, React brings it back in a cleaner way! What's old is new again.
+
+---
+
+### Reading Form Data
+
+The `FormData` API gives you a clean way to read all the values from a form:
+
+```jsx
+function handleSubmit(formData) {
+  const name = formData.get("name"); // Get one field
+  const email = formData.get("email"); // Get another
+
+  // Or get all fields at once as an object
+  const data = Object.fromEntries(formData);
+  console.log(data); // { name: "...", email: "..." }
+}
+```
+
+**What's `Object.fromEntries()`?** It converts the `FormData` into a regular JavaScript object. This makes it easy to store in state or send to an API.
+
+**Important:** Each input needs a `name` attribute. That's how `FormData` knows which value belongs to which field.
+
+```jsx
+<input name="email" type="email" /> {/* ✅ Has name */}
+<input type="text" />                {/* ❌ No name, won't show up in FormData */}
+```
+
+---
+
+### When Uncontrolled is Enough
+
+Use uncontrolled inputs when:
+
+- You only need the values on submit (no live validation)
+- You don't need to format or transform the input while the user types
+- You're not coordinating multiple fields that depend on each other
+- You want simple, minimal code
+
+**This is perfect for:**
+
+- Contact forms
+- Login forms
+- Search boxes
+- Any "fill it out, then submit" workflow
+
+**You'll need controlled inputs (next lesson) when:**
+
+- You need live validation or error messages as the user types
+- You want to disable the submit button based on field values
+- You need to format input (like auto-formatting phone numbers)
+- Multiple components need to read/write the same field
+
+---
+
+## Hands-On Application
+
+### Setup
+
+Use the React + Vite template repository provided in Brightspace. It includes:
+
+- ESLint and Prettier pre-configured
+- Tailwind CSS ready to use
+
+**Your task:** Build a contact form app using uncontrolled inputs. All code will go in `src/app.jsx`.
+
+---
+
+### Part 1: Basic Form Structure
+
+Open `src/app.jsx` and create your main `App` component:
+
+```jsx
+import { useState } from "react";
+
+export default function App() {
+  const [submittedData, setSubmittedData] = useState(null);
+
+  function handleSubmit(formData) {
+    const data = Object.fromEntries(formData);
+    setSubmittedData(data);
+  }
+
+  return (
+    <main className="mx-auto max-w-md p-6">
+      <h1 className="mb-6 text-2xl font-bold">Contact Us</h1>
+
+      <form action={handleSubmit} className="space-y-4">
+        {/* TODO: Add form fields here */}
+
+        <button
+          type="submit"
+          className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        >
+          Submit
+        </button>
+      </form>
+
+      {submittedData && (
+        <section className="mt-6 rounded-lg bg-green-50 p-4">
+          <h2 className="mb-2 font-semibold text-green-900">Form Submitted!</h2>
+          <ul className="space-y-1 text-sm">
+            <li>
+              <strong>Name:</strong> {submittedData.name}
+            </li>
+            <li>
+              <strong>Email:</strong> {submittedData.email}
+            </li>
+            <li>
+              <strong>Message:</strong> {submittedData.message}
+            </li>
+          </ul>
+        </section>
+      )}
+    </main>
+  );
+}
+```
+
+**Note:** We're using one piece of state (`submittedData`) to store the form values _after_ submission. The actual form fields remain uncontrolled — the browser manages them until submit.
+
+**Test this structure:**
+
+1. Run `npm run dev`
+2. You should see "Contact Us" heading and a Submit button
+3. Clicking Submit won't do much yet (no fields to submit)
+
+**Checkpoint question:** In this code, where is `formData` coming from in the `handleSubmit` function parameter?
+
+---
+
+### Part 2: Building a Reusable Input Component
+
+Right now, you need to add three form fields: name, email, and message. You _could_ copy-paste the HTML three times. But that's not reusable!
+
+Instead, let's build a reusable `Input` component using a **3-step process**:
+
+#### Step 1: Start with Static HTML
+
+Below your `App` component (in the same `src/app.jsx` file), create an `Input` component with completely hardcoded HTML:
+
+```jsx
+function Input() {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-sm font-medium">Name</span>
+      <input
+        name="name"
+        type="text"
+        required
+        className="w-full rounded border px-3 py-2"
+      />
+    </label>
+  );
+}
+```
+
+**Now test it:** In your `App` component's form, add:
+
+```jsx
+<Input />
+<Input />
+<Input />
+```
+
+You should see three identical "Name" inputs. That's good! The component works, it's just not dynamic yet.
+
+**Checkpoint question:** Take a screenshot showing your three identical Name inputs.
+
+---
+
+#### Step 2: Identify What Needs to Be Dynamic
+
+Look at your hardcoded `Input` component. What would need to change for each field?
+
+- The label text ("Name", "Email", "Message")
+- The `name` attribute (for FormData)
+- The `type` attribute ("text", "email", "textarea" for message)
+- Maybe: the `required` attribute (some fields might be optional)
+
+For a textarea (the message field), you'll need a `<textarea>` element instead of `<input>`.
+
+**List the props you'll need:**
+
+- `label` — the text to display
+- `name` — the form field name
+- `type` — input type (or "textarea" for textarea)
+- `required` — boolean, default to true
+
+**Stuck?** Ask Copilot: "How do I make this Input component accept props for label, name, and type?" or "How do I conditionally render a textarea vs input in React?"
+
+---
+
+#### Step 3: Add Props and Make It Dynamic
+
+Update your `Input` component to accept props:
+
+```jsx
+// Remember default parameters???
+function Input({ label, name, type = "text", required = true }) {
+  const isTextarea = type === "textarea";
+
+  return (
+    <label className="block">
+      <span className="mb-1 block text-sm font-medium">{label}</span>
+      {isTextarea ? (
+        <textarea
+          name={name}
+          required={required}
+          rows="4"
+          className="w-full rounded border px-3 py-2"
+        />
+      ) : (
+        <input
+          name={name}
+          type={type}
+          required={required}
+          className="w-full rounded border px-3 py-2"
+        />
+      )}
+    </label>
+  );
+}
+```
+
+**Now update your form in `App` to use the dynamic component:**
+
+```jsx
+<form action={handleSubmit} className="space-y-4">
+  <Input label="Name" name="name" type="text" />
+  <Input label="Email" name="email" type="email" />
+  <Input label="Message" name="message" type="textarea" />
+
+  <button
+    type="submit"
+    className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+  >
+    Submit
+  </button>
+</form>
+```
+
+**Test it:**
+
+1. You should now see three properly labeled fields: Name, Email, and Message
+2. Fill them out with test data
+3. Click Submit
+4. The submitted data should appear below the form
+
+**Checkpoint question:** What would happen if you forgot to pass the `name` prop to one of your `Input` components? Would the form still work?
+
+---
+
+### Part 3: Enhancements
+
+#### Enhancement A: Clear Button
+
+Add a button that clears both the form fields and the submitted data:
+
+```jsx
+// In your App component, after the submit button:
+<button
+  type="button"
+  onClick={(event) => {
+    event.target.form.reset();
+    setSubmittedData(null);
+  }}
+  className="ml-2 rounded bg-gray-400 px-4 py-2 text-white hover:bg-gray-500"
+>
+  Clear
+</button>
+```
+
+**Note:** `type="button"` prevents it from submitting the form.
+
+**Note:** `type="reset"` would only clear the form fields, not the submitted data in state.
+
+---
+
+#### Enhancement B: Data-Driven Form Fields
+
+Right now, your form has three `<Input />` components written out manually. That works, but it's not very DRY (Don't Repeat Yourself).
+
+**The challenge:** Refactor your form to be **data-driven**. Instead of repeating JSX, create an array of field configuration objects and map over them.
+
+**Requirements:**
+
+1. Create a `formFields` array (or constant) that describes your three fields
+2. Each object in the array should have the properties your `Input` component needs
+3. Use `.map()` to generate the `<Input />` components
+4. Don't forget the `key` prop when mapping!
+
+**Success criteria:**
+
+- Your form works exactly the same as before
+- You have NO repeated `<Input />` JSX in your `App` component
+- Adding a new field would only require adding one object to your array
+
+**Hints:**
+
+- Think about what data each field needs: label, name, type, required?
+- The spread operator (`{...field}`) can pass all props at once
+- The `key` should be something unique to each field
+
+**Stuck?** Try asking Copilot: "How do I map over an array to generate React components?" or "What's the spread operator for passing props?"
+
+**Checkpoint question:** After implementing this, answer in your reflection: What would you need to do to add a "Phone" field to your form now? Compare this to the manual approach you started with.
+
+## Advanced Concepts & Comparisons
+
+### Why Not Just Use Plain HTML Forms?
+
+You might wonder: "If we're not using React state for the inputs, why use React at all?"
+
+Good question! React gives you:
+
+- **Component reusability**: Your `Input` component can be used anywhere
+- **Conditional rendering**: Easy to show/hide the success message
+- **State management**: Easy to track submission history or status
+- **Integration**: Easy to send data to an API or parent component later
+
+The inputs themselves are uncontrolled (browser-managed), but the _surrounding logic_ benefits from React.
+
+---
+
+### The `action` Prop: Client vs Server
+
+The `action` prop can accept:
+
+1. **A function** (what we're doing): handles the form on the client side
+2. **A URL string**: submits the form to a server (like traditional HTML forms)
+
+```jsx
+<form action="/api/contact"> {/* Submits to server */}
+```
+
+In this lesson, we're using client-side handling. Later in the course, you'll see server-side form handling with Next.js Server Actions.
+
+---
+
+### What About `useRef`?
+
+You might see older React tutorials using `useRef` to read form values:
+
+```jsx
+const nameRef = useRef();
+// Later: nameRef.current.value
+```
+
+This works, but `FormData` is cleaner:
+
+- ✅ `FormData`: One parameter gives you all fields
+- ❌ `useRef`: Need a separate ref for every field
+
+**Rule of thumb:** Use `FormData` with the modern `action` pattern for uncontrolled forms.
+
+---
+
+## Troubleshooting & Best Practices
+
+### Common Issues
+
+**Problem:** "The page reloads when I submit"
+
+**Solution:** Make sure you're using `action={handleSubmit}` (not `onSubmit`). If you're using `onSubmit`, you need `event.preventDefault()`.
+
+---
+
+**Problem:** "`formData.get('name')` returns `null`"
+
+**Solution:** Check that your input has a `name` attribute: `<input name="name" />`
+
+---
+
+**Problem:** "The submitted data doesn't show up"
+
+**Solution:**
+
+- Check that you're calling `setSubmittedData(data)` in your submit handler
+- Verify your conditional rendering: `{submittedData && ...}`
+- Use React DevTools to inspect the state
+
+---
+
+**Problem:** "Tailwind classes aren't working"
+
+**Solution:**
+
+- Make sure the dev server is running (`npm run dev`)
+- Check that your classes are spelled correctly (no typos)
+- Verify Tailwind is configured in the template repo
+
+---
+
+**Problem:** "My `Input` component doesn't show up"
+
+**Solution:**
+
+- Make sure it's defined in the same file (`src/app.jsx`)
+- Check that you're passing all required props (`label`, `name`)
+- Look for typos in prop names
+
+---
+
+### Best Practices
+
+1. **Always use `name` attributes** on form inputs when using `FormData`
+2. **Use semantic HTML**: `<label>`, `<input>`, `<textarea>`, etc.
+3. **Use the `type` attribute**: `type="email"` gives you browser validation for free
+4. **Add `required` when appropriate**: Browser will handle basic validation
+5. **Keep the handler function simple**: Just read data and update state
+6. **Build reusable components**: Use the 3-step process (static → identify → props)
+7. **Colocate related components**: Keep `Input` and `App` in the same file for now
+
+---
+
+## Wrap-Up & Assessment
+
+### Key Takeaways
+
+- **Uncontrolled inputs** let the browser manage form data; React reads it on submit
+- The **modern `action` prop** replaces `onSubmit` + `event.preventDefault()` for cleaner code
+- Use **`FormData`** to read all form values at once
+- Build **reusable components** using the 3-step process: static HTML → identify dynamic parts → add props
+- This pattern is perfect for simple "fill and submit" forms
+- You only need state for **displaying** submitted data, not for tracking input changes
+
+---
+
+### Assessment
+
+**Part 1: Video Walkthrough (2-3 minutes)**
+
+Record a screen video demonstrating your contact form:
+
+1. **Form demo** (60 seconds):
+   - Show your form in the browser with all three fields visible
+   - Fill out all three fields with test data
+   - Submit the form
+   - Show that the page doesn't reload
+   - Show the submitted data appearing below the form
+   - Submit again with different data to show it updates
+
+2. **Code explanation** (60-90 seconds):
+   - Open `src/app.jsx` in VS Code
+   - Point to the `action` prop and explain what it does
+   - Show your `Input` component and explain the props it accepts
+   - **Show your `formFields` array** and explain what data it contains
+   - **Show the `.map()` line** that generates the inputs and explain how it works
+   - Show the `Object.fromEntries(formData)` line and explain what it does
+
+3. **Data-driven reflection** (30 seconds):
+   - Explain: "What's the benefit of using a `formFields` array and `.map()` instead of writing out each `<Input />` manually?"
+   - Answer: "What would I need to do to add a Phone field to this form?"
+
+---
+
+**Part 2: Written Reflection**
+
+1. **From Core Concepts**: What's the main benefit of using `action` instead of `onSubmit` for client-side form handling?
+
+2. **From Core Concepts**: What happens if you forget to add a `name` attribute to an input when using `FormData`?
+
+3. **From Part 1**: In the code, where is `formData` coming from in the `handleSubmit` function parameter?
+
+4. **From Part 2 - Step 1**: Include your screenshot showing three identical Name inputs. Why is it okay to have duplicate HTML at the "static" stage of building a reusable component?
+
+5. **From Part 2 - Step 3**: What would happen if you forgot to pass the `name` prop to one of your `Input` components? Would the form still work?
+
+6. **Component design**: Look at your final `Input` component. List all the props it accepts. Which props have default values, and why?
+
+7. **Enhancement reflection** (if you did the exercises): Which enhancement(s) did you attempt? What was challenging about it? Include a screenshot if applicable.
+
+8. **Comparison**: Look at your entire `src/app.jsx` file. Count how many times the word `useState` appears. Count how many times the word `value` appears (as a prop). What does this tell you about uncontrolled inputs?
+
+9. **Synthesis**: Imagine your boss asks: "Can we add a character counter showing 'Message: 47/500 characters' while the user types?" Could you add this feature with your current uncontrolled form? Why or why not?
+
+---
+
+**Submission checklist:**
+
+- [ ] GitHub repository with your complete `src/app.jsx` file
+- [ ] Working form with three fields using your custom `Input` component
+- [ ] **Enhancement B implemented** (data-driven form fields with `.map()`)
+- [ ] Video walkthrough (2-3 minutes)
+- [ ] Written reflection answering all 11 questions
+- [ ] Screenshot from Part 2, Step 1 (three identical inputs)
+- [ ] Code snippet of your `formFields` array and `.map()` implementation (in reflection)
+
+---
+
+## Resources
+
+- [React Docs: Form Components](https://react.dev/reference/react-dom/components/form)
+- [React Docs: Handling Form Submission](https://react.dev/reference/react-dom/components/form#handle-form-submission-on-the-client)
+- [MDN: FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData)
+- [MDN: HTML Forms](https://developer.mozilla.org/en-US/docs/Learn/Forms)
+- [Tailwind CSS: Forms Plugin](https://github.com/tailwindlabs/tailwindcss-forms) (optional styling helper)
