@@ -1,9 +1,9 @@
 interface AccordionProps {
   question: string;
-  answer: string;
+  children: React.ReactNode;
 }
 
-export function Accordion({ question, answer }: AccordionProps) {
+export function Accordion({ question, children }: AccordionProps) {
   return (
     <details className="mb-4 rounded-lg border border-gray-300 dark:border-gray-700">
       <summary className="cursor-pointer bg-gray-100 px-4 py-3 dark:bg-gray-800">
@@ -11,7 +11,9 @@ export function Accordion({ question, answer }: AccordionProps) {
           {question}
         </span>
       </summary>
-      <div className="px-4 py-3 text-gray-700 dark:text-gray-300">{answer}</div>
+      <div className="px-4 py-3 text-gray-700 dark:text-gray-300">
+        {children}
+      </div>
     </details>
   );
 }
