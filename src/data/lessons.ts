@@ -440,7 +440,7 @@ const lessons = [
       },
       {
         id: "react-uncontrolled-forms",
-        title: "React Forms: The Modern Uncontrolled Way",
+        title: "React Forms (Uncontrolled)",
         description:
           "Build a contact form using modern uncontrolled React inputs with the form action prop and FormData.",
         video: null,
