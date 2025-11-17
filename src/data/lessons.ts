@@ -296,6 +296,13 @@ const lessons = [
         video: null,
       },
       {
+        id: "js-form-fundamentals",
+        title: "Form Fundamentals",
+        description:
+          "Learn to work with HTML forms using JavaScript: reading values, handling submissions, and understanding form behavior in the browser.",
+        video: null,
+      },
+      {
         id: "function-components",
         title: "Function Components",
         description:

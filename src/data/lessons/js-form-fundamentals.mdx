@@ -1,0 +1,438 @@
+# JavaScript Form Fundamentals: Submit & Data Extraction
+
+## Introduction
+
+**Learning objectives:**
+
+- Briefly review core form structure (reinforce attributes you _must_ know from the prerequisite course).
+- Intercept a form submit **event** with JavaScript
+- Use `FormData` to extract values and convert them to a plain object
+- Display submitted data with tiny helper functions (simple, readable, no extra abstraction)
+- Add minimal enhancement: disabled submit state + simple “required” messaging
+- Reflect on when to keep vs override native behavior
+
+**Note:** You may wish to review [MDN resources](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form) before or during the lesson. It all depends on how well you remember basic form structure from prior learning.
+
+**Note:** Throughout this lesson are checkpoint questions—answer them in your reflection at the end. They are also instructions for capturing your work as screenshots as you proceed. And, as usual, make sure that you are making relevant commits as you go.
+
+---
+
+## Core Concept Overview
+
+### 1. Native Form Flow (Why It Matters)
+
+Default behavior: submit event → browser packages key/value pairs (based on `name` attributes) → navigates (or reloads) according to `action` & `method`.
+
+With JavaScript, we can _intercept_ this flow by listening for the `submit` event and calling `event.preventDefault()`. This stops the browser's default behavior of submitting the form and/or reloading the page. It gives the opportunity to handle the data client-side, such as displaying it on the same page or sending it via an API call.
+
+### 2. Minimal Structural Review
+
+Key elements & attributes you must be solid on:
+
+- `<form>`: container; can have `action`, `method`, `novalidate`
+- Inputs: `<input>`, `<textarea>`, `<select>` — each needs a `name` if you want its value inside `FormData`
+- Types that give built‑in validation: `email`, `number`, `url`, etc.
+- Common attributes: `required`, `placeholder`, `min`, `max`, `pattern` (used more in Lesson 2), `disabled`
+
+If those are fuzzy, review MDN link above ☝️.
+
+### 3. Reading Values: Manual vs `FormData`
+
+Recall that all of our HTML elements are represented in the DOM, so we can always grab them and read their `.value` properties manually:
+
+```js
+const value = document.querySelector('[name="email"]').value;
+```
+
+<Accordion question="What's happening above? 🤔">
+  <p>
+    We QUERY the document using a CSS selector. This one is using an attribute
+    selector. It finds the element with the attribute name='email' and then
+    accesses its value property.
+  </p>
+</Accordion>
+
+As you can imagine, if you have many fields, this becomes tedious and error-prone. Instead, we use the built-in `FormData` API, which automatically collects all named fields from a form:
+
+```js
+const form = document.querySelector("form");
+const formData = new FormData(form); // Collects all named fields
+const dataObject = Object.fromEntries(formData.entries()); // Converts to plain object
+```
+
+This technique relies on each input having a `name` attribute. The `FormData` constructor takes the form element and gathers all its named fields into key/value pairs. This isn't quite an object literal, but since it has key/value pairs (i.e. entries!), we can convert that to a plain object using `Object.fromEntries()` for easier manipulation. This is using the top-level **Object function constructor** and from the FormData's entries we are creating a **P**lain **O**l' **J**avaScript **O**bject (POJO).
+
+Why `FormData` here?
+
+- Automatically includes all named fields (less error‑prone)
+- Easy conversion: `Object.fromEntries(formData.entries())`. Just remember this pattern and it works for any form, provided you have the `name` attributes set correctly.
+
+---
+
+## Hands-On Application
+
+Commit after each practice file with messages like `feat: render the form HTML`.
+
+---
+
+### Try It 1: Just the Form (No JS Yet)
+
+**What you're learning:** Render a form with proper HTML attributes.
+
+Add the following HTML structure to `index.html` inside the `<body>`:
+
+```html
+<form class="mx-auto max-w-md space-y-4 rounded border p-4">
+  <div>
+    <label class="mb-1 block text-sm font-medium" for="name">Name</label>
+    <input
+      id="name"
+      name="name"
+      required
+      class="w-full rounded border px-3 py-2"
+    />
+  </div>
+
+  <div>
+    <label class="mb-1 block text-sm font-medium" for="email">Email</label>
+    <input
+      id="email"
+      name="email"
+      type="email"
+      required
+      class="w-full rounded border px-3 py-2"
+    />
+  </div>
+
+  <div>
+    <label class="mb-1 block text-sm font-medium" for="message">Message</label>
+    <textarea
+      id="message"
+      name="message"
+      rows="4"
+      required
+      class="w-full rounded border px-3 py-2"
+    ></textarea>
+  </div>
+
+  <button
+    class="rounded bg-blue-600 px-4 py-2 text-white disabled:bg-gray-400"
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+
+<section id="result" class="mt-6"></section>
+```
+
+All of the above is just HTML structure with Tailwind classes for basic styling. No JavaScript yet.
+
+Run `npm run dev` to start the server and verify that the form appears with 3 fields + submit button.
+
+Take a screenshot of the rendered form for your homework submission.
+
+**Checkpoint:** What attribute must each field have to appear in `FormData`?
+
+---
+
+### Try It 2: Intercept Submit
+
+**What you're learning:** Stop page reload, see what `FormData` contains.
+
+Create `src/form-practice.js`. In the HTML file, be sure to update the script tag to point to this new file:
+
+```html
+<script type="module" src="./src/form-practice.js"></script>
+```
+
+Then add this to `src/form-practice.js`:
+
+```js
+const form = document.querySelector("form");
+
+// Same pattern as 'clicks', but for 'submit' events.
+form.addEventListener("submit", (event) => {
+  // No, browser! WE will handle this. Stop your default behavior.
+  event.preventDefault();
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+
+  console.log(data);
+});
+```
+
+<Accordion question="What's happening above? 🤔">
+  <ul>
+    <li>We select the form element from the DOM.</li>
+    <li>We add a submit event listener to the form.</li>
+    <li>
+      Inside the handler, we call `event.preventDefault()` to stop the default
+      submission behavior.
+    </li>
+    <li>
+      We create a new FormData object from the form, which collects all named
+      fields.
+    </li>
+    <li>
+      We convert the FormData entries to a plain object and log it to the
+      console.
+    </li>
+  </ul>
+</Accordion>
+
+**Test:** Fill form, click Submit. Page stays put, check browser console for your data object. Screenshot console output for the homework submission.
+
+<Figure
+  src="https://d8n3.c1.e2-8.dev/swic/dev-console.png"
+  alt="Developer Console"
+  width={619}
+  height={246}
+  caption="Be sure that you are looking in the  ℹ️ Console tab of your browser's developer tools to see the logged object."
+/>
+
+---
+
+### Try It 3: Display the Data in the Browser
+
+Look back at the HTML and notice the empty `<section id="result">` below the form. We'll use that to display the submitted data.
+
+Let's use a function component to render each result item. At the bottom of your `form-practice.js`, add the following:
+
+```js
+function Results(data) {
+  console.log(Object.entries(data));
+
+  return `<ul class="space-y-1 text-sm">
+        ${Object.entries(data)
+          .map(([k, v]) => `<li><strong>${k}:</strong> ${v}</li>`)
+          .join("")}
+    </ul>   
+    `;
+}
+```
+
+<Accordion question="What's happening above? 🤔">
+  <ul>
+    <li>
+      We define a function component called Results that takes a data object as
+      an argument.
+    </li>
+    <li>
+      It pulls apart the entries or key-value pairs in that `data` object.
+      Recall that `Object.entries()` gives an array of arrays. Each array has
+      two items, one for the key and one for the value.
+    </li>
+    <li>
+      Since we are working with an array, we can use `.map()` to transform each
+      entry into an HTML string for a list item. We just look at each array
+      item, destructure it into `k` (key) and `v` (value), and return a
+      formatted string, the `li`.
+    </li>
+  </ul>
+</Accordion>
+
+Now, putting it all together, we have:
+
+```js
+const result = document.querySelector("#result");
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+
+  // Pass the data object to the Results function to get HTML! 🚀
+  result.innerHTML = Results(data);
+});
+
+function Results(data) {
+  return `<ul class="space-y-1 text-sm">
+        ${Object.entries(data)
+          .map(([k, v]) => `<li><strong>${k}:</strong> ${v}</li>`)
+          .join("")}
+    </ul>   
+    `;
+}
+```
+
+**Test:** Submit form, data appears below (not in console). Screenshot it.
+
+---
+
+### Try It 4: Disable Submit Until Ready
+
+**What you're learning:** Control button state based on field completeness.
+
+Let's specify some required fields and disable the submit button until all are filled.
+
+Start by declaring `const REQUIRED = ["name", "email", "message"];` at the top of the same JS file.
+
+We also need to query the submit button so we can enable/disable it: `const submitBtn = form.querySelector('[type="submit"]');`
+
+<Accordion question="What's next? 🤔">
+  We need to go over each required field and check if it has a non-empty value.
+  So, `value !== ""` for each field. We need some type of loop or array method
+  to check all required fields.
+</Accordion>
+
+To get this to work, we can use a new Array method called `every()`, which tests whether all elements in the array pass a given condition. It follows the same pattern as a `filter()` or `map()`, but instead of returning a new array, it returns a single boolean: true if all elements pass, false if any fail.
+
+Simply put, the code reads as follows: `REQUIRED.every((field) => form[field].value.trim() !== "");`
+
+<Accordion question="What's happening here?">
+  <ul>
+    <li>
+      We call `every()` on the REQUIRED array, which contains the names of the
+      fields we want to check.
+    </li>
+    <li>
+      For each field name in the array, we use an arrow function that checks if
+      the corresponding form (same `form` reference as before) field's value is
+      not empty, after trimming whitespace, with `.trim()`. That way, just
+      entering a bunch of spaces doesn't count as "filled".
+    </li>
+    <li>
+      If all fields return true for this condition, `every()` returns true;
+      otherwise, it returns false.
+    </li>
+  </ul>
+</Accordion>
+
+<Accordion question="I'm still not sure what `form[field]` is... 😕">
+  <p>
+    Recall that we can access an object's properties using either dot notation
+    (e.g., `form.name`) or bracket notation (e.g., `form["name"]`). In this
+    case, `field` is a variable that holds the name of the form field (like
+    "name", "email", or "message"). So, `form[field]` dynamically accesses the
+    corresponding form element based on the current value of `field` in the
+    loop. We can just say `form.field`, right? No! Because that would look for a
+    property literally named "field", which doesn't exist on the form object.
+
+    <footer>
+      <em>Example:</em> If `field` is "email", then `form[field]` is equivalent
+      to `form["email"]`, which accesses the email input element in the form.
+    </footer>
+
+  </p>
+</Accordion>
+
+But...what kind of an event do we use to enable the submit button? It can't be just `"submit"` because the form isn't being submitted yet.
+
+We need to listen for changes as the user types or interacts with the form fields. The best event for this is the `"input"` event, which fires whenever the value of any input field within the form changes.
+
+We just add that directly to the `form` reference we already have.
+
+```js
+form.addEventListener("input", () => {
+  // Does EVERY form input field have a non-empty value?
+  REQUIRED.every((field) => form[field].value.trim() !== "")
+    ? (submitBtn.disabled = false) // If yes, enable button
+    : (submitBtn.disabled = true); // If no, disable button
+});
+```
+
+Note that `disabled` is a boolean property of the button element. Setting it to `true` disables the button, while setting it to `false` enables it. This is wired to the HTML attribute `disabled`, which we can manipulate via JavaScript.
+
+So, putting it all together, we now have:
+
+```js
+// SCREAMING_SNAKE_CASE as this is a constant configuration value.
+const REQUIRED = ["name", "email", "message"];
+
+const form = document.querySelector("form");
+const result = document.querySelector("#result");
+
+// CSS attribute selector.
+const submitBtn = form.querySelector('[type="submit"]');
+
+submitBtn.disabled = true; // Start disabled
+
+form.addEventListener("input", () => {
+  // Does EVERY form input field have a non-empty value?
+  REQUIRED.every((field) => form[field].value.trim() !== "")
+    ? (submitBtn.disabled = false) // If yes, enable button
+    : (submitBtn.disabled = true); // If no, disable button
+});
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+
+  // Pass the data object to the Results function to get HTML! 🚀
+  result.innerHTML = Results(data);
+});
+
+function Results(data) {
+  return `<ul class="space-y-1 text-sm">
+        ${Object.entries(data)
+          .map(([k, v]) => `<li><strong>${k}:</strong> ${v}</li>`)
+          .join("")}
+    </ul>   
+    `;
+}
+```
+
+Looking back the HTML, specifically the CSS for the submit button, we see: `disabled:bg-gray-400`. This Tailwind class automatically applies a gray background when the button is disabled, giving a visual cue to users that the button is not clickable. So much better than vanilla CSS and/or having to manipulate styles via JavaScript.
+
+**Test:** Button starts disabled/faded. Type to fill fields → button enables. Screenshot both states.
+
+---
+
+## Wrap-Up & Assessment
+
+### Key Takeaways
+
+- Forms already manage state; JS reads values at need.
+- `FormData` + `Object.fromEntries` = quick object conversion.
+- Small helper functions returning HTML strings reduce repetition for result & error markup.
+- Disabling submit is a UX choice, not a rule.
+- Separation of concerns makes future validation upgrades straightforward.
+
+### Homework: Build a Different Form
+
+Start by deleting the 'practice HTML' form from `index.html`. Make this a clear commit message so that I can easily see that you have removed it. `"Remove contact form HTML"`.
+
+Then, add your own form HTML with respectable Tailwind styling for a registration form. It will have the following fields:
+
+- Username (text input)
+- Email (email input)
+- Password (password input)
+- Confirm Password (password input)
+
+And, of course a submit button.
+
+Right before the closing `form` tag, add an empty `<output>` tag, where you will be displaying an error message if the passwords do not match. `<output className="text-red-500 italic"></output>`.
+
+You don't need any section to output the results. That was just in the practice exercises.
+
+Now, you'll work in `src/main.js`
+
+**Requirements:**
+
+1. Submit button is disabled until all 4 fields are filled (similar to practice).
+2. On submit, intercept with `preventDefault()`. Compare the value of the password and confirm password fields. If they do not match, display an error message in the `<output>` tag. If they do match, clear any error message.
+
+Upon completion, you will need to create a brief walkthrough video (3-5 minutes) showing how you hit each requirement in the code, along with working app in the browser. This video is part of your homework submission. You may also want to show any AI chats that you had to help you complete the assignment.
+
+### Reflection (`js-form-fundamentals-reflection.md`)
+
+Answer these checkpoint questions from the practice exercises:
+
+1. What attribute must each field have to appear in `FormData`?
+2. Why `event.preventDefault()` here but not always?
+3. Explain how `form[field]` bracket notation works vs `form.field` dot notation.
+4. One advantage and one drawback of disabling submit early?
+5. What are two legitimate reasons to let native form submission proceed?
+6. Predict one improvement the constraint validation API gives over manual checks.
+
+### Submission Checklist
+
+- [ ] Practice file `form-practice.js` complete with screenshots showing console output and displayed data
+- [ ] Commit removing contact form HTML from `index.html`
+- [ ] Registration form HTML added to `index.html` with proper Tailwind styling
+- [ ] `src/main.js` working: button disabled until fields filled, password match validation, error message in `<output>` tag
+- [ ] Video walkthrough (3-5 min) showing code + working app
+- [ ] Reflection file with all checkpoint answers
+- [ ] Well written commit messages throughout
