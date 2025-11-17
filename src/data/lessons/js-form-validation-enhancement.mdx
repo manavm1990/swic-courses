@@ -1,0 +1,413 @@
+# JavaScript Form Validation & Enhancement
+
+## Introduction
+
+**Icebreaker:** Think of a form that yelled at you _after_ submission vs one that guided you _as you typed_. Which felt better? Why?
+
+**Scenario:** Building a “Join Study Group” form with slightly higher stakes: you want immediate feedback (valid email pattern, username length) and clearer error messaging—still no server calls.
+
+**Learning objectives:** You will:
+
+- Use the Constraint Validation API (`checkValidity`, `reportValidity`, `validity` object)
+- Provide custom error messages with `setCustomValidity`
+- Implement field-level live validation (input event)
+- Dynamically enable/disable submit based on overall validity
+- Add light UX enhancements: character count + remaining characters
+- Reuse function component patterns for error display & helpers
+
+Estimated Time: ~2.5–3 hours (paired with preceding fundamentals lesson total ≈5 hours).
+
+---
+
+## Core Concept Overview
+
+### 1. Constraint Validation API Snapshot
+
+Each form control exposes `element.validity` (an object with booleans like `valueMissing`, `typeMismatch`, `patternMismatch`, etc.) and methods:
+
+- `checkValidity()` → returns boolean (and fires invalid events)
+- `reportValidity()` → displays browser UI messages (we’ll mostly custom render)
+- `setCustomValidity(message)` → override message; pass empty string to clear
+
+### 2. Strategy: Browser First, JavaScript Second
+
+Use HTML attributes (`required`, `minlength`, `maxlength`, `pattern`, `type`) for baseline rules; layer JavaScript only for aggregation, custom phrasing, and dynamic counters.
+
+### 3. Data Flow
+
+Form controls (DOM) → Validity states → Our helper functions → Rendered error components → User corrections → Re-check.
+
+### 4. Function Component Reuse
+
+We’ll create small HTML-returning helpers: `ErrorItem()`, `FieldErrorList()`, `CharacterCounter()`, making structure consistent and maintainable.
+
+Checkpoint: Why is starting with HTML attributes (instead of only JS checks) beneficial?
+
+---
+
+## Hands-On Application
+
+**Practice Workflow (READ THIS FIRST):**
+
+Each exercise builds on the previous by copying and adding code:
+
+1. **Start with `-01.js`** → Test → Screenshot
+2. **Create `-02.js`** → Copy all of `-01.js` → Add new code → Update `<script>` tag → Test → Screenshot
+3. **Create `-03.js`** → Copy all of `-02.js` → Add new code → Update `<script>` tag → Test → Screenshot
+4. Continue pattern through `-05.js`...
+5. **Final homework**: Build everything from scratch in `main.js` (proves you mastered it)
+
+**Pro tip:** Each file is a working checkpoint. If something breaks, you can go back one step.
+
+---
+
+### Try It 1: Enhanced Form Markup with Validation Attributes
+
+Create `src/form-validation-01.js`. Focus: HTML validation attributes (minlength, maxlength, pattern).
+
+Add a "Join Study Group" form with these rules:
+
+- Username: required, minlength 3, maxlength 16
+- Email: required, type email
+- Bio: optional, maxlength 120 (with live counter)
+
+```html
+<form
+  id="join-form"
+  novalidate
+  class="mx-auto max-w-md space-y-4 rounded border p-4"
+>
+  <div>
+    <label for="username" class="mb-1 block text-sm font-medium"
+      >Username</label
+    >
+    <input
+      id="username"
+      name="username"
+      required
+      minlength="3"
+      maxlength="16"
+      class="w-full rounded border px-3 py-2"
+    />
+  </div>
+  <div>
+    <label for="email" class="mb-1 block text-sm font-medium">Email</label>
+    <input
+      id="email"
+      name="email"
+      type="email"
+      required
+      class="w-full rounded border px-3 py-2"
+    />
+  </div>
+  <div>
+    <label for="bio" class="mb-1 block text-sm font-medium"
+      >Bio (optional)</label
+    >
+    <textarea
+      id="bio"
+      name="bio"
+      maxlength="120"
+      rows="4"
+      class="w-full rounded border px-3 py-2"
+    ></textarea>
+    <div id="bio-counter" class="mt-1 text-xs text-gray-600"></div>
+  </div>
+  <button type="submit" class="rounded bg-blue-600 px-4 py-2 text-white">
+    Join
+  </button>
+</form>
+<section id="validation-errors" class="mt-4"></section>
+<section id="submitted" class="mt-6"></section>
+```
+
+`novalidate` lets us control message rendering instead of default browser tooltips.
+
+**Step 2:** Update `index.html` script tag:
+
+```html
+<script type="module" src="/src/form-validation-01.js"></script>
+```
+
+**Step 3:** Test it. Form should render with proper validation attributes. Try submitting—browser won't show default tooltips (novalidate blocks them). Take a screenshot.
+
+**Checkpoint Question:** What does `novalidate` disable and why do we use it here? Answer in your reflection.
+
+---
+
+### Try It 2: Validity API Helpers
+
+**Goal:** Use `element.validity` to check validation automatically.
+
+**Step 1:** Create `src/form-validation-02.js` and **copy all the code from `form-validation-01.js`** into it.
+
+**Step 2:** Below the form rendering, add this validation logic:
+
+```js
+const form = document.querySelector("#join-form");
+const errorsBox = document.querySelector("#validation-errors");
+const submittedBox = document.querySelector("#submitted");
+const submitBtn = form.querySelector('[type="submit"]');
+
+function ErrorItem(msg) {
+  return `<li class="text-red-700">${msg}</li>`;
+}
+
+function gatherFieldErrors(el) {
+  const v = el.validity;
+  if (v.valid) return [];
+  const errors = [];
+  if (v.valueMissing) errors.push(`${el.name} is required.`);
+  if (v.tooShort)
+    errors.push(
+      `${el.name} must be at least ${el.getAttribute("minlength")} characters.`,
+    );
+  if (v.tooLong)
+    errors.push(
+      `${el.name} must be at most ${el.getAttribute("maxlength")} characters.`,
+    );
+  if (v.typeMismatch) errors.push(`Please enter a valid ${el.type}.`);
+  if (v.patternMismatch) errors.push(`${el.name} format is invalid.`);
+  return errors;
+}
+
+function allErrors() {
+  const fields = Array.from(form.elements).filter((e) => e.name);
+  return fields.flatMap(gatherFieldErrors);
+}
+
+function renderErrors(list) {
+  errorsBox.innerHTML = list.length
+    ? `<ul class="mb-4">${list.map(ErrorItem).join("")}</ul>`
+    : "";
+}
+
+function updateSubmitState() {
+  submitBtn.disabled = allErrors().length > 0;
+  submitBtn.classList.toggle("opacity-50", submitBtn.disabled);
+}
+
+form.addEventListener("input", () => {
+  renderErrors(allErrors());
+  updateSubmitState();
+});
+```
+
+**Step 3:** Update `index.html` script tag:
+
+```html
+<script type="module" src="/src/form-validation-02.js"></script>
+```
+
+**Step 4:** Test it. Type invalid data (e.g., 2-char username, invalid email). Error messages should appear live. Submit button disables when errors exist. Take a screenshot showing live validation errors.
+
+**Checkpoint Question:** Why do we check `el.validity` instead of manually re‑writing required logic? Answer in your reflection.
+
+---
+
+### Hands-On Practice 1: Custom Validation Messages
+
+**Goal:** Provide clearer error messages using `setCustomValidity()`.
+
+**Step 1:** Create `src/form-validation-03.js` and **copy all the code from `form-validation-02.js`** into it.
+
+**Step 2:** In the form HTML, add `pattern="[A-Za-z0-9]+"` to the username input.
+
+**Step 3:** Below existing code, add this custom message handler:
+
+```js
+form.username.addEventListener("input", () => {
+  form.username.setCustomValidity(""); // reset first
+  if (form.username.validity.patternMismatch) {
+    form.username.setCustomValidity(
+      "Username may contain only letters and numbers.",
+    );
+  }
+});
+```
+
+Note: After setting a custom validity message, `validity.valid` becomes false until cleared.
+
+**Step 4:** Update `index.html` script tag:
+
+```html
+<script type="module" src="/src/form-validation-03.js"></script>
+```
+
+**Step 5:** Test it. Type special characters in username (e.g., "user@123"). Your custom message should appear instead of generic "format is invalid." Take a screenshot.
+
+**Checkpoint Question:** Why must we clear custom validity before re‑setting it? Answer in your reflection.
+
+---
+
+### Hands-On Practice 2: Live Character Counter
+
+**Goal:** Show live character count for the bio field.
+
+**Step 1:** Create `src/form-validation-04.js` and **copy all the code from `form-validation-03.js`** into it.
+
+**Step 2:** Below existing code, add this counter logic:
+
+```js
+const bio = form.bio;
+const counter = document.querySelector("#bio-counter");
+const max = parseInt(bio.getAttribute("maxlength"), 10);
+
+function updateCounter() {
+  const used = bio.value.length;
+  counter.textContent = `${used}/${max} characters`;
+}
+bio.addEventListener("input", updateCounter);
+updateCounter();
+```
+
+**Step 3:** Update `index.html` script tag:
+
+```html
+<script type="module" src="/src/form-validation-04.js"></script>
+```
+
+**Step 4:** Test it. Type in bio field. Counter should update in real-time showing "X/120 characters". Take a screenshot showing the counter.
+
+**Checkpoint Question:** Why is counting characters an enhancement, not a validation requirement? Answer in your reflection.
+
+---
+
+### Try It 3: Complete Submit Handler
+
+**Goal:** Tie everything together with proper submit handling.
+
+**Step 1:** Create `src/form-validation-05.js` and **copy all the code from `form-validation-04.js`** into it.
+
+**Step 2:** Add (or modify) the submit handler to include error re-checking:
+
+```js
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const errs = allErrors();
+  renderErrors(errs);
+  if (errs.length) return;
+  const data = Object.fromEntries(new FormData(form).entries());
+  submittedBox.innerHTML = `
+    <div class="border rounded p-4 bg-green-50">
+      <h2 class="font-semibold mb-2">Submission Received</h2>
+      <pre class="text-xs bg-white p-2 rounded border">${JSON.stringify(data, null, 2)}</pre>
+  </div>
+`;
+});
+```
+
+**Step 3:** Update `index.html` script tag:
+
+```html
+<script type="module" src="/src/form-validation-05.js"></script>
+```
+
+**Step 4:** Test it. Submit with errors—submission blocked, errors listed. Fix all errors, submit again—JSON data appears. Take screenshots of both states.
+
+**Checkpoint Question:** Why is it safe to rely on validity-based disabling yet still re-check errors on submit? Answer in your reflection.
+
+---
+
+## Advanced Concepts & Comparisons
+
+| Approach             | Pros                    | Cons                                  |
+| -------------------- | ----------------------- | ------------------------------------- |
+| Manual required loop | Transparent logic       | Re-implement what browser knows       |
+| Constraint API       | Less code, standardized | Need to learn validity property names |
+| Custom messages      | Precise UX              | Must clear/reset carefully            |
+| Live validation      | Immediate feedback      | Risk of noisy UI if overdone          |
+
+Checkpoint: Give one example of “noisy” validation UX.
+
+---
+
+## Troubleshooting & Best Practices
+
+- **Custom message stuck?** Forgot to clear with empty string first.
+- **Submit always disabled?** Some field is failing hidden pattern or type check—log `form.elements` validity states.
+- **Counter off by one?** Verify you’re using `value.length` (not trimming) unless whitespace rules required.
+- **Errors flicker?** Debounce input handling (future optimization) or validate on blur for heavy checks.
+
+Best practices now expanded:
+
+1. Prefer HTML attributes for baseline rules.
+2. Use validity API for consistency & future maintenance.
+3. Keep rendering logic pure (ErrorItem, renderErrors).
+4. Avoid blocking progress with aggressive validation (balance guidance vs friction).
+
+---
+
+## Wrap-Up & Assessment
+
+### Key Takeaways
+
+- Constraint Validation gives structured rule checking—stop re‑coding basics.
+- `setCustomValidity` allows domain-specific clarity.
+- Live feedback should guide, not overwhelm.
+- Function component pattern keeps display code DRY.
+- Separation (“gather errors” vs “render errors” vs “submit”) makes refactors trivial.
+
+### Homework: Enhanced Study Group Form (Submit for Credit)
+
+**This is your graded assessment.** Build a complete validated form in `src/main.js` combining both lessons' techniques.
+
+**Requirements:**
+
+1. **Form Structure:**
+   - Username: required, minlength 3, maxlength 16, pattern for alphanumeric only
+   - Email: required, email type
+   - Bio: optional, maxlength 120
+   - Submit button
+
+2. **Validation Features:**
+   - Use Constraint Validation API (`element.validity`) for all checks
+   - Custom error message for username pattern mismatch
+   - Live error list that updates as user types
+   - Submit button disabled when form invalid, enabled when valid
+   - Character counter for bio field (live updates)
+
+3. **Submit Behavior:**
+   - Prevent default submission
+   - Re-check errors on submit (defensive)
+   - Display submitted data as formatted JSON on success
+
+4. **Code Quality:**
+   - Helper functions: `ErrorItem()`, `gatherFieldErrors()`, `allErrors()`, `renderErrors()`, `updateSubmitState()`, `updateCounter()`
+   - Separate concerns clearly
+   - Use function component pattern for error display
+
+5. **Deliverables:**
+   - Complete `src/main.js`
+   - Update `index.html` to load `main.js`
+   - Commit: `feat: complete validation enhancement homework`
+
+### Reflection Questions (Answer in `js-form-validation-reflection.md`)
+
+1. Why use `novalidate` while still leveraging validity states?
+2. Show one validity property that triggered during testing and its meaning.
+3. How does `setCustomValidity` interact with `validity.valid`?
+4. Compare manual required loop (Lesson 1) vs constraint API (Lesson 2) in terms of maintainability.
+5. What UX guideline did you follow to avoid “noisy” validation?
+6. How did reusing ErrorItem() reduce duplication as requirements grew?
+7. If you added a new field (e.g., phone with pattern), what single area of code changes (list them briefly)?
+8. What is one enhancement you deliberately did **not** build yet (and why)?
+
+### Submission Checklist
+
+- [ ] All practice files completed (`form-validation-01.js` through `form-validation-05.js`)
+- [ ] Screenshots from each Try It and Hands-On Practice exercise
+- [ ] Final homework in `src/main.js` with all features working
+- [ ] Homework screenshots: (1) form with live errors showing, (2) valid state with enabled button, (3) submitted JSON output, (4) character counter in action
+- [ ] Reflection file with answers to all checkpoint questions
+- [ ] Clear commit message for homework
+
+---
+
+## Looking Ahead
+
+Future extensions (not in this track today): multi-step forms, file inputs, accessibility focus (ARIA live regions for errors), and eventually framework abstractions. You will revisit function component patterns to further modularize complex UI sections.
+
+**Final Checkpoint:** Provide a single sentence explaining why gathering all errors before rendering is preferable to rendering each field error in isolation, in this design.
+
+---
