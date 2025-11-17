@@ -126,6 +126,16 @@ Primitive data types are the most basic building blocks of data in programming. 
 
 Primitive data types are also immutable. They cannot be changed or broken apart further. You can create new values based on them, and you can even discard or garbage collect the previous value, but you cannot change the original value itself, ever.
 
+When you call methods on primitives (like `"hello".toUpperCase()`), JavaScript temporarily wraps the primitive in a special **wrapper object** (`String`, `Number`, or `Boolean`), calls the method on that object, and then returns a **new primitive value**. The original primitive is unchanged:
+
+```javascript
+const greeting = "hello";
+const loudGreeting = greeting.toUpperCase();
+
+console.log(greeting); // "hello" (original string is unchanged)
+console.log(loudGreeting); // "HELLO" (new string primitive)
+```
+
 ## Operators
 
 In order to do anything useful with the aforementioned data types, aside from a way to classify or type them, we need to perform **operations** on them. Operations are actions that can be performed on data, such as arithmetic calculations, comparisons, or manipulations.

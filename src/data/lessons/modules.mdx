@@ -113,12 +113,36 @@ JavaScript modules have had a messy history, but there's now a clear winner:
 
 #### Named Exports
 
-You can export multiple things from a file by name:
+You can export multiple things from a file by name. In modern JavaScript, you'll often see **arrow functions** exported this way:
 
 ```js
 // math.js
 export const add = (a, b) => a + b;
 export const subtract = (a, b) => a - b;
+
+/**
+ * Example: filter a list of Pokémon by type.
+ *
+ * - Arrow function
+ * - Exported as a named ESM export
+ * - Uses camelCase and starts with a verb because functions perform an action
+ */
+export const filterByType = (pokemonList, type) => {
+  return pokemonList.filter((pokemon) => pokemon.type === type);
+};
+
+/**
+ * Map a list of Pokémon objects to an array of just their names.
+ */
+export const getPokemonNames = (pokemonList) => {
+  return pokemonList.map((pokemon) => pokemon.name);
+};
+```
+
+In another file, you can import these helpers:
+
+```js
+import { add, subtract, filterByType, getPokemonNames } from "./math.js";
 ```
 
 Import them by name (curly braces):

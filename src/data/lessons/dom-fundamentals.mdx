@@ -41,6 +41,8 @@ const nameInput = document.getElementById("user-name");
 - No `#` symbol needed (it's implied)
 - Returns `null` if not found
 
+When using `querySelector("#some-id")`, you **include** the `#` character yourself. With `getElementById("some-id")`, you just pass the bare id name (`"some-id"`) without the `#`.
+
 ### 2. `querySelector()` - Find First Match
 
 **Best for**: Using CSS selectors, finding first match
@@ -113,6 +115,8 @@ Once you've found an element, you can change what's inside it:
 
 ```javascript
 const heading = document.querySelector("h1");
+
+// textContent is a PROPERTY on the DOM element object
 heading.textContent = "New heading text";
 
 // Safe from XSS attacks - HTML tags become literal text
@@ -149,12 +153,17 @@ userInfo.innerHTML = `
 
 ## Working with CSS Classes (Tailwind Focus)
 
-Since you're using Tailwind, you'll frequently add/remove CSS classes:
+Since you're using Tailwind, you'll frequently add/remove CSS classes.
+
+Instead of directly changing styles with `element.style`, Tailwind encourages you to add or remove **utility classes** (like `bg-red-500`, `hidden`, `text-xl`) on the element. The `classList` API makes this easy.
 
 ### `classList` Methods
 
 ```javascript
 const button = document.querySelector(".btn");
+
+// classList is another PROPERTY on the element object
+// It has METHODS like add, remove, toggle, and contains
 
 // Add classes
 button.classList.add("bg-red-500", "text-white", "px-4");
@@ -213,9 +222,13 @@ const newDiv = document.createElement("div");
 newDiv.textContent = "Hello from JavaScript!";
 newDiv.classList.add("bg-blue-100", "p-4", "rounded");
 
-// Add to page
+// Add to a specific container on the page
 const container = document.querySelector("#container");
 container.appendChild(newDiv);
+
+// Or, append directly to the document body
+// (common for small "Hello" examples or quick experiments)
+document.body.appendChild(newDiv);
 ```
 
 ### Building Complex Elements
@@ -249,7 +262,7 @@ users.forEach((user) => {
 
 ## Debugging: When Elements Aren't Found
 
-Common issue: `document.querySelector()` returns `null`
+Common issue: `document.querySelector()` returns `null`. This happens when your **CSS selector doesn't match any node on the page**—for example, the class/id changed in the HTML, the element hasn't been rendered yet, or there's a typo in your selector.
 
 ### Safe Element Selection
 
@@ -369,6 +382,8 @@ heading.addEventListener("click", function () {
 - `element.appendChild()` - Add a child element
 - `element.removeChild()` - Remove a child element
 - `element.querySelector()` - Find elements inside this element
+
+For example, when you see `heading.textContent` or `button.addEventListener("click", handleClick)`, **`textContent` is a property** on the DOM element object, and **`addEventListener` is a method** (a function stored as a property that you can call).
 
 ## Practical DOM Exploration
 

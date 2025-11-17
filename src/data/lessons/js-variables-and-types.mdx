@@ -69,6 +69,23 @@ console.log(typeof notificationCount); // "undefined"
 
 ### Everything Is an Object (Except Primitives)
 
+When you use React methods and JavaScript features, you're working with objects that inherit from prototypes.
+
+You'll often hear the phrase: **"Everything in JavaScript is an object, except primitives. And even those are wrapped in objects when needed."**
+
+What this means in practice:
+
+- **Primitives** (string, number, boolean, null, undefined, symbol, bigint) are the simplest values and are stored directly.
+- When you call a method on a primitive (like `"hello".toUpperCase()`), JavaScript temporarily wraps it in a `String`/`Number`/`Boolean` object so the method call can work, then returns a **new primitive** and discards the wrapper.
+
+```javascript
+const message = "hello"; // primitive string
+const upper = message.toUpperCase(); // temporary String object wrapper
+
+console.log(message); // "hello" - original primitive
+console.log(upper);   // "HELLO" - new primitive
+```
+
 When you use React methods and JavaScript features, you're working with objects that inherit from prototypes:
 
 ```javascript

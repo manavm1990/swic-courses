@@ -81,6 +81,8 @@ Open up VS Code with: `code .` Open up the `.vscode/extensions.json` file (you c
 
 You can Google any of these extension identifiers to see what they are, exactly. Summarily, these are the recommended extensions for enhancing your development experience in VS Code. It's likely that you already have these installed, but in case you don't, once you close out and come back in you will be prompted to install any that are missing.
 
+In particular, `dbaeumer.vscode-eslint` integrates ESLint into VS Code so that linting problems show up directly in your editor, and `usernamehw.errorlens` highlights those ESLint errors and warnings inline. That's why, when you violate a rule (like using `var` or leaving an unused variable), you see the issue immediately under the offending line of code.
+
 **Note:** the filename must be exactly `extensions.json`.
 
 **Note:** Please don't install other extensions that are not listed here, as they may not be compatible with our project setup. Installing things like themes should be fine, but be wary of potential conflicts.
@@ -163,6 +165,8 @@ This initialization did a few things.
 1. It created a `package-lock.json` file, which locks the versions of the installed packages to ensure consistent installs across different environments.
 1. It installed the necessary ESLint packages into `node_modules`. The packages were installed from the npm 📦 registry. This is what makes the `package.json` file critical. Without the list of the necessary packages, whenever we shared this project, others would not be able to install the required dependencies easily.
 1. Last, but not least, it created an `eslint.config.js` file, which is the configuration file for ESLint. This file contains the rules and settings that ESLint will use to analyze your code. In the video ☝️ I trim this file down a bit, but it's not wholly necessary.
+
+Later, when someone else clones this project and runs `npm install`, npm uses `package.json` (and `package-lock.json`) to reinstall all of those dependencies into a fresh `node_modules/` folder on their machine.
 
 Now, if we try this out by opening up `src/index.js` and typing some 💩 code like: `var x = 5`. ESLint will start to warn us that we have declared `x` but haven't used it anywhere in the code. Now, this is a bit silly b/c if we just created the variable, of course we haven't used it yet.
 
@@ -397,7 +401,7 @@ build/
 coverage/
 ```
 
-Most of the above should be self-explanatory. The `node_modules/` folder is where all of our installed packages live. We don't want to commit that b/c it can be reinstalled from the `package.json` file. The `.env` file is where we will store environment variables (more on that later). The `.DS_Store` file is a macOS system file that we don't want to track. Log files, build output folders, and coverage reports are also typically ignored.
+Most of the above should be self-explanatory. The `node_modules/` folder is where all of our installed packages live. We don't want to commit that b/c it can be reinstalled from the `package.json` file. It's also huge and is created whenever we run `npm install`, so there is no benefit to tracking it in Git. The `.env` file is where we will store environment variables (more on that later). The `.DS_Store` file is a macOS system file that we don't want to track. Log files, build output folders, and coverage reports are also typically ignored.
 
 ### Pushing to GitHub as a Template Repository
 

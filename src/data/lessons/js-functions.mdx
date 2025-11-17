@@ -45,7 +45,7 @@ console.log("Room temperature:", roomTemp, "°F"); // 71.6°F
 Another powerful way to think about functions is as **recipes in a cookbook**:
 
 ```javascript
-const makeCoffe = (coffeeBeans, sugarAmount) => {
+const makeCoffee = (coffeeBeans, sugarAmount) => {
   console.log("Grinding", coffeeBeans, "beans...");
   console.log("Brewing coffee...");
   console.log("Adding", sugarAmount, "spoons of sugar");
@@ -55,7 +55,7 @@ const makeCoffe = (coffeeBeans, sugarAmount) => {
 };
 
 // Using the recipe
-const morningCoffee = makeCoffe("Colombian", 2);
+const morningCoffee = makeCoffee("Colombian", 2);
 console.log("Ready:", morningCoffee);
 ```
 
@@ -93,10 +93,21 @@ console.log("Order received:", myLunch);
 ### Key Terms
 
 - **Function Declaration**: Creating a new function (like writing a new recipe)
-- **Parameters**: The inputs a function expects (the ingredients list)
+- **Parameters**: The named inputs a function expects in its definition (the ingredients list)
 - **Arguments**: The actual values you pass when calling the function (the specific ingredients you use)
 - **Return value**: What the function gives back (the finished product)
 - **Function call**: Actually using the function (following the recipe)
+
+When you see something like:
+
+```javascript
+const filterByType = (pokemonList, type) => {
+  return pokemonList.filter((pokemon) => pokemon.type === type);
+};
+```
+
+- `pokemonList` and `type` are **parameters** – placeholders defined in the function.
+- When you call `filterByType(myTeam, "fire")`, the values `myTeam` and `"fire"` are the **arguments**.
 
 ## Hands-On Application
 
@@ -181,7 +192,7 @@ console.log("Advice 1:", advice1);
 console.log("Advice 2:", advice2);
 ```
 
-### Exercise 4: Functions Calling Functions
+### Functions Calling Functions
 
 **Analogy**: Like having one kitchen assistant who specializes in prep work and another who specializes in cooking - they work together.
 
@@ -207,6 +218,25 @@ const createWelcomeMessage = (name, age) => {
 // Test the combined functions
 console.log(createWelcomeMessage("Alex", 22));
 console.log(createWelcomeMessage("Sam", 16));
+```
+
+### Return: Ending the Function and Sending Back a Result
+
+The `return` keyword does two important things:
+
+1. **Ends** the function immediately – code after `return` in that function won't run.
+2. **Sends a value back** to whoever called the function.
+
+If a function has **no explicit `return`**, JavaScript still returns something: the special value `undefined`.
+
+```javascript
+const logMessage = () => {
+  console.log("Hello from inside the function");
+  // No explicit return here
+};
+
+const result = logMessage();
+console.log(result); // undefined
 ```
 
 ## Advanced Concepts & Comparisons
