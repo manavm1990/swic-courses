@@ -33,5 +33,5 @@
   "workbench.colorCustomizations": {
     "@import": "./src/app/syntax-theme.json"
   },
-  "cSpell.words": ["firstname"]
+  "cSpell.words": ["bject", "firstname"]
 }
