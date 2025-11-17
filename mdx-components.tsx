@@ -1,3 +1,4 @@
+import { Accordion } from "@/components/accordion";
 import { CopyableCode } from "@/components/code-block";
 import { Figure } from "@/components/figure";
 import { VideoYT } from "@/components/video-yt";
@@ -211,7 +212,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 
       // Otherwise, it's inline code
       return (
-        <code className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm break-words dark:bg-gray-800">
+        <code className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm wrap-break-word dark:bg-gray-800">
           {children}
         </code>
       );
@@ -219,6 +220,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     VideoYT: VideoYT,
     Figure: Figure,
     CopyableCode: CopyableCode,
+    Accordion: Accordion,
     ...components,
   };
 }
