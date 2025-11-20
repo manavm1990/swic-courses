@@ -199,26 +199,6 @@ Use the same React + Vite template repository from the previous lesson. You'll b
 
 For **Part 1**, you'll enhance your existing contact form from `react-uncontrolled-forms`. For **Part 2**, you'll build a new registration form from scratch.
 
----
-
-**Important: ESLint and Encapsulation**
-
-Your template enforces the `use-encapsulation` rule, which requires state management to be in custom hooks. You'll see warnings throughout this lesson's exercises—that's expected.
-
-**Why are we "breaking" the rule?**
-
-- This lesson focuses on understanding **controlled inputs** (the `value`/`onChange` pattern)
-- Adding hook encapsulation now would obscure what we're trying to learn
-- Just like in the Immutability lesson, we practice with raw state first
-
-**When will we fix it?**
-
-In your final assessment, you'll create a `useRegistrationForm` custom hook that encapsulates all the form state and validation logic. The component will use the hook cleanly with no direct `useState` calls. This is the production pattern.
-
-For now: **Ignore the ESLint warnings.** Focus on understanding controlled inputs.
-
----
-
 ### Part 1: Enhancement — Add Character Counter to Message Field
 
 Let's answer that question from the last lesson: "Can we add a character counter?" Yes, by converting the Message field from uncontrolled to controlled.
