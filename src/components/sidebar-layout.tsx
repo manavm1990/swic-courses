@@ -1,6 +1,7 @@
 "use client";
 
 import { IconButton } from "@/components/icon-button";
+import { useCommandPalette } from "@/components/command-palette-provider";
 import { SidebarIcon } from "@/icons/sidebar-icon";
 import type { Video } from "@/types/video.types";
 import {
@@ -189,6 +190,10 @@ export function SidebarLayoutContent({
     isMobileDialogOpen,
     setIsMobileDialogOpen,
   } = useContext(SidebarContext);
+  const { openPalette } = useCommandPalette();
+
+  const isMac =
+    typeof navigator !== "undefined" && navigator.platform.includes("Mac");
 
   return (
     <>
@@ -214,6 +219,17 @@ export function SidebarLayoutContent({
             </IconButton>
           )}
         </div>
+
+        <button
+          type="button"
+          onClick={openPalette}
+          className="hidden items-center gap-2 rounded-full border border-gray-300 bg-white px-3 py-1 text-xs text-gray-600 shadow-sm transition hover:border-gray-400 hover:text-gray-800 dark:border-white/20 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-white/40 sm:inline-flex"
+        >
+          <span>Search lessons…</span>
+          <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-300">
+            {isMac ? "⌘K" : "Ctrl+K"}
+          </span>
+        </button>
       </div>
 
       <main className="px-4 sm:px-6">{children}</main>

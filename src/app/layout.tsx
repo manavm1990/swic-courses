@@ -1,4 +1,5 @@
 import { SidebarLayout } from "@/components/sidebar-layout";
+import { CommandPaletteProvider } from "@/components/command-palette-provider";
 import { getModules } from "@/data/lessons";
 import { clsx } from "clsx";
 import { GeistMono } from "geist/font/mono";
@@ -29,9 +30,11 @@ export default function RootLayout({
       )}
     >
       <body>
-        <div className="isolate">
-          <SidebarLayout modules={getModules()}>{children}</SidebarLayout>
-        </div>
+        <CommandPaletteProvider>
+          <div className="isolate">
+            <SidebarLayout modules={getModules()}>{children}</SidebarLayout>
+          </div>
+        </CommandPaletteProvider>
       </body>
     </html>
   );
