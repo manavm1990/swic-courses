@@ -462,7 +462,12 @@ const lessons = [
         title: "React Forms (Controlled)",
         description:
           "Build a registration form with live validation, password strength indicators, and controlled inputs using value and onChange.",
-        video: null,
+        video: {
+          url: "https://videos.learnjs.tech/swic/videos/react-controlled.mp4",
+          thumbnail:
+            "https://d8n3.c1.e2-8.dev/swic/videos/react-controlled.png",
+          duration: 662,
+        },
       },
     ],
   },
