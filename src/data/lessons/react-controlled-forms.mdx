@@ -1,0 +1,1225 @@
+# React Forms: Controlled Inputs & Live Validation
+
+## Introduction
+
+**Icebreaker:** Remember the last lesson where we asked: "Can we add a character counter showing 'Message: 47/500 characters' while the user types?" You said no with uncontrolled forms. Today, you'll learn how to say yes.
+
+**Real-world scenario:** You're building a user registration form. The design team wants live feedback: a password strength indicator that updates as the user types, a "Passwords match ✓" message that appears immediately, and a submit button that stays disabled until everything is valid. You need React to track every keystroke and update the UI instantly.
+
+With uncontrolled forms, the browser holds the data and you only read it on submit. With **controlled forms**, React owns the data. Every keystroke updates React state, which triggers a re-render, which updates what the user sees. This gives you complete control over the form's behavior.
+
+**Learning objectives:**
+
+- Understand controlled inputs: `value={state}` + `onChange={setState}`
+- Convert an uncontrolled input to controlled (hands-on)
+- Build live validation features (character counter, password strength, password match)
+- Implement conditional UI based on form state (enable/disable submit button)
+- Write simple validator functions with tests
+- Recognize when to use controlled vs uncontrolled forms
+
+---
+
+**Note:** There are checkpoint questions throughout this lesson. Answer them in your written reflection at the end. Work through all exercises and commit your code as you go.
+
+---
+
+## Core Concept Overview
+
+### What Are Controlled Inputs?
+
+In React, a **controlled input** is one where:
+
+- **React state** is the source of truth for the input's current value
+- The input's `value` prop is set to the state variable
+- An `onChange` handler updates the state on every keystroke
+- React re-renders the component with the new value
+
+Here's the fundamental pattern:
+
+```jsx
+import { useState } from "react";
+
+function ControlledInput() {
+  const [message, setMessage] = useState("");
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={message}
+        onChange={(e) => {
+          setMessage(e.target.value);
+        }}
+      />
+      <p>You typed: {message}</p>
+      <p>Character count: {message.length}</p>
+    </div>
+  );
+}
+```
+
+<Accordion question="What's happening here?">
+  <ol>
+    <li>User types "H" → `onChange` fires → `setMessage("H")` runs</li>
+    <li>
+      React re-renders → `value={message}` shows "H" → Character count shows `1`
+    </li>
+    <li>User types "e" → `onChange` fires → `setMessage("He")` runs</li>
+    <li>
+      React re-renders → `value={message}` shows "He" → Character count shows
+      `2`
+    </li>
+    <li>And so on...</li>
+  </ol>
+  <strong>Key concept:</strong> The data flows in a circle: User types → State
+  updates → UI updates → User sees new UI → User types again...
+</Accordion>
+
+### Controlled vs Uncontrolled: Side by Side
+
+Let's compare the two approaches you've learned:
+
+**Uncontrolled (from last lesson):**
+
+```jsx
+function UncontrolledForm() {
+  const [submittedData, setSubmittedData] = useState(null);
+
+  function handleSubmit(formData) {
+    const message = formData.get("message");
+    setSubmittedData({ message });
+  }
+
+  return (
+    <form action={handleSubmit}>
+      <input name="message" type="text" />
+      {/* Browser holds the value. We read it on submit. */}
+      <button type="submit">Submit</button>
+
+      {submittedData && <p>Submitted: {submittedData.message}</p>}
+    </form>
+  );
+}
+```
+
+With uncontrolled inputs, the browser manages the input's value internally. You only access it when the form is submitted, using `FormData`. React sits on the sidelines instead of being a 🚁 parent micromanaging every update to the value.
+
+**Controlled (this lesson):**
+
+```jsx
+function ControlledForm() {
+  const [message, setMessage] = useState("");
+  const [submittedData, setSubmittedData] = useState(null);
+
+  function handleSubmit(formData) {
+    setSubmittedData({ message });
+  }
+
+  return (
+    <form action={handleSubmit}>
+      <input
+        name="message"
+        type="text"
+        value={message}
+        onChange={(e) => {
+          setMessage(e.target.value);
+        }}
+      />
+      {/* React holds the value. We know it at all times. */}
+      <p>Character count: {message.length}</p>
+      <button type="submit">Submit</button>
+
+      {submittedData && <p>Submitted: {submittedData.message}</p>}
+    </form>
+  );
+}
+```
+
+Summarily, uncontrolled tends to be easier to implement, but the user experience can be limited. Think about when you fill out a form that gives you instant feedback as you type — that's controlled inputs in action. Or, you get the annoying experience of filling out a complete form, clicking submit, and then being told you made a mistake because the form couldn't validate until submission. Controlled inputs let you build those live, interactive experiences.
+
+---
+
+### The `value` and `onChange` Contract
+
+For a controlled input to work, you **must** provide both `value` and `onChange`:
+
+```jsx
+// ✅ Correct: Both value and onChange
+<input
+  value={message}
+  onChange={(e) => setMessage(e.target.value)}
+/>
+
+// ❌ Wrong: Only value (input becomes read-only)
+<input value={message} />
+
+// ❌ Wrong: Only onChange (this is uncontrolled, not controlled)
+<input onChange={(e) => setMessage(e.target.value)} />
+
+// ⚠️ This is uncontrolled (no value prop)
+<input name="message" />
+```
+
+<Accordion question="Why both?">
+React needs to know:
+
+1. What to display in the input (`value={message}`)
+2. What to do when the user types (`onChange={...}`)
+
+<p><strong>Without `onChange`, the input becomes read-only. Without `value`, it's uncontrolled.</strong></p>
+</Accordion>
+
+---
+
+### When to Use Controlled Forms
+
+Use controlled inputs when you need:
+
+- **Live character counters** ("47/500 characters")
+- **Live validation** (password strength, email format)
+- **Dependent fields** (confirm password must match password)
+- **Formatted input** (auto-format phone numbers as user types)
+- **Conditional UI** (disable submit until all fields valid)
+- **Multi-step forms** (carry state across steps)
+
+Use uncontrolled inputs (from last lesson) when:
+
+- Simple "fill and submit" workflow
+- No live validation needed
+- Form is just collecting data to send somewhere
+- You want minimal code and fewer re-renders
+
+---
+
+## Hands-On Application
+
+### Setup
+
+Use the same React + Vite template repository from the previous lesson. You'll be working in the same project.
+
+For **Part 1**, you'll enhance your existing contact form from `react-uncontrolled-forms`. For **Part 2**, you'll build a new registration form from scratch.
+
+---
+
+**Important: ESLint and Encapsulation**
+
+Your template enforces the `use-encapsulation` rule, which requires state management to be in custom hooks. You'll see warnings throughout this lesson's exercises—that's expected.
+
+**Why are we "breaking" the rule?**
+
+- This lesson focuses on understanding **controlled inputs** (the `value`/`onChange` pattern)
+- Adding hook encapsulation now would obscure what we're trying to learn
+- Just like in the Immutability lesson, we practice with raw state first
+
+**When will we fix it?**
+
+In your final assessment, you'll create a `useRegistrationForm` custom hook that encapsulates all the form state and validation logic. The component will use the hook cleanly with no direct `useState` calls. This is the production pattern.
+
+For now: **Ignore the ESLint warnings.** Focus on understanding controlled inputs.
+
+---
+
+### Part 1: Enhancement — Add Character Counter to Message Field
+
+Let's answer that question from the last lesson: "Can we add a character counter?" Yes, by converting the Message field from uncontrolled to controlled.
+
+**Goal:** Add a live character counter showing "Characters: 47/500" below the Message textarea.
+
+<Accordion question="Step 1: Review Your Current Code">
+
+Open your `src/app.jsx` from the previous lesson. Find your `Input` component that renders the Message field. It currently looks something like this:
+
+```jsx
+<textarea
+  name="message"
+  required={required}
+  rows="4"
+  className="w-full rounded border px-3 py-2"
+/>
+```
+
+</Accordion>
+
+This is uncontrolled. The browser manages its value.
+
+<Accordion question="Step 2: Add State for Message">
+
+In your `App` component, add state to track the message value:
+
+```jsx
+export default function App() {
+  const [submittedData, setSubmittedData] = useState(null);
+  const [message, setMessage] = useState(""); // Add this line
+
+  // ... rest of your code
+}
+```
+
+</Accordion>
+
+<Accordion question="Step 3: Make the Input Component Accept Value and OnChange Props">
+
+Your `Input` component needs to support controlled mode. Update it to accept optional `value` and `onChange` props:
+
+```jsx
+function Input({
+  label,
+  name,
+  type = "text",
+  required = true,
+  value,
+  onChange,
+}) {
+  const isTextarea = type === "textarea";
+
+  return (
+    <label className="block">
+      <span className="mb-1 block text-sm font-medium">{label}</span>
+      {isTextarea ? (
+        <textarea
+          name={name}
+          required={required}
+          rows="4"
+          className="w-full rounded border px-3 py-2"
+          value={value}
+          onChange={onChange}
+        />
+      ) : (
+        <input
+          name={name}
+          type={type}
+          required={required}
+          className="w-full rounded border px-3 py-2"
+          value={value}
+          onChange={onChange}
+        />
+      )}
+    </label>
+  );
+}
+```
+
+</Accordion>
+
+**Note:** Whenever `value` and `onChange` are `undefined`, the input remains uncontrolled. This is intentional — your Name and Email fields will stay uncontrolled.
+
+<Accordion question="Step 4: Pass Controlled Props to Message Field">
+
+Update how you render the Message input in your form:
+
+```jsx
+<Input
+  label="Message"
+  name="message"
+  type="textarea"
+  value={message}
+  onChange={(e) => setMessage(e.target.value)}
+/>
+```
+
+</Accordion>
+
+<Accordion question="Step 5: Add Character Counter Display">
+
+Right after the Message `<Input />`, add the character counter:
+
+```jsx
+<Input
+  label="Message"
+  name="message"
+  type="textarea"
+  value={message}
+  onChange={(e) => setMessage(e.target.value)}
+/>
+<p className="text-sm text-gray-600">
+  Characters: {message.length}/500
+</p>
+```
+
+</Accordion>
+
+#### Step 6: Test It
+
+1. Run `npm run dev`
+2. Type in the Message field
+3. Watch the character counter update live as you type
+4. The Name and Email fields should still work (they're uncontrolled)
+5. Submit the form — everything should still work
+
+**Checkpoint question:** What happens to the character counter when you submit the form? Should you reset the message state after submission? Why or why not?
+
+**Take a screenshot** of your form showing the character counter updating as you type.
+
+---
+
+### Part 2: New Project — User Registration Form with Live Validation
+
+Now let's build a complete registration form from scratch using controlled inputs throughout.
+
+**Requirements:**
+
+- Email input with live format validation
+- Password input with live strength indicator
+- Confirm Password input with live "match" validation
+- Submit button disabled until all validations pass
+- Display submitted data on success
+
+The template repo associated with this lesson includes some validators and associated tests to get you started. Find those and run the tests to ensure they work. You should see all tests passing.
+
+Take some time to review the validator functions in `src/utils/validators.js`. In addition to answering the checkpoint questions below, note down 2-3 interesting features of the functions and/or their tests. What parts of this is immediately familiar to you based on your previous experience? What parts are new or surprising? Use Copilot and/or MDN to explore any concepts you're unsure about and include your findings in your reflection.
+
+**Checkpoint question:** Why do we test `doPasswordsMatch("", "")` to return `false`? What UX problem does this prevent?
+
+#### Step 1: Create the Registration Form Component
+
+Now let's build the UI. Create a new component in your `src/app.jsx` file.
+
+**First, add the necessary imports and state:**
+
+```jsx
+import { useState } from "react";
+import {
+  isValidEmail,
+  getPasswordStrength,
+  doPasswordsMatch,
+  hasMinLength,
+  hasUpperCase,
+  hasNumber,
+  hasSymbol,
+} from "./utils/validators";
+
+export default function RegistrationForm() {
+  // Form field state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  // Submission state
+  const [submittedData, setSubmittedData] = useState(null);
+
+  // Derived state (validation results)
+  const emailValid = isValidEmail(email);
+  const passwordStrength = getPasswordStrength(password);
+  const passwordsMatch = doPasswordsMatch(password, confirmPassword);
+
+  // Form is valid when all checks pass
+  const formValid = emailValid && passwordStrength !== "weak" && passwordsMatch;
+
+  function handleSubmit(formData) {
+    // Defensive: re-check validation
+    if (!formValid) return;
+
+    setSubmittedData({
+      email,
+      password: "••••••••", // Don't show real password
+      passwordStrength,
+    });
+  }
+
+  return (
+    <main className="mx-auto max-w-md p-6">
+      <h1 className="mb-6 text-2xl font-bold">Create Account</h1>
+
+      <form action={handleSubmit} className="space-y-4">
+        {/* TODO: Add form fields here */}
+
+        <button
+          type="submit"
+          disabled={!formValid}
+          className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Create Account
+        </button>
+      </form>
+
+      {submittedData && (
+        <section className="mt-6 rounded-lg bg-green-50 p-4">
+          <h2 className="mb-2 font-semibold text-green-900">
+            Account Created!
+          </h2>
+          <ul className="space-y-1 text-sm">
+            <li>
+              <strong>Email:</strong> {submittedData.email}
+            </li>
+            <li>
+              <strong>Password Strength:</strong>{" "}
+              {submittedData.passwordStrength}
+            </li>
+          </ul>
+        </section>
+      )}
+    </main>
+  );
+}
+```
+
+**Important pattern:** Notice how we derive validation state from the form fields:
+
+```jsx
+const emailValid = isValidEmail(email);
+const passwordStrength = getPasswordStrength(password);
+```
+
+These run on **every render**. That's okay — they're simple pure functions. This is how React builds reactive UIs.
+
+**Checkpoint question:** Why do we check `if (!formValid) return;` in `handleSubmit` even though the button is disabled? (Hint: What if someone uses browser dev tools to enable the button?)
+
+#### Step 2: Add the Email Field
+
+Add this inside your `<form>`:
+
+```jsx
+<div>
+  <label htmlFor="email" className="mb-1 block text-sm font-medium">
+    Email
+  </label>
+  <input
+    id="email"
+    name="email"
+    type="email"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    className="w-full rounded border px-3 py-2"
+    required
+  />
+  {email.length > 0 && (
+    <p
+      className={`mt-1 text-sm ${emailValid ? "text-green-600" : "text-red-600"}`}
+    >
+      {emailValid ? "✓ Valid email" : "✗ Invalid email format"}
+    </p>
+  )}
+</div>
+```
+
+**What's happening:**
+
+- `value={email}` and `onChange={...}` make it controlled
+- Validation feedback only shows after user starts typing (`email.length > 0`)
+- Color changes based on validity (green ✓ or red ✗)
+
+#### Step 3: Add the Password Field with Strength Indicator
+
+```jsx
+<div>
+  <label htmlFor="password" className="mb-1 block text-sm font-medium">
+    Password
+  </label>
+  <input
+    id="password"
+    name="password"
+    type="password"
+    value={password}
+    onChange={(e) => {
+      setPassword(e.target.value);
+    }}
+    className="w-full rounded border px-3 py-2"
+    required
+  />
+  {password.length > 0 && (
+    <div className="mt-1 text-sm">
+      <p>
+        Strength:{" "}
+        <span
+          className={`font-semibold ${
+            passwordStrength === "weak"
+              ? "text-red-600"
+              : passwordStrength === "medium"
+                ? "text-yellow-600"
+                : "text-green-600"
+          }`}
+        >
+          {passwordStrength}
+        </span>
+      </p>
+      <ul className="mt-1 space-y-1 text-xs text-gray-600">
+        <li className={hasMinLength(password) ? "text-green-600" : ""}>
+          {hasMinLength(password) ? "✓" : "○"} At least 8 characters
+        </li>
+        <li className={hasUpperCase(password) ? "text-green-600" : ""}>
+          {hasUpperCase(password) ? "✓" : "○"} Contains uppercase letter
+        </li>
+        <li className={hasNumber(password) ? "text-green-600" : ""}>
+          {hasNumber(password) ? "✓" : "○"} Contains number
+        </li>
+        <li className={hasSymbol(password) ? "text-green-600" : ""}>
+          {hasSymbol(password) ? "✓" : "○"} Contains special character
+        </li>
+      </ul>
+    </div>
+  )}
+</div>
+```
+
+**This shows:**
+
+- Current strength level with color coding
+- Checklist showing which requirements are met
+- ○ for not met, ✓ for met (with green color)
+
+#### Step 4: Add the Confirm Password Field
+
+```jsx
+<div>
+  <label htmlFor="confirmPassword" className="mb-1 block text-sm font-medium">
+    Confirm Password
+  </label>
+  <input
+    id="confirmPassword"
+    name="confirmPassword"
+    type="password"
+    value={confirmPassword}
+    onChange={(e) => setConfirmPassword(e.target.value)}
+    className="w-full rounded border px-3 py-2"
+    required
+  />
+  {confirmPassword.length > 0 && (
+    <p
+      className={`mt-1 text-sm ${passwordsMatch ? "text-green-600" : "text-red-600"}`}
+    >
+      {passwordsMatch ? "✓ Passwords match" : "✗ Passwords do not match"}
+    </p>
+  )}
+</div>
+```
+
+#### Step 5: Test the Complete Form
+
+1. Run `npm run dev`
+2. Type an invalid email — see the red "✗ Invalid email format"
+3. Fix the email — see the green "✓ Valid email"
+4. Type a short password — see "weak" in red
+5. Add uppercase and numbers — watch it change to "medium" then "strong"
+6. See the checklist items turn green as you meet requirements
+7. Type a mismatched confirm password — see red "✗ Passwords do not match"
+8. Fix it — see green "✓ Passwords match"
+9. Notice the submit button is disabled until all validations pass
+10. Submit the form — see your data displayed
+
+**Take a screenshot** showing the form with all validation feedback visible (email valid, password strong, passwords matching, submit button enabled).
+
+**Checkpoint question:** Why do we only show validation messages when `email.length > 0`? What happens if we remove that check?
+
+---
+
+### Part 3: Build Your Own Validator — Username Availability Check
+
+Now it's your turn to write a validator from scratch, test it, and integrate it into the form.
+
+**Requirements:**
+
+- Add a username field to your registration form
+- Write a validator function that checks username availability
+- Write tests for the validator
+- Show "Checking..." message while user is typing
+- Display validation feedback with proper styling
+
+This simulates real-world API validation (checking if a username is taken) without needing a server.
+
+#### Step 1: Write the Validator Function
+
+Add to `src/utils/validators.js`:
+
+```js
+/**
+ * Checks if a username is available (not taken)
+ * In production, this would call an API. For now, we simulate it.
+ * @param {string} username - Username to check
+ * @returns {boolean} - True if available (not in "taken" list)
+ */
+export const isUsernameAvailable = (username) => {
+  // Simulate taken usernames (in real app, this would be an API call)
+  const takenUsernames = ["admin", "test", "user", "root", "guest"];
+
+  return (
+    username.length >= 3 &&
+    username.length <= 20 &&
+    !takenUsernames.includes(username.toLowerCase())
+  );
+};
+```
+
+**Understanding the logic:**
+
+- Must be 3-20 characters (basic length validation)
+- Can't match any username in the "taken" list
+- Case-insensitive check (`toLowerCase()`)
+
+**Checkpoint question:** Why do we check `username.length >= 3` BEFORE checking the taken list? What would happen if we switched the order?
+
+#### Step 2: Write Tests for Your Validator
+
+Add to `src/utils/validators.test.js`:
+
+```js
+describe("isUsernameAvailable", () => {
+  it("should return false for usernames shorter than 3 characters", () => {
+    expect(isUsernameAvailable("ab")).toBe(false);
+    expect(isUsernameAvailable("a")).toBe(false);
+    expect(isUsernameAvailable("")).toBe(false);
+  });
+
+  it("should return false for usernames longer than 20 characters", () => {
+    expect(isUsernameAvailable("a".repeat(21))).toBe(false);
+  });
+
+  it("should return false for taken usernames (case-insensitive)", () => {
+    expect(isUsernameAvailable("admin")).toBe(false);
+    expect(isUsernameAvailable("Admin")).toBe(false);
+    expect(isUsernameAvailable("ADMIN")).toBe(false);
+    expect(isUsernameAvailable("test")).toBe(false);
+    expect(isUsernameAvailable("user")).toBe(false);
+  });
+
+  it("should return true for available usernames", () => {
+    expect(isUsernameAvailable("johndoe")).toBe(true);
+    expect(isUsernameAvailable("jane_smith")).toBe(true);
+    expect(isUsernameAvailable("developer123")).toBe(true);
+  });
+});
+```
+
+**Run your tests:** `npm test`
+
+All tests should pass. If not, debug your validator function until they do.
+
+**Checkpoint question:** The test uses `"a".repeat(21)` to create a 21-character string. Use your browser console or Node to experiment with `.repeat()`. What does `"x".repeat(5)` return?
+
+#### Step 3: Add Username State and Validation
+
+In your `RegistrationForm` component, add the username state and import the validator:
+
+```jsx
+import {
+  isValidEmail,
+  getPasswordStrength,
+  doPasswordsMatch,
+  hasMinLength,
+  hasUpperCase,
+  hasNumber,
+  hasSymbol,
+  isUsernameAvailable, // Add this import
+} from "./utils/validators";
+
+export default function RegistrationForm() {
+  // Form field state
+  const [username, setUsername] = useState(""); // Add this
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  // Submission state
+  const [submittedData, setSubmittedData] = useState(null);
+
+  // Derived state (validation results)
+  const usernameAvailable = isUsernameAvailable(username); // Add this
+  const emailValid = isValidEmail(email);
+  const passwordStrength = getPasswordStrength(password);
+  const passwordsMatch = doPasswordsMatch(password, confirmPassword);
+
+  // Form is valid when all checks pass
+  const formValid =
+    usernameAvailable && // Add this
+    emailValid &&
+    passwordStrength !== "weak" &&
+    passwordsMatch;
+
+  // ... rest of component
+}
+```
+
+#### Step 4: Add the Username Field to Your Form
+
+Add this field **before** the email field in your form (username typically comes first):
+
+```jsx
+<div>
+  <label htmlFor="username" className="mb-1 block text-sm font-medium">
+    Username
+  </label>
+  <input
+    id="username"
+    name="username"
+    type="text"
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+    className="w-full rounded border px-3 py-2"
+    required
+  />
+  {username.length > 0 && username.length < 3 && (
+    <p className="mt-1 text-sm text-gray-600">
+      Keep typing... (minimum 3 characters)
+    </p>
+  )}
+  {username.length >= 3 && (
+    <p
+      className={`mt-1 text-sm ${usernameAvailable ? "text-green-600" : "text-red-600"}`}
+    >
+      {usernameAvailable ? "✓ Username available" : "✗ Username already taken"}
+    </p>
+  )}
+</div>
+```
+
+**What's new here:**
+
+- Shows "Keep typing..." hint when 1-2 characters entered
+- Only shows availability check when 3+ characters
+- Three-state feedback: too short, available, taken
+
+**Checkpoint question:** Why do we show "Keep typing..." instead of "Username too short" or a red error? How does this affect the user experience?
+
+#### Step 5: Update the Submit Handler
+
+Update your `handleSubmit` to include username:
+
+```jsx
+function handleSubmit(formData) {
+  // Defensive: re-check validation
+  if (!formValid) return;
+
+  setSubmittedData({
+    username, // Add this
+    email,
+    password: "••••••••", // Don't show real password
+    passwordStrength,
+  });
+}
+```
+
+And update the success display:
+
+```jsx
+{
+  submittedData && (
+    <section className="mt-6 rounded-lg bg-green-50 p-4">
+      <h2 className="mb-2 font-semibold text-green-900">Account Created!</h2>
+      <ul className="space-y-1 text-sm">
+        <li>
+          <strong>Username:</strong> {submittedData.username}
+        </li>
+        <li>
+          <strong>Email:</strong> {submittedData.email}
+        </li>
+        <li>
+          <strong>Password Strength:</strong> {submittedData.passwordStrength}
+        </li>
+      </ul>
+    </section>
+  );
+}
+```
+
+#### Step 6: Test Your Complete Form
+
+1. Type "ad" in username → see "Keep typing..."
+2. Type "admin" → see red "✗ Username already taken"
+3. Try "Admin" or "ADMIN" → still taken (case-insensitive works!)
+4. Type "john123" → see green "✓ Username available"
+5. Notice submit button stays disabled until username is valid
+6. Complete all fields and submit
+7. See username in success message
+
+**Take a screenshot** showing your form with all four fields (username, email, password, confirm password) with validation feedback visible.
+
+**Checkpoint question:** In a real application, how would the `isUsernameAvailable` function work differently? What would replace the `takenUsernames` array?
+
+---
+
+## Advanced Concepts & Comparisons
+
+### Derived State vs Stored State
+
+Notice how we didn't store validation results in state:
+
+```jsx
+// ❌ Don't do this:
+const [emailValid, setEmailValid] = useState(false);
+
+// ✅ Do this instead:
+const emailValid = isValidEmail(email);
+```
+
+<Accordion question="Why not store validation in state?">
+The validation result can be **derived** from the email state. Storing it separately creates two sources of truth that can get out of sync.
+
+For example, if you forget to update `emailValid` when `email` changes, your UI shows incorrect feedback.
+
+By deriving it during render, you ensure it's always accurate.
+
+</Accordion>
+
+**Rule of thumb:** If you can calculate a value from existing state, don't store it in new state. Calculate it during render.
+
+---
+
+### Validation Timing Strategies
+
+You have options for when to show validation:
+
+**1. onChange (what we did) — Show immediately as user types:**
+
+```jsx
+{
+  email.length && <p>{emailValid ? "✓ Valid" : "✗ Invalid"}</p>;
+}
+```
+
+**Pros:** Immediate feedback, user knows right away  
+**Cons:** Can feel aggressive if shown too early
+
+**2. onBlur — Show when user leaves the field:**
+
+```jsx
+const [emailTouched, setEmailTouched] = useState(false);
+
+<input
+  onBlur={() => setEmailTouched(true)}
+  // ...
+/>;
+
+{
+  emailTouched && !emailValid && <p>✗ Invalid</p>;
+}
+```
+
+**Pros:** Less aggressive, gives user time to finish typing  
+**Cons:** No feedback until they leave the field
+
+**3. Hybrid — Show errors onBlur, show success onChange:**
+
+```jsx
+{
+  emailTouched && !emailValid && <p>✗ Invalid</p>;
+}
+{
+  emailValid && <p>✓ Valid</p>;
+}
+```
+
+**Pros:** Best of both worlds  
+**Cons:** More complex logic
+
+**For this lesson, we used onChange for simplicity.** In production apps, experiment with what feels best for your users.
+
+---
+
+### Combining Multiple Fields into One State Object
+
+When you have many fields, separate `useState` calls get verbose:
+
+```jsx
+// ❌ Gets tedious with many fields:
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+const [confirmPassword, setConfirmPassword] = useState("");
+const [firstName, setFirstName] = useState("");
+const [lastName, setLastName] = useState("");
+// ... 10 more fields ...
+```
+
+**Alternative:** Combine into one object:
+
+```jsx
+// ✅ Cleaner for many fields:
+const [formData, setFormData] = useState({
+  email: "",
+  password: "",
+  confirmPassword: "",
+  firstName: "",
+  lastName: "",
+});
+
+// Update one field:
+<input
+  value={formData.email}
+  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+/>;
+```
+
+**Trade-offs:**
+
+- ✅ Less code for forms with 5+ fields
+- ❌ More complex update logic (spread operator)
+- ❌ All fields re-render when any field changes (but React is fast enough)
+
+**For this lesson, we kept fields separate for clarity.** You'll see the combined approach in React Hook Form **later.**
+
+**React Hook Form handles:**
+
+- Controlled vs uncontrolled decisions (uses uncontrolled internally for performance)
+- Validation (built-in and custom)
+- Error state management
+- Form submission
+- Integration with validation libraries (Zod, Yup)
+
+**You'll learn this in a future "Advanced Forms" lesson.** For now, understanding the manual controlled pattern is essential. React Hook Form is just automation over what you learned today.
+
+---
+
+## Troubleshooting & Best Practices
+
+### Common Issues
+
+**Problem:** "The input doesn't update when I type"
+
+**Solution:** Make sure you have both `value` and `onChange`:
+
+```jsx
+// ✅ Correct
+<input value={email} onChange={(e) => setEmail(e.target.value)} />
+
+// ❌ Missing onChange
+<input value={email} />
+```
+
+---
+
+**Problem:** "I get a warning: 'component is changing an uncontrolled input to be controlled'"
+
+**Solution:** Initialize state with a string, not `null` or `undefined`:
+
+```jsx
+// ✅ Correct
+const [email, setEmail] = useState("");
+
+// ❌ Wrong
+const [email, setEmail] = useState(null);
+```
+
+---
+
+**Problem:** "Validation shows immediately, even before I type"
+
+**Solution:** Add a check for empty state:
+
+```jsx
+// ✅ Only show after typing starts
+{
+  email.length > 0 && !emailValid && <p>Invalid</p>;
+}
+
+// ❌ Shows even when empty
+{
+  !emailValid && <p>Invalid</p>;
+}
+```
+
+---
+
+**Problem:** "The form re-renders too much, it feels slow"
+
+**Solution:** Controlled inputs re-render on every keystroke. For most forms, this is fine. If you have a truly massive form (50+ fields), consider:
+
+- React Hook Form (uses uncontrolled internally)
+- Breaking the form into smaller components
+- Using `React.memo()` for expensive child components
+
+**But honestly:** Start with controlled inputs. Only optimize if you actually measure a performance problem.
+
+---
+
+**Problem:** "My validator functions don't work in tests"
+
+**Solution:**
+
+- Make sure you exported them: `export const isValidEmail = ...`
+- Check your test file imports: `import { isValidEmail } from "./validators"`
+- Run tests with `npm test` and read the error messages carefully
+
+---
+
+### Best Practices
+
+1. **Use controlled inputs for live features** (character counters, live validation, dependent fields)
+2. **Use uncontrolled for simple forms** (just collecting data to submit)
+3. **Derive validation results** don't store them in separate state
+4. **Keep validator functions pure** (no side effects, just input → output)
+5. **Write tests for validators** (they're easy to test since they're pure functions)
+6. **Show validation only after user starts typing** (don't yell at them immediately)
+7. **Use semantic HTML** (`type="email"`, `type="password"`, etc.)
+8. **Disable submit until valid** (but still check validation in handleSubmit as defense)
+9. **Never log or display actual passwords** (use `••••••••` or "hidden" in submission display)
+
+---
+
+## Wrap-Up & Assessment
+
+### Key Takeaways
+
+- **Controlled inputs** use `value={state}` + `onChange={setState}` to let React own the data
+- This enables **live features** like character counters, password strength, and dependent field validation
+- **Derive validation results** from state instead of storing them separately
+- **Pure validator functions** are easy to write, test, and reuse
+- Use controlled for **interactive forms**, uncontrolled for **simple forms**
+- **React Hook Form** automates this pattern for production apps (learn it later)
+
+---
+
+### Assessment
+
+**Part 1: Build the Production Version**
+
+Create `src/hooks/use-registration-form.js` that encapsulates ALL form state and validation:
+
+**Requirements:**
+
+1. **State management:**
+   - Four form fields: `username`, `email`, `password`, `confirmPassword`
+   - Each field needs state and setter
+
+2. **Validation (derived state):**
+   - `usernameAvailable` using `isUsernameAvailable(username)`
+   - `emailValid` using `isValidEmail(email)`
+   - `passwordStrength` using `getPasswordStrength(password)`
+   - `passwordsMatch` using `doPasswordsMatch(password, confirmPassword)`
+   - `formValid` combining all validations
+
+3. **What to return:**
+   - All field values and setters
+   - All validation states
+   - `formValid` boolean
+
+**Example structure (you implement the details):**
+
+```jsx
+import { useState } from "react";
+import {
+  isValidEmail,
+  getPasswordStrength,
+  doPasswordsMatch,
+  isUsernameAvailable,
+  hasMinLength,
+  hasUpperCase,
+  hasNumber,
+  hasSymbol,
+} from "../utils/validators";
+
+export function useRegistrationForm() {
+  // TODO: Add all four useState declarations
+
+  // TODO: Derive all validation states
+
+  // TODO: Return everything the component needs
+  return {
+    // field values and setters
+    username,
+    setUsername,
+    // ... rest of fields
+
+    // validation states
+    usernameAvailable,
+    emailValid,
+    // ... rest of validations
+
+    formValid,
+  };
+}
+```
+
+**Update your `RegistrationForm` component:**
+
+- Import and use the hook: `const { username, setUsername, ... } = useRegistrationForm()`
+- Remove all `useState` calls from the component
+- Component should ONLY handle rendering and event handlers
+- No ESLint warnings should remain
+
+---
+
+**Part 2: Video Walkthrough (4-5 minutes)**
+
+Record a screen video demonstrating your complete solution:
+
+1. **Registration Form Demo** (90 seconds):
+   - Show your complete registration form with all four fields
+   - **Username field**: Type "ad" → "Keep typing...", type "admin" → red taken, type "john123" → green available
+   - **Email field**: Type invalid → red error, fix → green checkmark
+   - **Password field**: Show weak → medium → strong progression with checklist
+   - **Confirm password**: Show mismatch → red, fix → green "Passwords match"
+   - Show submit button disabled until all valid
+   - Submit and show success message with all four fields
+
+2. **Hook Code Walkthrough** (90 seconds):
+   - Open `src/hooks/use-registration-form.js`
+   - Show all four `useState` declarations
+   - Point to derived validation states (not stored in separate state!)
+   - Explain what the hook returns and why
+   - Show that there are NO ESLint warnings
+
+3. **Component Code Walkthrough** (60 seconds):
+   - Open your `RegistrationForm` component
+   - Show the hook import and usage
+   - Point out: component has NO `useState` calls
+   - Demonstrate controlled pattern: `value={username}` + `onChange={setUsername}`
+   - Explain: "Component handles UI, hook handles state logic"
+
+4. **Validators Walkthrough** (60 seconds):
+   - Open `src/utils/validators.js`
+   - Show your `isUsernameAvailable` function and explain the logic
+   - Open `validators.test.js` and show your tests
+   - Run `npm test` and show all tests passing
+
+---
+
+**Part 3: Written Reflection**
+
+Answer these questions in a markdown file:
+
+1. **From Part 1 (Contact Form)**: In the enhanced contact form, what happens to the character counter when you submit the form? Should you reset the message state after submission? Why or why not?
+
+2. **From Part 2 (Registration - Validators)**: Why do we test `doPasswordsMatch("", "")` to return `false`? What UX problem does this prevent?
+
+3. **From Part 2 (Registration - Submit)**: Why do we check `if (!formValid) return;` in `handleSubmit` even though the button is disabled?
+
+4. **From Part 2 (Registration - Validation Timing)**: Why do we only show validation messages when `email.length > 0`? What happens if we remove that check?
+
+5. **From Part 3 (Username - Logic Order)**: Why do we check `username.length >= 3` BEFORE checking the taken list? What would happen if we switched the order?
+
+6. **From Part 3 (Username - Testing)**: The test uses `"a".repeat(21)` to create a 21-character string. Explain what `.repeat()` does and why it's useful for testing length validation.
+
+7. **From Part 3 (Username - UX)**: Why do we show "Keep typing..." instead of "Username too short" or a red error? How does this affect the user experience?
+
+8. **From Part 3 (Username - Real World)**: In a real application, how would the `isUsernameAvailable` function work differently? What would replace the `takenUsernames` array?
+
+9. **Hook Encapsulation**: Look at your `useRegistrationForm` hook. What state does it manage internally? What does it return to the component? Why is this separation better than having all the `useState` calls in the component?
+
+10. **Derived State**: In your hook, you wrote `const emailValid = isValidEmail(email)`. Why didn't you use `useState` for `emailValid`? What problems would that create?
+
+11. **Controlled vs Uncontrolled**: Look at your contact form from Part 1. You made the Message field controlled but left Name and Email uncontrolled. Explain why this "mixed" approach makes sense.
+
+12. **Validation Strategy**: Your registration form shows validation feedback immediately (onChange). Describe one scenario where onBlur validation would be better. Describe one where onChange is clearly the right choice.
+
+13. **Code Organization**: You created validator functions in a separate file with tests. How does this help if you need to use the same email validation in three different forms?
+
+14. **Writing Your Own Validator**: Compare writing `isUsernameAvailable` yourself versus using the provided validators. What made it easier or harder? What did you learn by writing your own?
+
+15. **Reflection on Learning**: What was the most surprising thing about controlled inputs? What's one concept you're still uncertain about?
+
+---
+
+**Submission Checklist:**
+
+- [ ] Enhanced contact form with character counter on Message field (Part 1)
+- [ ] `useRegistrationForm` hook created in `src/hooks/use-registration-form.js`
+- [ ] Hook encapsulates all four form fields (username, email, password, confirmPassword)
+- [ ] Hook returns all validation states (derived, not stored separately)
+- [ ] Registration component uses the hook (NO `useState` in component)
+- [ ] `isUsernameAvailable` validator function written in `src/utils/validators.js`
+- [ ] Tests for `isUsernameAvailable` written and passing in `src/utils/validators.test.js`
+- [ ] NO ESLint warnings (encapsulation rule satisfied)
+- [ ] Video walkthrough (4-5 minutes) showing forms, hook code, component code, and validators
+- [ ] Written reflection answering all 15 questions
+- [ ] Screenshot showing registration form with all validation feedback
+- [ ] Screenshot showing NO ESLint warnings in your editor
+- [ ] Well-written commit messages throughout
+
+---
+
+## Resources
+
+- [React Docs: Managing State](https://react.dev/learn/managing-state)
+- [React Docs: Sharing State Between Components](https://react.dev/learn/sharing-state-between-components)
+- [React Docs: Controlled vs Uncontrolled Components](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components)
+- [MDN: Regular Expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) (for understanding the email pattern)
+- [React Hook Form Documentation](https://react-hook-form.com/) (for future reference)
+- [Vitest Documentation](https://vitest.dev/) (for writing tests)

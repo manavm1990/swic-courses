@@ -457,6 +457,13 @@ const lessons = [
           "Build a contact form using modern uncontrolled React inputs with the form action prop and FormData.",
         video: null,
       },
+{
+        id: "react-controlled-forms",
+        title: "React Forms (Controlled)",
+        description:
+          "Build a registration form with live validation, password strength indicators, and controlled inputs using value and onChange.",
+        video: null,
+      },
     ],
   },
 ] as const satisfies Module[];
