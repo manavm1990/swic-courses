@@ -62,7 +62,7 @@ function OldForm() {
 **Modern React** (as shown in [the official React docs](https://react.dev/reference/react-dom/components/form#handle-form-submission-on-the-client)) uses the `action` prop instead:
 
 ```jsx
-// Modern pattern (cleaner)
+// Modern pattern (cleaner) — React 19+
 function ModernForm() {
   function handleSubmit(formData) {
     const name = formData.get("name");
@@ -86,9 +86,32 @@ function ModernForm() {
 
 > **Key idea:** The `action` prop is the modern way to handle client-side form submissions in React. Use it instead of `onSubmit` + `event.preventDefault()`.
 
-Ironically, `action` was what was used prevalently in forms before JavaScript frameworks took over. Now, React brings it back in a cleaner way! What's old is new again.
+---
+
+### Important: The `action` Prop Accepts Functions (Not Just URLs)
+
+You might encounter older tutorials or AI tools suggesting that `action` must be a URL string, recommending you use `onSubmit` + `event.preventDefault()` as a workaround.
+
+**This is outdated advice.** Don't follow it.
+
+[According to the official React documentation](https://react.dev/reference/react-dom/components/form#props), the `action` prop explicitly accepts:
+
+> `action`: a URL or function.
+
+Passing a function directly to `action={handleSubmit}` is **not a hack or workaround**—it's the documented, first-class approach in React 19+. When you pass a function:
+
+- React doesn't try to navigate anywhere
+- It simply calls your function and passes the FormData object as the first parameter
+- It automatically prevents the default form submission behavior
+- This is the _official supported_ way to handle form submissions now
+
+**Why does this confusion exist?** React 19 is relatively new. Much of the web's existing content (tutorials, Stack Overflow answers, AI training data) was written before this feature existed. Older resources teach the `onSubmit` pattern because that was the best option at the time. You might see this same recommendation in ChatGPT, Copilot, or other AI tools—they're drawing from pre-2024 examples.
+
+**When in doubt: Trust the official React documentation over tutorials or AI suggestions.** The docs are the source of truth.
 
 ---
+
+Ironically, `action` was what developers used prevalently in forms before JavaScript frameworks took over. Now, React brings it back in a cleaner, more modern way. What's old is new again.
 
 ### Reading Form Data
 
