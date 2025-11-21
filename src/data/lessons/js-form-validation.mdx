@@ -98,12 +98,12 @@ We’ll create small HTML-returning helpers: `ErrorItem()`, `FieldErrorList()`, 
 
 For practice, you will use a single JavaScript file and keep improving it step by step. At the end, the graded homework will be a fresh build in `src/main.js`.
 
-- Use `src/form-validation-practice.js` for all Try It / Hands-On exercises.
+- Use `src/practice.js` for all Try It / Hands-On exercises.
 - Keep the form HTML in `index.html` and only change it when the lesson says to.
 - After each step, test in the browser, take a screenshot, and make a commit.
 - The final homework will ask you to rebuild the validated form in `src/main.js` using what you learned here.
 
-Don't forget to ~~drink your Ovaltine~~ make regular commits with clear messages as you progress.
+Don't forget to make regular commits with clear messages as you progress.
 
 There are short video checkpoints in some steps; record yourself explaining how the code works and demonstrating the app. 3-5 minutes is ideal.
 
@@ -111,7 +111,7 @@ There are short video checkpoints in some steps; record yourself explaining how 
 
 ### Try It 1: Enhanced Form Markup with Validation Attributes
 
-Create `src/form-validation-practice.js`. For this first step, the JS file can stay empty; we are focused on the HTML validation attributes (minlength, maxlength, type).
+Create `src/practice.js`. For this first step, the JS file can stay empty; we are focused on the HTML validation attributes (minlength, maxlength, type).
 
 Add a "Join Study Group" form to `index.html` with these rules:
 
@@ -174,7 +174,7 @@ Add a "Join Study Group" form to `index.html` with these rules:
 **Step 2:** In `index.html`, add (or update) the script tag at the bottom of `<body>` so it points to your practice file:
 
 ```html
-<script type="module" src="./src/form-validation-practice.js"></script>
+<script type="module" src="./src/practice.js"></script>
 ```
 
 **Step 3:** Test it. Form should render with proper validation attributes. Try submitting—browser won't show default tooltips (novalidate blocks them). Take a screenshot.
@@ -187,11 +187,14 @@ Add a "Join Study Group" form to `index.html` with these rules:
 
 **Goal:** Use `element.validity` to check validation automatically.
 
-**Step 1:** Open `src/form-validation-practice.js`. Keep the form HTML in `index.html` exactly as you had it in Try It 1.
+**Step 1:** Open `src/practice.js`. Keep the form HTML in `index.html` exactly as you had it in Try It 1.
 
-**Step 2:** In `src/form-validation-practice.js`, add this validation logic:
+**Step 2:** In `src/practice.js`, add this validation logic:
 
 ```js
+// * Keep this so we have our Tailwind styles
+import "./style.css";
+
 const form = document.querySelector("#join-form");
 const errorsBox = document.querySelector("#validation-errors");
 const submittedBox = document.querySelector("#submitted");
@@ -202,6 +205,7 @@ function ErrorItem(msg) {
 }
 
 function gatherFieldErrors(el) {
+  // We access the `validity` object on the incoming element.
   const v = el.validity;
   if (v.valid) return [];
 
@@ -229,8 +233,15 @@ function gatherFieldErrors(el) {
 }
 
 function collectErrors() {
-  const fields = Array.from(form.elements).filter((e) => e.name);
-  return fields.flatMap(gatherFieldErrors);
+  const fields = Array.from(form.elements).filter((field) => field.name);
+  // `fields` is now a real array of just the inputs with a name (ignore the button).
+  // We already wrote `gatherFieldErrors(el)` to return an ARRAY of messages for one field.
+  // Here we map over all fields and then flatten so we end up with
+  // ONE big array of strings instead of an array of arrays.
+  // If you were to log this, you would see that it was an Array of Arrays 🤮
+  // We use `flatMap` to avoid that!
+  return fields.flatMap((field) => gatherFieldErrors(field));
+}
 }
 
 function renderErrors(list) {
@@ -246,6 +257,8 @@ function updateSubmitState() {
 
 // This listens for any input changes in the form
 // and updates errors and submit button state live.
+// Putting the listener on the form means any change in its inputs
+// will trigger this function (one listener instead of one per field).
 form.addEventListener("input", () => {
   renderErrors(collectErrors());
   updateSubmitState();
@@ -262,11 +275,11 @@ form.addEventListener("input", () => {
 
 **Goal:** Provide clearer error messages using `setCustomValidity()`.
 
-**Step 1:** Continue working in `src/form-validation-practice.js`.
+**Step 1:** Continue working in `src/practice.js`.
 
 **Step 2:** In the form HTML in `index.html`, add `pattern="[A-Za-z0-9]+"` to the username input.
 
-**Step 3:** Below your existing JavaScript code in `form-validation-practice.js`, add this custom message handler:
+**Step 3:** Below your existing JavaScript code in `practice.js`, add this custom message handler:
 
 ```js
 form.username.addEventListener("input", () => {
@@ -290,7 +303,7 @@ Note: After setting a custom validity message, `validity.valid` becomes false un
 
 **Goal:** Show live character count for the bio field.
 
-**Step 1:** Still in `src/form-validation-practice.js`, below your existing code, add this counter logic:
+**Step 1:** Still in `src/practice.js`, below your existing code, add this counter logic:
 
 ```js
 const bio = form.bio;
@@ -321,17 +334,20 @@ updateCounter();
 
 **Goal:** Tie everything together with proper submit handling.
 
-**Step 1:** Finally, still in `src/form-validation-practice.js`, add (or modify) the submit handler to include error re-checking:
+**Step 1:** Finally, still in `src/practice.js`, add (or modify) the submit handler to include error re-checking:
 
 ```js
 // Listen for form submission,
 // which comes from clicking a submit button within the form
 form.addEventListener("submit", (event) => {
+  // Don't let the browser navigate/refresh; we handle everything in JS.
   event.preventDefault();
+
   const errs = collectErrors();
 
   renderErrors(errs);
 
+  // Defensive: if anything is invalid, stop here.
   if (errs.length) return;
 
   const data = Object.fromEntries(new FormData(form).entries());
@@ -459,12 +475,12 @@ In `src/main.js`, wire up validation using the **Constraint Validation API** and
 1. **Adaptation:** Describe two specific changes you had to make when reusing your practice helpers for the tutor request form (field names, messages, pattern, counter logic, etc.).
 2. **Validity details:** Show one `validity` property that triggered during your testing (for any field) and explain what it means in plain language.
 3. **Custom validity:** Write out your custom course code error message, and explain when it gets set and when it is cleared.
-4. **Used vs remaining:** In practice, you counted `used / max` characters. In homework, you count `remaining`. Show the line of code you used for remaining characters, and explain the difference in words.
+4. **Used vs remaining:** In practice, you counted `used / max` characters. In homework, you count `remaining`. Show the line of code you used for remaining characters, and explain the difference in words. (Hint: you can use `maxChars - notes.value.length`.)
 5. **Change surface area:** If you needed to add a new field (for example, `preferredTime` with its own rules), which helper(s) would you need to change? List them briefly.
 
 ### Submission Checklist
 
-- [ ] Practice work completed in `src/form-validation-practice.js`
+- [ ] Practice work completed in `src/practice.js`
 - [ ] Final homework in `src/main.js` with the tutor request form fully working
 - [ ] Homework screenshots: (1) invalid state with errors, (2) valid state with enabled button, (3) submitted JSON output, (4) notes counter showing remaining characters
 - [ ] Reflection file with answers to all reflection questions

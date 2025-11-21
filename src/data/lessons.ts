@@ -324,7 +324,11 @@ const lessons = [
         title: "Form Validation",
         description:
           "Use the Constraint Validation API to validate user input. Provide feedback and ensure data integrity before form submission.",
-        video: null,
+        video: {
+          thumbnail: "https://d8n3.c1.e2-8.dev/swic/videos/validation.png",
+          url: "https://videos.learnjs.tech/swic/videos/validation.mp4",
+          duration: 530,
+        },
       },
       {
         id: "js-local-storage",
