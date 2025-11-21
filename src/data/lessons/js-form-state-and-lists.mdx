@@ -1,0 +1,479 @@
+# From Single Submission to App State: Building a Submissions List
+
+## Introduction
+
+In the last lesson, you:
+
+- Built a form with proper HTML structure and attributes.
+- Intercepted the `submit` event with JavaScript and used `FormData`.
+- Converted `FormData` into a plain JavaScript object (POJO).
+- Rendered a **single** result into the DOM with a function component.
+- Controlled the submit buttons disabled state based on form completeness.
+
+In this lesson, well level that up.
+
+Instead of treating each submission as a oneoff thing, youll treat all submissions as **data** (state) and render a **list** of them in the browser.
+
+Youll see how:
+
+- Your form feeds data into an **array of objects**.
+- That array is the **single source of truth**.
+- The DOM becomes a **view** of that data, not the data itself.
+
+### Learning Objectives
+
+By the end of this lesson, you will be able to:
+
+- Explain app state as plain JavaScript data separate from the DOM.
+- Store all form submissions in an inmemory array of objects.
+- Render a list of submissions using `.map()` and function components.
+- Clear the form after submit without losing previously submitted entries.
+- Reason about how this pattern sets you up for **persistence** (localStorage) and **remote data** (fetch) later.
+
+> **Checkpoint:** In one sentence: what is the difference between **form state** (values inside inputs) and **app state** (the data your app cares about overall)?  
+> Write your answer down now; youll revisit it in the reflection.
+
+---
+
+## Core Concept Overview
+
+### 1. App State: Data First, DOM Second
+
+Up to now youve mostly:
+
+1. Read values from the DOM (input `.value`s).
+2. Immediately pushed those values *back* into the DOM (with `innerHTML`).
+
+In this lesson, youll insert a crucial middle step:
+
+1. Read values from the DOM.
+2. **Store them in a JavaScript data structure (array of objects).**
+3. Render the DOM **from that data structure**.
+
+That data structure is your **app state**.
+
+> For this lesson, state just means:  
+> **The current data your app cares about, stored in variables (not in the DOM).**
+
+### 2. Single Source of Truth
+
+We want to avoid a situation where:
+
+- The DOM says one thing,
+- Your JavaScript data says another thing,
+- And youre not sure which one is correct.
+
+Instead, we choose a **single source of truth**.
+
+In this lesson:
+
+- The **array of submissions** in JavaScript is the source of truth.
+- Whenever it changes, you **rerender** the list in the DOM.
+
+### 3. Function Components + `.map()`
+
+You already saw a function component like:
+
+```js
+function Results(data) {
+  return `<ul>
+    ${Object.entries(data)
+      .map(([key, value]) => `<li>${key}: ${value}</li>`)
+      .join("")}
+  </ul>`;
+}
+```
+
+That was for **one** object.
+
+Now, your app state will be an **array of objects**, so youll:
+
+- Use a **component for one submission** (e.g. `SubmissionItem`).
+- Use `.map()` to transform **every object** in the array into HTML.
+- Join those snippets into one string and put it in the DOM.
+
+---
+
+## Hands-On Application
+
+As always:
+
+- Use your **template repository** for this work.
+- Keep your existing `index.html` from `js-form-fundamentals` (contact form + `#result` section).
+- Create **new JS files** for each Try It to keep things organized.
+- Update the `<script>` tag in `index.html` to point to the file youre working on.
+
+---
+
+### Try It 1: Store Every Submission in an Array
+
+**What youre learning:** Treat all submissions as data in memory.
+
+1. Create `src/form-submissions-01.js`.
+2. In `index.html`, update the script tag:
+
+```html
+<script type="module" src="/src/form-submissions-01.js"></script>
+```
+
+3. In `src/form-submissions-01.js`, start with:
+
+```js
+const form = document.querySelector("form");
+
+// Our in-memory "state":
+let submissions = [];
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+
+  // New array with old items + this one (no mutation):
+  submissions = [...submissions, data];
+
+  console.log("Current submissions:", submissions);
+});
+```
+
+4. Fill out the form and submit it **at least three times** with different values.
+
+You should see something like this in the console:
+
+```js
+[
+  { name: "Alice", email: "a@example.com", message: "Hi" },
+  { name: "Bob", email: "b@example.com", message: "Hello" },
+  { name: "Charlie", email: "c@example.com", message: "Hey" },
+];
+```
+
+> **Checkpoint:**  
+> Why is `let submissions = [];` defined **outside** the event listener instead of inside it?  
+> (Write your answer in a sentence for your reflection.)
+
+> **Screenshot requirement:**  
+> Take a screenshot of your developer console showing the `submissions` array with at least three objects.
+
+> **Why the `...` spread here?**  
+> We could write `submissions.push(data)`.  
+> Instead we use `submissions = [...submissions, data];` to create a **new** array from the old one plus the new entry. Were choosing not to mutate our state array in place. This dont mutate your state, create a new one habit will make your life much easier when you get to React.
+
+---
+
+### Try It 2: Render All Submissions into the DOM
+
+**What youre learning:** Use app state (the array) as the source of truth for what appears on screen.
+
+1. Still in `src/form-submissions-01.js`, add a reference to the `#result` section:
+
+```js
+const result = document.querySelector("#result");
+```
+
+2. Create a function component that renders **one** submission:
+
+```js
+function SubmissionItem(data) {
+  return `<li>
+    <strong>${data.name}</strong>
+    &lt;${data.email}&gt;
+    — ${data.message}
+  </li>`;
+}
+```
+
+3. Create a component that renders the **list** of all submissions:
+
+```js
+function SubmissionList(items) {
+  return `
+    <section>
+      <h2 class="mb-2 text-lg font-semibold">Submissions</h2>
+      <ul class="space-y-1 text-sm">
+        ${items.map(SubmissionItem).join("")}
+      </ul>
+    </section>
+  `;
+}
+```
+
+4. Update your submit handler to use `SubmissionList`:
+
+```js
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+
+  submissions = [...submissions, data];
+
+  // Render from state:
+  result.innerHTML = SubmissionList(submissions);
+
+  console.log("Current submissions:", submissions);
+});
+```
+
+Now, every time you submit:
+
+- A new object is added to `submissions` (by creating a new array).
+- The whole list in the DOM is **rerendered** from that array.
+
+> **Checkpoint:**  
+> In your own words, what is the **single source of truth** for the submission list:  
+> the DOM, or the `submissions` array? Why?
+
+> **Screenshot requirement:**  
+> Take a screenshot of your browser showing **at least three** submissions rendered in the list.
+
+---
+
+### Try It 3: Reset the Form Without Losing the List
+
+**What youre learning:** Clear the form while preserving app state.
+
+Right now, after submission, the fields still show the values you just entered. Lets improve that UX.
+
+1. At the end of the submit handler, after `result.innerHTML = ...`, add:
+
+```js
+form.reset();
+```
+
+2. Refresh the page. Now:
+
+- Fill out the form and submit.
+- The form should clear out.
+- The submission should still appear in the list.
+- Submitting again should **add** to the list, not replace it.
+
+Combine this with your existing disableduntilvalid logic from `js-form-fundamentals`:
+
+- Start with the submit button disabled.
+- Enable it when all required fields are filled.
+- After `form.reset()`, it should go back to disabled.
+
+> **Checkpoint:**  
+> Which *single* line of code is responsible for the DOM updating when state changes?
+
+> **Screenshot requirement:**  
+> Take two screenshots:
+> - One showing the form filled out **before** submit, with the button enabled.
+> - One showing the cleared form **after** submit, with the list of submissions visible below.
+
+---
+
+### Hands-On Practice: Build a Support Inbox
+
+Now youll apply the pattern to a slightly different scenario.
+
+**Goal:** Turn your form into a tiny Support Inbox that lists incoming support messages.
+
+**Setup:**
+
+- Create `src/support-inbox.js`.
+- Point your `<script>` tag at it:
+
+```html
+<script type="module" src="/src/support-inbox.js"></script>
+```
+
+**Requirements:**
+
+1. **Use your existing contact form HTML**, but change labels/placeholders to feel like support tickets (e.g. Issue title, Details, Priority).
+2. Store each submission in an array called `tickets`:
+   ```js
+   const form = document.querySelector("form");
+   const result = document.querySelector("#result");
+
+   let tickets = [];
+   ```
+3. Create:
+   - `TicketItem(ticket)` — renders one ticket with a clear layout.
+   - `TicketList(tickets)` — renders all tickets in a list or grid.
+
+   Example shape:
+
+   ```js
+   function TicketItem(ticket) {
+     return `
+       <article class="rounded border p-3">
+         <h3 class="font-semibold">${ticket.title}</h3>
+         <p class="text-sm text-gray-700">${ticket.details}</p>
+         <p class="mt-1 text-xs uppercase text-gray-500">
+           Priority: ${ticket.priority}
+         </p>
+       </article>
+     `;
+   }
+
+   function TicketList(items) {
+     if (items.length === 0) {
+       return`<p class="text-sm text-gray-500">No tickets yet.</p>`;
+     }
+
+     return `
+       <section class="mt-4 space-y-2">
+         <h2 class="mb-1 text-lg font-semibold">Support Inbox</h2>
+         <div class="space-y-2">
+           ${items.map(TicketItem).join("")}
+         </div>
+       </section>
+     `;
+   }
+   ```
+
+4. On each submit:
+   - Prevent default.
+   - Convert `FormData` to a plain object.
+   - Use an **immutable** update to add the ticket:
+     ```js
+     tickets = [...tickets, ticket];
+     ```
+   - Render the list using `TicketList(tickets)`.
+   - Reset the form.
+
+5. Add a **Clear All Tickets** button below the list:
+   - Clicking it should empty the `tickets` array and rerender:
+
+   ```js
+   clearButton.addEventListener("click", () => {
+     tickets = [];
+     result.innerHTML = TicketList(tickets);
+   });
+   ```
+
+> **Checkpoint:**  
+> What are two reasons it is cleaner to **always rerender from `tickets`** instead of trying to surgically add/remove DOM elements one by one?
+
+> **Screenshot requirements (for homework):**
+> - One screenshot with **no tickets** (fresh page).
+> - One screenshot with **multiple tickets** listed.
+> - One screenshot **after** clicking Clear All Tickets.
+
+Make at least one commit with a message like:
+
+- `feat: add support inbox state and list rendering`
+
+---
+
+## Advanced Concepts & Comparisons
+
+Once youve done the handson work, pause and think about these comparisons:
+
+1. **DOM as state vs JavaScript as state**
+
+   - DOM-as-state: Ill just read values from the DOM whenever I need them.
+   - JS-as-state: I keep the data in variables/arrays/objects and rerender the DOM from that.
+
+   In real apps, the JSasstate pattern scales much better.
+
+2. **Function Components vs Copy/Paste HTML**
+
+   - Without components, youd paste repeated `<li>` or card markup everywhere.
+   - With components, you write one `SubmissionItem` or `TicketItem` and reuse it via `.map()`.
+
+3. **Setting up for Persistence and Fetch**
+
+   - Right now, your state lives **only in memory**. Refresh the page, and its gone.
+   - Later, `localStorage` can be used to **save** and **restore** this array.
+   - Even later, `fetch` can be used to **load** and **save** this array from/to a server.
+
+> Youre building the muscle of:  
+> **Data in memory  render from that data.**  
+> Everything else (storage, networking, React, etc.) builds on this.
+
+---
+
+## Troubleshooting & Best Practices
+
+Common gotchas:
+
+- **Nothing renders in the list**
+
+  - Did you set `result.innerHTML = SubmissionList(submissions);` *after* updating `submissions`?
+  - Did you remember `.join("")` after `.map()`?
+
+- **Only the last submission shows up**
+
+  - Are you accidentally replacing `submissions` with just the new item?
+    ```js
+    // ❌ Wrong:
+    submissions = [data];
+    // ✅ Right:
+    submissions = [...submissions, data];
+    ```
+
+- **Form doesnt reset**
+
+  - Did you remember `form.reset()` inside the submit handler?
+
+- **Submit button never disables again**
+
+  - After `form.reset()`, does your `input` event listener run again to check required fields?
+  - Are you correctly setting `submitBtn.disabled = true` when fields are empty?
+
+Best practices from this lesson:
+
+- Keep **app state** in as few places as possible (one array).
+- Use function components for **repeated UI patterns**.
+- Rerender from state instead of trying to remember what the DOM looks like.
+- Prefer **immutable updates** (`state = [...state, newItem]`) for state arrays.
+
+---
+
+## Wrap-Up & Assessment
+
+### Key Takeaways
+
+- Your form is a way to **capture data**, not the permanent home for that data.
+- An inmemory array of objects can represent all submissionsthis is your **app state**.
+- The DOM should be rendered **from app state**, making the state the **single source of truth**.
+- Function components + `.map()` let you render dynamic lists from that state with minimal repetition.
+- Immutable updates to state arrays set you up for the patterns youll use in React.
+- This pattern is the stepping stone to **persistent state** (with localStorage) and **remote state** (with fetch + a backend).
+
+### Homework: Build a Different Log App
+
+In your template repository, build a **new** app (not a support inbox) that uses the same pattern. Some ideas:
+
+- A Workout Log (date, exercise, duration).
+- A Study Sessions tracker (topic, duration, notes).
+- A Bug Reports log (title, severity, description).
+
+**Requirements:**
+
+1. Use a form with at least **three fields** plus a submit button.
+2. Maintain an inmemory array of entries (e.g. `workouts`, `sessions`, or `bugs`).
+3. Use:
+   - A function component for a **single** entry.
+   - A function component for the **list** of entries.
+4. On submit:
+   - Prevent default.
+   - Use an immutable update, e.g. `workouts = [...workouts, workout];`.
+   - Rerender the list from that array.
+   - Reset the form.
+5. Include a Clear All button that empties the array and rerenders.
+
+**Deliverables:**
+
+- Screenshots:
+  - Empty state.
+  - Several entries listed.
+  - After Clear All.
+- Commits with clear messages showing your progress.
+
+### Reflection (`js-form-state-and-lists-reflection.md`)
+
+Create a reflection markdown file that answers these questions in your own words:
+
+1. Describe the full data flow in your app, from typing in the form to seeing entries listed on the page. Mention **FormData**, the **array of objects**, and your **list component(s)**.
+2. Before this lesson, how did you think about where data lives in a web page? Has that changed? How?
+3. What confused you the most in this lesson (for example, `.map()`, components, or managing the array)? How did you work through that confusion? Mention any resources or AI prompts you used.
+4. If your browser tab closed unexpectedly, what would you need to add so your entries could come back on reload? Describe it in plain language (you do **not** need to implement it yet).
+5. How do you think this pattern (state in JS  render UI from it) might show up again when you eventually learn React?
+
+Be specific and concrete. Show that you understand not just *what* you typed, but **why** it works.

@@ -296,6 +296,18 @@ const lessons = [
         video: null,
       },
       {
+        id: "function-components",
+        title: "Function Components",
+        description:
+          "Learn to build reusable UI components with JavaScript functions that return DOM elements. Understand component structure and composition.",
+        video: {
+          duration: 703,
+          thumbnail:
+            "https://d8n3.c1.e2-8.dev/swic/videos/function-components.png",
+          url: "https://videos.learnjs.tech/swic/videos/function-components.mp4",
+        },
+      },
+      {
         id: "js-form-fundamentals",
         title: "Form Fundamentals",
         description:
@@ -308,16 +320,11 @@ const lessons = [
         },
       },
       {
-        id: "function-components",
-        title: "Function Components",
+        id: "js-form-validation",
+        title: "Form Validation",
         description:
-          "Learn to build reusable UI components with JavaScript functions that return DOM elements. Understand component structure and composition.",
-        video: {
-          duration: 703,
-          thumbnail:
-            "https://d8n3.c1.e2-8.dev/swic/videos/function-components.png",
-          url: "https://videos.learnjs.tech/swic/videos/function-components.mp4",
-        },
+          "Use the Constraint Validation API to validate user input. Provide feedback and ensure data integrity before form submission.",
+        video: null,
       },
       {
         id: "js-local-storage",
@@ -457,7 +464,7 @@ const lessons = [
           "Build a contact form using modern uncontrolled React inputs with the form action prop and FormData.",
         video: null,
       },
-{
+      {
         id: "react-controlled-forms",
         title: "React Forms (Controlled)",
         description:
