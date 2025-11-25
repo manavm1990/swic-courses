@@ -228,6 +228,10 @@ function gatherFieldErrors(el) {
       `${el.name} must be at most ${el.getAttribute("maxlength")} characters.`,
     );
   if (v.typeMismatch) errors.push(`Please enter a valid ${el.type}.`);
+
+ // Do we have any custom errors set from `setCustomValidity()`?
+  if (v.customError) errors.push(el.validationMessage);
+
   if (v.patternMismatch) errors.push(`${el.name} format is invalid.`);
 
   return errors;
