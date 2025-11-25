@@ -275,27 +275,6 @@ const lessons = [
         video: null,
       },
       {
-        id: "manipulating-content-styles",
-        title: "Manipulating Content & Styles",
-        description:
-          "Change text, HTML content, and styles dynamically. Work with classList to toggle Tailwind classes and create interactive interfaces.",
-        video: null,
-      },
-      {
-        id: "creating-elements",
-        title: "Creating & Adding Elements",
-        description:
-          "Generate new DOM elements programmatically. Learn createElement, appendChild, and building dynamic content from JavaScript data.",
-        video: null,
-      },
-      {
-        id: "event-handling-basics",
-        title: "Event Handling Basics",
-        description:
-          "Respond to user interactions with addEventListener. Handle clicks, form input, and other events to create responsive web applications.",
-        video: null,
-      },
-      {
         id: "function-components",
         title: "Function Components",
         description:
@@ -342,13 +321,6 @@ const lessons = [
         title: "Browser Storage Fundamentals",
         description:
           "Understand how browsers store data with localStorage. Learn when to use it, how to handle errors, and build persistent applications.",
-        video: null,
-      }
-      {
-        id: "interactive-project",
-        title: "Interactive Project: Task Manager",
-        description:
-          "Apply DOM manipulation skills to build a functional task manager app with add, edit, delete, and toggle functionality.",
         video: null,
       },
     ],
