@@ -101,6 +101,43 @@ console.log(adultAges); // [21, 25, 22] - only items that passed the test
 
 **Key concept**: `filter` returns a **new array containing only items that pass the test** (return true).
 
+### Bonus Array Methods: every & some
+
+**Mental model**: Think of these as group decision makers:
+
+- **every**: The "All-Star Vote" – returns `true` if **every** item in the array passes the test you give (callback returns true).
+- **some**: The "At Least One Vote" – returns `true` if **at least one** item in the array passes the test.
+
+#### every: Require All Items to Pass
+
+**Analogy**: Like a school rule that ALL students must have turned in their homework for a class reward.
+
+```javascript
+const homeworkStatus = [true, true, false, true];
+
+// Did every student submit homework?
+const allSubmitted = homeworkStatus.every((status) => status === true);
+
+console.log(allSubmitted); // false (not everyone submitted)
+```
+
+#### some: Succeed If Any Item Passes
+
+**Analogy**: Like a contest where ANY student who gets an A wins a prize.
+
+```javascript
+const grades = [67, 84, 75, 90, 82];
+
+// Did anyone get an A (90 or above)?
+const hasAStudent = grades.some((grade) => grade >= 90);
+
+console.log(hasAStudent); // true
+```
+
+**Use cases**:
+- Use `every` when you need ALL items to satisfy a rule (e.g., "Do all users have permission?")
+- Use `some` when ANY item passing is enough (e.g., "Is there any product out of stock?")
+
 ### Key Terms
 
 - **Callback function**: A function passed to another function to be executed later
