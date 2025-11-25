@@ -1,0 +1,931 @@
+# Persistent Tutor Requests with localStorage
+
+## Introduction
+
+**Icebreaker:**  
+Have you ever filled out a long form, accidentally refreshed the page, and lost everything? How did that feel?
+
+**Scenario:**  
+You just built a nicely validated **"Request a Tutor Session"** form. It guides the user with live errors and checks everything on submit. That’s good UX.
+
+But there’s still one big problem:
+
+> If the student closes the tab or refreshes the page, all their work vanishes.
+
+In this lesson, you’ll teach your app to **remember** two things:
+
+1. A **list of submitted tutor requests** (an “inbox”)
+2. Optionally, a **draft** in progress before they hit Submit
+
+You’ll do this with the browser’s built-in storage, `localStorage`, using the same form and validation patterns you already know.
+
+### Learning Objectives
+
+By the end of this lesson, you will be able to:
+
+- Explain at a high level what `localStorage` is and what it is _not_
+- Use `localStorage.setItem` and `localStorage.getItem` to save and load data
+- Convert objects/arrays to strings with `JSON.stringify` and back with `JSON.parse`
+- Use `try/catch` to safely handle corrupted data in storage
+- Store validated form submissions in an in-memory array ("app state")
+- Render that array as a list using **function components** and `.map().join("")`
+- Persist that array to `localStorage` and restore it on page load
+
+> Time budget: This lesson (reading + practice + homework + reflection) is designed for roughly **4 hours** of focused work.
+
+## Core Concept Overview
+
+### 1. Where We Are: Validated Forms + Components
+
+From earlier lessons you already know how to:
+
+- Build a form with HTML attributes (`required`, `minlength`, `maxlength`, `pattern`, etc.)
+- Use the **Constraint Validation API**:
+  - `element.validity`
+  - `checkValidity()`, `reportValidity()`, `setCustomValidity()`
+- Turn a form into a **plain object** with `FormData` + `Object.fromEntries`
+- Render that object into the DOM
+- Build **function components**:
+
+```js
+function RequestCard(request) {
+  return `
+    <article>
+      <h3>${request.studentName}</h3>
+      <p>${request.courseCode}</p>
+    </article>
+  `;
+}
+```
+
+You already have:
+
+- **Validated data** in a plain JS object
+- **Components** that turn objects into HTML strings
+
+### 2. What We Add: Browser Storage
+
+Right now, your data flow looks like this:
+
+1. User types into the form (DOM input values)
+2. Validation runs (Constraint Validation API)
+3. On successful submit:
+   - You build a **plain object** from the form
+   - You maybe render **one** submission into the DOM
+
+When the page reloads, everything is gone.
+
+We’ll adjust the model to this:
+
+1. **Form fields (DOM)**
+2. **Validation** (Constraint Validation + your helpers)
+3. **App state array** in JavaScript, e.g. `let requests = []`
+4. **Render components** from that array into the DOM
+5. **Save array into localStorage** as a JSON string
+6. On page load, **load from localStorage** into the array, then re-render
+
+Key ideas:
+
+- `requests` (the array) is the **single source of truth** in your running app
+- `localStorage` is where you **remember that array between visits**
+- You always:
+  - **Update the array**
+  - **Render from the array**
+  - **Sync the array to localStorage**
+
+### 3. Quick localStorage Recap (and a Big Warning)
+
+The core methods you’ll use:
+
+```js
+// Save a string value
+localStorage.setItem("some-key", "some string value");
+
+// Read it later
+const value = localStorage.getItem("some-key"); // string or null
+
+// Remove one key
+localStorage.removeItem("some-key");
+
+// Clear everything for this site
+localStorage.clear();
+```
+
+Important details:
+
+- **Everything is a string** in `localStorage`
+- You’ll use `JSON.stringify` and `JSON.parse` to store arrays/objects
+- `localStorage.getItem(key)` returns either:
+  - A string (if the key exists)
+  - `null` (if it doesn’t)
+
+<Accordion question="Should I put everything in localStorage now?">
+
+**No. Absolutely not.** localStorage is:
+
+- Per-browser, per-device, per-site (not shared across users)
+- Not secure (any JS on the page can read it as plain text)
+- Tiny (around 5–10 MB total per origin)
+
+**Never** store passwords, API tokens, credit card numbers, or sensitive personal data in localStorage.  
+**Never** use it as a shared multi-user database.
+
+It _is_ okay for:
+
+- Small, per-user preferences (dark mode, font size)
+- Local-only drafts (like your own tutor request before you submit it)
+- Caching small bits of non-sensitive data
+
+In this lesson, we will only store **your own tutor requests** in your own browser, as practice. That’s a safe and realistic use.
+
+</Accordion>
+
+### 4. JSON + try/catch Pattern
+
+To store an array:
+
+```js
+const todos = [{ text: "Study JS", done: false }];
+localStorage.setItem("todos", JSON.stringify(todos));
+```
+
+To load safely with `try/catch`:
+
+```js
+function loadTodos() {
+  try {
+    const stored = localStorage.getItem("todos");
+    if (!stored) return [];
+
+    const parsed = JSON.parse(stored);
+
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed;
+  } catch (error) {
+    console.error("Error loading todos:", error.message);
+    return [];
+  }
+}
+```
+
+You’ll use this pattern with your **validated tutor requests**.
+
+> **Checkpoint:** Why is it important to default to an empty array (`[]`) if loading fails instead of letting the app crash? Jot down your answer; you’ll revisit it in the reflection.
+
+---
+
+## Hands-On Application
+
+**Practice workflow (READ THIS):**
+
+- Use **practice files** for “Try It” sections (like `src/local-storage-practice-01.js`)
+- Keep your `js-form-validation` homework in `src/main.js` untouched for now
+- Only for the homework in this lesson will you update `src/main.js`
+
+---
+
+### Try It 1: Remember My Name
+
+**Goal:** Warm up with localStorage by persisting a single input value.
+
+#### Step 1: Set up the HTML
+
+In your template repo’s `index.html`, inside `<body>`, replace the inner content with:
+
+```html
+<div id="app" class="mx-auto mt-8 max-w-md space-y-4 p-4">
+  <h1 class="text-2xl font-bold">localStorage Warmup: Remember My Name</h1>
+  <label class="block text-sm font-medium text-gray-800" for="name-input">
+    Name
+  </label>
+  <input
+    id="name-input"
+    class="w-full rounded border px-3 py-2"
+    placeholder="Type your name"
+  />
+  <p id="greeting" class="text-gray-700"></p>
+  <button
+    id="clear-name"
+    class="rounded bg-red-500 px-3 py-1 text-sm text-white"
+    type="button"
+  >
+    Clear Stored Name
+  </button>
+</div>
+<script type="module" src="/src/local-storage-practice-01.js"></script>
+```
+
+#### Step 2: Create `src/local-storage-practice-01.js`
+
+```js
+const input = document.querySelector("#name-input");
+const greeting = document.querySelector("#greeting");
+const clearBtn = document.querySelector("#clear-name");
+
+const STORAGE_KEY = "practice-name";
+
+function renderGreeting(name) {
+  greeting.textContent = name ? `Welcome back, ${name}!` : "";
+}
+
+function loadName() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return "";
+    return stored;
+  } catch (error) {
+    console.error("Error loading name:", error.message);
+    return "";
+  }
+}
+
+function saveName(name) {
+  try {
+    localStorage.setItem(STORAGE_KEY, name);
+  } catch (error) {
+    console.error("Error saving name:", error.message);
+  }
+}
+
+function clearName() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (error) {
+    console.error("Error clearing name:", error.message);
+  }
+}
+
+// Initialize from storage on page load
+const initialName = loadName();
+input.value = initialName;
+renderGreeting(initialName);
+
+// Save on every change
+input.addEventListener("input", () => {
+  const name = input.value;
+  saveName(name);
+  renderGreeting(name);
+});
+
+// Clear button
+clearBtn.addEventListener("click", () => {
+  input.value = "";
+  clearName();
+  renderGreeting("");
+});
+```
+
+#### Step 3: Test
+
+1. Start your dev server: `npm run dev`
+2. Type your name → greeting shows
+3. Refresh the page → your name and greeting should still be there
+4. Click “Clear Stored Name” → value disappears, refresh again → still empty
+
+> **Screenshot requirement:**
+>
+> - One screenshot with your name typed and greeting visible
+> - One screenshot after refresh showing it persisted
+
+> **Checkpoint:** In your own words, why do we load from `localStorage` **once on page load** instead of constantly reading from it every time we need the name?
+
+---
+
+### Try It 2: Tutor Requests as App State (In Memory Only)
+
+**Goal:** Treat each **validated submission** as an object in an array, and render a list from that array with function components. No localStorage yet.
+
+You will:
+
+- Reuse the **“Request a Tutor Session”** form structure from `js-form-validation`
+- Store each successful submission in a `requests` array
+- Render all requests below the form using function components
+
+#### Step 1: HTML: Tutor Form + Requests Section
+
+In `index.html`, update the content to your tutor request form.
+
+You can either:
+
+- Copy your own validated form from your `js-form-validation` homework, or
+- Start from this baseline and adjust:
+
+```html
+<form
+  id="tutor-form"
+  novalidate
+  class="mx-auto mt-8 max-w-md space-y-4 rounded border p-4"
+>
+  <h1 class="text-xl font-bold">Request a Tutor Session</h1>
+
+  <div>
+    <label for="studentName" class="mb-1 block text-sm font-medium">
+      Student Name
+    </label>
+    <input
+      id="studentName"
+      name="studentName"
+      required
+      minlength="2"
+      maxlength="40"
+      class="w-full rounded border px-3 py-2"
+    />
+  </div>
+
+  <div>
+    <label for="courseCode" class="mb-1 block text-sm font-medium">
+      Course Code
+    </label>
+    <input
+      id="courseCode"
+      name="courseCode"
+      required
+      pattern="^[A-Z]{3}[0-9]{3}$"
+      class="w-full rounded border px-3 py-2"
+      placeholder="Example: CIS177"
+    />
+  </div>
+
+  <div>
+    <label for="sessionType" class="mb-1 block text-sm font-medium">
+      Session Type
+    </label>
+    <select
+      id="sessionType"
+      name="sessionType"
+      required
+      class="w-full rounded border px-3 py-2"
+    >
+      <option value="">Choose one…</option>
+      <option value="Online">Online</option>
+      <option value="In person">In person</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="notes" class="mb-1 block text-sm font-medium">
+      Notes (optional)
+    </label>
+    <textarea
+      id="notes"
+      name="notes"
+      maxlength="200"
+      rows="4"
+      class="w-full rounded border px-3 py-2"
+    ></textarea>
+    <div id="notes-counter" class="mt-1 text-xs text-gray-600"></div>
+  </div>
+
+  <button
+    type="submit"
+    class="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
+  >
+    Request Tutor
+  </button>
+</form>
+
+<section id="validation-errors" class="mx-auto mt-4 max-w-md"></section>
+<section id="requests" class="mx-auto mt-6 max-w-md"></section>
+
+<script type="module" src="/src/tutor-requests-practice.js"></script>
+```
+
+#### Step 2: Create `src/tutor-requests-practice.js`
+
+Start with basic wiring and an **in-memory array**:
+
+```js
+import "./style.css";
+
+const form = document.querySelector("#tutor-form");
+const errorsBox = document.querySelector("#validation-errors");
+const requestsBox = document.querySelector("#requests");
+const submitBtn = form.querySelector('[type="submit"]');
+const notes = form.notes;
+const notesCounter = document.querySelector("#notes-counter");
+
+// App state: array of request objects
+let requests = [];
+```
+
+#### Step 3: Validation Helpers (Reuse from js-form-validation)
+
+You can copy a simplified version of your earlier helpers:
+
+```js
+function ErrorItem(msg) {
+  return `<li class="text-red-700">${msg}</li>`;
+}
+
+function gatherFieldErrors(el) {
+  const v = el.validity;
+  if (v.valid) return [];
+
+  const errors = [];
+
+  if (v.valueMissing) errors.push(`${el.name} is required.`);
+  if (v.tooShort)
+    errors.push(
+      `${el.name} must be at least ${el.getAttribute("minlength")} characters.`,
+    );
+  if (v.tooLong)
+    errors.push(
+      `${el.name} must be at most ${el.getAttribute("maxlength")} characters.`,
+    );
+  if (v.typeMismatch) errors.push(`Please enter a valid ${el.type}.`);
+  if (v.patternMismatch)
+    errors.push(`${el.name} format is invalid. (Check the pattern.)`);
+
+  return errors;
+}
+
+function collectErrors() {
+  const fields = Array.from(form.elements).filter((field) => field.name);
+  return fields.flatMap((field) => gatherFieldErrors(field));
+}
+
+function renderErrors(list) {
+  errorsBox.innerHTML = list.length
+    ? `<ul class="mb-4 space-y-1">${list.map(ErrorItem).join("")}</ul>`
+    : "";
+}
+
+function updateSubmitState() {
+  submitBtn.disabled = collectErrors().length > 0;
+  submitBtn.classList.toggle("opacity-50", submitBtn.disabled);
+}
+
+form.addEventListener("input", () => {
+  renderErrors(collectErrors());
+  updateSubmitState();
+});
+```
+
+#### Step 4: Notes Counter (Small Enhancement)
+
+```js
+const maxChars = parseInt(notes.getAttribute("maxlength"), 10);
+
+function updateNotesCounter() {
+  const used = notes.value.length;
+  const remaining = maxChars - used;
+  notesCounter.textContent = `${remaining} characters remaining`;
+}
+
+notes.addEventListener("input", updateNotesCounter);
+updateNotesCounter();
+```
+
+#### Step 5: Request Components (Function Components)
+
+Create components for rendering requests:
+
+```js
+function RequestCard(request) {
+  return `
+    <article class="rounded border p-3 bg-white shadow-sm">
+      <h3 class="font-semibold">${request.studentName}</h3>
+      <p class="text-sm text-gray-700">
+        ${request.courseCode} — ${request.sessionType}
+      </p>
+      ${
+        request.notes
+          ? `<p class="mt-1 text-xs text-gray-600">${request.notes}</p>`
+          : ""
+      }
+    </article>
+  `;
+}
+
+function EmptyState() {
+  return `<p class="text-sm text-gray-500">No tutor requests yet.</p>`;
+}
+
+function RequestList(items) {
+  if (!items.length) return EmptyState();
+
+  return `
+    <section class="space-y-2">
+      <h2 class="mb-2 text-lg font-semibold">Tutor Requests Inbox</h2>
+      <div class="space-y-2">
+        ${items.map(RequestCard).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderRequests() {
+  requestsBox.innerHTML = RequestList(requests);
+}
+```
+
+#### Step 6: Submit Handler (In Memory Only)
+
+Wire it all together:
+
+```js
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const errs = collectErrors();
+  renderErrors(errs);
+  if (errs.length) return;
+
+  const data = Object.fromEntries(new FormData(form).entries());
+
+  // Immutable update — do NOT use .push() here
+  requests = [...requests, data];
+
+  renderRequests();
+
+  form.reset();
+  updateSubmitState();
+  updateNotesCounter();
+});
+
+// Initial UI
+updateSubmitState();
+renderRequests();
+```
+
+#### Step 7: Test
+
+1. Load the page
+2. Submit invalid data → errors should show, no card added
+3. Submit valid data:
+   - Errors clear
+   - Form resets
+   - A new request card appears below the form
+4. Submit at least 3 different requests
+
+> **Screenshot requirement:**
+>
+> - One screenshot showing the form with validation errors
+> - One screenshot showing at least 3 tutor requests rendered in the inbox
+
+> **Checkpoint:** According to this design, what is the **single source of truth** for the inbox: the DOM, or the `requests` array? Why?
+
+---
+
+### Hands-On Practice: Add Persistence with localStorage
+
+**Goal:** Extend the tutor requests inbox so that:
+
+- Requests are **saved to localStorage** whenever they change
+- On page load, existing requests are **loaded from localStorage** and rendered
+- There is a **“Clear All Requests”** button that clears both:
+  - The `requests` array in memory
+  - The data in `localStorage`
+
+We’ll stay entirely in `src/tutor-requests-practice.js`.
+
+#### Step 1: Add a Storage Key and Clear Button
+
+In `tutor-requests-practice.js`, near the top:
+
+```js
+const STORAGE_KEY = "tutor-requests";
+```
+
+In `index.html`, below the `#requests` section, add:
+
+```html
+<div class="mx-auto mt-4 max-w-md">
+  <button
+    id="clear-requests"
+    type="button"
+    class="rounded bg-red-500 px-3 py-1 text-sm text-white"
+  >
+    Clear All Requests
+  </button>
+</div>
+```
+
+In JS, grab the button:
+
+```js
+const clearBtn = document.querySelector("#clear-requests");
+```
+
+#### Step 2: Implement `loadRequests` and `saveRequests`
+
+Add these functions:
+
+```js
+function loadRequests() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return [];
+
+    const parsed = JSON.parse(stored);
+
+    if (!Array.isArray(parsed)) {
+      console.warn("Stored tutor requests were not an array, resetting.");
+      return [];
+    }
+
+    return parsed;
+  } catch (error) {
+    console.error("Error loading tutor requests:", error.message);
+    return [];
+  }
+}
+
+function saveRequests(list) {
+  try {
+    const json = JSON.stringify(list);
+    localStorage.setItem(STORAGE_KEY, json);
+  } catch (error) {
+    console.error("Error saving tutor requests:", error.message);
+  }
+}
+```
+
+#### Step 3: Load on Page Start
+
+After you declare `let requests = []`, replace it with:
+
+```js
+let requests = loadRequests();
+renderRequests();
+```
+
+(Keep your existing `renderRequests` function as-is.)
+
+#### Step 4: Save After Each Change
+
+In your submit handler, **after** updating `requests`, call `saveRequests`:
+
+```js
+requests = [...requests, data];
+saveRequests(requests);
+renderRequests();
+```
+
+#### Step 5: Clear All Button
+
+Add this listener:
+
+```js
+clearBtn.addEventListener("click", () => {
+  requests = [];
+  saveRequests(requests);
+  renderRequests();
+});
+```
+
+#### Step 6: Test Persistence
+
+1. Add a few valid tutor requests
+2. Refresh the page:
+   - Your inbox should show the same requests
+3. Click “Clear All Requests”:
+   - Inbox shows the empty state
+4. Refresh again:
+   - Inbox should still be empty
+
+> **Screenshot requirements:**
+>
+> - One screenshot showing several tutor requests listed
+> - One screenshot after refresh showing they persisted
+> - One screenshot after “Clear All Requests” showing the empty state
+
+> **Checkpoint:** Describe the full data flow when you click “Submit” on a valid form, from form fields all the way to localStorage and back on the next page load.
+
+---
+
+## Troubleshooting & Best Practices
+
+Common issues:
+
+- **Nothing shows after reload**
+  - Did you call `loadRequests()` to initialize `requests`?
+  - Did you call `renderRequests()` after setting `requests` on load?
+- **Only the last request appears**
+  - Are you accidentally doing `requests = [data];` instead of `requests = [...requests, data];`?
+- **localStorage errors / crashes**
+  - Did you wrap `JSON.parse` in `try/catch`?
+  - Did you handle the “not an array” case by returning `[]`?
+- **Clear All doesn’t persist**
+  - Did you call `saveRequests(requests);` _after_ setting `requests = []`?
+
+Best practices from this lesson:
+
+1. Keep **app state** in a JS variable (like `requests`), not in the DOM
+2. Render the DOM from that **single source of truth**
+3. Use **function components** for repeated UI (`RequestCard`, `RequestList`, `EmptyState`)
+4. Use immutable updates (`requests = [...requests, data]`)
+5. Wrap `JSON.parse` in `try/catch` and default to **safe values** (like `[]`)
+6. Treat `localStorage` like a **small, local notebook**, not a shared, secure database
+
+---
+
+## Wrap-Up & Homework
+
+### Homework: Persistent Tutor Requests Inbox (Submit for Credit)
+
+For your graded assignment, you will upgrade your **existing `js-form-validation` homework** to include:
+
+- A **persistent tutor requests inbox**
+- localStorage integration
+- Clear, component-based rendering of the list
+
+#### 1. Starting Point
+
+In your template repo:
+
+- Use your current `src/main.js` and `index.html` that contain your:
+  - Validated “Request a Tutor Session” form
+  - Constraint Validation helpers
+  - Notes character counter
+
+You will **extend** this app; you do _not_ need to start from scratch.
+
+#### 2. Requirements: State & Components
+
+In `src/main.js`:
+
+- Add a `requests` array as app state:
+
+  ```js
+  let requests = [];
+  ```
+
+- Add function components (you may reuse/adjust from practice):
+  - `RequestCard(request)` – renders one tutor request
+  - `EmptyState()` – renders a “no requests yet” message
+  - `RequestList(items)` – renders all requests or the empty state
+  - `renderRequests()` – sets `innerHTML` of your inbox section using `RequestList`
+
+- Your markup should use Tailwind classes and look reasonably styled (doesn’t need to be fancy).
+
+#### 3. Requirements: localStorage Integration
+
+Add a constant key:
+
+```js
+const STORAGE_KEY = "tutor-requests";
+```
+
+Implement:
+
+- `loadRequests()` using `localStorage.getItem`, `JSON.parse`, and `try/catch`:
+  - Returns an **array** of requests
+  - Returns `[]` on any failure (missing key, bad JSON, not an array, etc.)
+- `saveRequests(list)` using `JSON.stringify`:
+  - Catches and logs errors but does not crash the app
+
+On script startup:
+
+- Initialize state from storage:
+
+  ```js
+  let requests = loadRequests();
+  renderRequests();
+  updateSubmitState();
+  updateNotesCounter();
+  ```
+
+On **successful submit** (after validation passes):
+
+- Convert the form to a plain object (you already do this)
+- Append that object immutably:
+
+  ```js
+  requests = [...requests, data];
+  saveRequests(requests);
+  renderRequests();
+  ```
+
+- Reset the form and any validation state as before
+
+Add a **“Clear All Requests”** button (in `index.html` or via JS) that:
+
+- Sets `requests = []`
+- Calls `saveRequests(requests)` to update localStorage
+- Calls `renderRequests()` to show the empty state
+
+#### 4. Validation & UX Requirements
+
+All of these from `js-form-validation` must still work:
+
+- HTML attributes for baseline rules (`required`, `minlength`, `maxlength`, `pattern`)
+- Constraint Validation API helpers:
+  - `collectErrors()`, `gatherFieldErrors()`, `renderErrors()`
+- Live validation on `input` that:
+  - Updates the error list as the user types
+  - Enables/disables the submit button correctly
+- Notes character **remaining** counter (like your previous homework):
+  - Starts at full remaining count
+  - Updates on every `input`
+
+You are **adding** persistence and list rendering, not removing validation.
+
+#### 5. Deliverables
+
+In your repo, you should have:
+
+- Updated `index.html` with:
+  - The tutor request form
+  - A section (like `#requests`) for the inbox
+  - A “Clear All Requests” button
+  - `<script type="module" src="/src/main.js"></script>` at the bottom
+- Updated `src/main.js` with:
+  - Validation helpers from previous homework
+  - Notes counter
+  - `requests` array state
+  - `RequestCard`, `RequestList`, `EmptyState`, `renderRequests`
+  - `loadRequests`, `saveRequests`
+  - Submit handler that updates state + storage + UI
+  - Clear All button handler
+
+**Screenshots (for submission):**
+
+1. **Invalid form state** with:
+   - Tutor-specific validation errors visible
+   - Disabled submit button
+2. **Valid form ready to submit** with:
+   - No errors
+   - Enabled submit button
+3. **Inbox with multiple requests** visible after several valid submissions
+4. **Page reload** showing that the same requests are still listed (persistence)
+5. **After Clear All** showing the empty state
+
+**Commits:**
+
+Make at least **2–3 commits** with clear messages as you build:
+
+- Example:
+  - `feat: add tutor requests inbox components`
+  - `feat: persist tutor requests to localStorage`
+  - `fix: handle corrupted storage data safely`
+
+---
+
+## Reflection (`js-form-local-storage-reflection.md`)
+
+Create a new markdown file in your repo:
+
+`js-form-local-storage-reflection.md`
+
+Answer these questions in your own words:
+
+1. **Data Flow:**  
+   Describe the full data flow when you submit a valid tutor request:
+   - From typing into the form
+   - Through validation
+   - Into the `requests` array
+   - Into `localStorage`
+   - Back out of `localStorage` on the next page load  
+     Use 1–2 short paragraphs.
+
+2. **Components:**  
+   Name at least **two** function components you wrote in this homework.  
+   For each one, explain:
+   - What props/data it expects
+   - How it helped you avoid copy-pasting HTML
+
+3. **localStorage Safety:**  
+   Show your `loadRequests()` function and explain:
+   - Where `try/catch` appears
+   - What happens if the stored data is corrupted or not an array
+   - Why returning `[]` is a safe default
+
+4. **Single Source of Truth:**  
+   In your app, which is the **single source of truth** for tutor requests while the page is open:
+   - The DOM, or the `requests` array?  
+     Justify your answer with a specific example from your code.
+
+5. **What Confused You & How You Solved It:**  
+   Be honest.
+   - What part of this lesson or homework was most confusing? (for example, `JSON.parse`, `try/catch`, `map().join("")`, keeping state and storage in sync)
+   - How did you work through that confusion?  
+     Mention any notes you wrote, docs you read, or specific AI prompts you used.
+
+Be specific and concrete. Show that you understand **why** your code works, not just what it does.
+
+---
+
+## Looking Ahead
+
+In this lesson you:
+
+- Combined **validated forms**, **function components**, and **localStorage**
+- Treated `requests` (an array) as your **single source of truth**
+- Used localStorage as a **small, local notebook** to remember that array between page loads
+
+In the next lessons you will:
+
+- Learn more about localStorage itself (`js-local-storage`) at the API level
+- Eventually move from **local-only state** (localStorage) to **shared remote state** using `fetch` and a real backend
+
+---
+
+## Final Checkpoint
+
+In a single sentence, explain:
+
+> Why is it better in this design to always re-render the inbox from the `requests` array (and then sync that array to localStorage) instead of manipulating the DOM directly and treating localStorage as the main source of truth?
+
+Write your answer at the end of your reflection file.

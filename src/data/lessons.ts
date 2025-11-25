@@ -331,12 +331,19 @@ const lessons = [
         },
       },
       {
+        id: "js-form-local-storage",
+        title: "Persistent Tutor Requests with localStorage",
+        description:
+          "Connect your validated Request a Tutor Session form with function components and localStorage to build a persistent tutor requests inbox.",
+        video: null,
+      },
+      {
         id: "js-local-storage",
         title: "Browser Storage Fundamentals",
         description:
           "Understand how browsers store data with localStorage. Learn when to use it, how to handle errors, and build persistent applications.",
         video: null,
-      },
+      }
       {
         id: "interactive-project",
         title: "Interactive Project: Task Manager",
