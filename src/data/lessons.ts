@@ -316,13 +316,6 @@ const lessons = [
           "Understand how browsers store data with localStorage. Learn when to use it, how to handle errors, and build persistent applications.",
         video: null,
       },
-      {
-        id: "interactive-project",
-        title: "Interactive Project: Task Manager",
-        description:
-          "Apply DOM manipulation skills to build a functional task manager app with add, edit, delete, and toggle functionality.",
-        video: null,
-      },
     ],
   },
   {
