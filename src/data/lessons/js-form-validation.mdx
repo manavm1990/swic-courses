@@ -242,7 +242,6 @@ function collectErrors() {
   // We use `flatMap` to avoid that!
   return fields.flatMap((field) => gatherFieldErrors(field));
 }
-}
 
 function renderErrors(list) {
   errorsBox.innerHTML = list.length
